@@ -1,0 +1,10 @@
+.steps-image-holder {
+    width: 1fr;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border-radius: 0.5rem;
+    padding: 1rem;
+
+}

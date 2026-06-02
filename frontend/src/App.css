@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+html {
+    overflow-x: hidden;
+}
+
+.smooth-trans, .smooth-trans * {
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    scroll-behavior: auto;
+    font-family: 'Roboto', sans-serif;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+
+
+/* 
+button,
+a,
+input,
+textarea,
+select {
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+*/

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <!-- https://i.postimg.cc/nr4SMq7L/favicon.png -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        try {
+          const storageKey = 'flowbite-theme-mode';
+          const storedMode = window.localStorage.getItem(storageKey);
+          const mode = storedMode === 'light' || storedMode === 'dark' || storedMode === 'auto'
+            ? storedMode
+            : 'auto';
+          const resolvedMode = mode === 'auto'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : mode;
+
+          document.documentElement.classList.toggle('dark', resolvedMode === 'dark');
+        } catch (error) {}
+      })();
+    </script>
+    <title>The Heritage Market</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
