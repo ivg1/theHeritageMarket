@@ -17,11 +17,11 @@ router.get("/", (req, res) => {
     res.send("users route");
 });
 
-router.get("/getAll", usersController.getAllUsers_get);
-router.get("/getById/", usersController.getUserById_get);
+router.get("/getNum", usersController.getNumUsers_get);
+router.get("/getById", usersController.getUserById_get);
 
 router.post("/create", usersController.createUser_post);
-router.post("/update/:id", usersController.updateUser_post);
-router.post("/delete/:id", usersController.deleteUser_post);
+router.post("/update", usersController.updateUser_post);
+//router.post("/delete", usersController.deleteUser_post);
 
 module.exports = router;

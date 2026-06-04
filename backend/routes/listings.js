@@ -14,7 +14,7 @@ module.exports = {
 */
 
 router.get("/getAll", listingsController.getListingsHeroData);
-router.get("/read/:id", listingsController.dataOfListing_get);
+router.get("/read", listingsController.dataOfListing_get);
 
 router.post("/create", listingsController.createListing_post);
 router.post("/update", listingsController.updateListing_post);

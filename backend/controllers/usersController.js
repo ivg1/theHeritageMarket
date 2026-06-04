@@ -14,15 +14,19 @@ const { deleteUser } = require("../db/users/deleteUser");
 
 //next(err) goes to next error handler
 
+//fixed
 //get users
-const getAllUsers_get = async (req, res, next) => {
+const getNumUsers_get = async (req, res, next) => {
     try {
-        res.status(200).json(await getUsers());
+        const usersList = await getUsers();
+        if (!usersList) res.status(400).json({ error: "failed getting all users" });
+        res.status(200).json(usersList);
     } catch (err) {
         next(err);
     }
 };
 
+//fixed
 const getUserById_get = async (req, res, next) => {
     try {
         const { id } = req.query;
@@ -35,17 +39,31 @@ const getUserById_get = async (req, res, next) => {
     }
 };
 
+//fixed
 //create user
 const createUser_post = async (req, res, next) => {
     try {
-        const { username, email, password_hash, phone } = req.body;
+        const { 
+            username, 
+            email, 
+            password_hash, 
+            phone 
+        } = req.body;
+
         const user = await createUser(username, email, password_hash, phone);
-        res.status(201).json(user);
+        
+        if (user) {
+            res.status(201).json({ message: "user created" });
+        } else {
+            res.status(400).json({ error: "user already exists" });
+        }
+        //res.status(201).json(user);
     } catch (err) {
         next(err);
     }
 };
 
+//didnt check
 //update user stuff
 //todo: fix the userChanges overwritten each time (make it array..?)
 const updateUser_post = async (req, res, next) => {
@@ -64,9 +82,9 @@ const updateUser_post = async (req, res, next) => {
         if (phone) {
             userChanges = await updateUserPhone(new_phone, id);
         } 
-        else {
-            return res.status(400).json({ message: "no changes given" });
-        }
+        //else {
+        //    return res.status(400).json({ message: "no changes given" });
+        //}
         
         res.status(200).json(userChanges);
     } catch (err) {
@@ -74,10 +92,11 @@ const updateUser_post = async (req, res, next) => {
     }
 };
 
+//didnt check
 //delete the user
 const deleteUser_post = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const { id } = req.query;
         res.status(200).json(await deleteUser(id));
     } catch (err) {
         next(err);
@@ -85,7 +104,7 @@ const deleteUser_post = async (req, res, next) => {
 }
 
 module.exports = {
-    getAllUsers_get,
+    getNumUsers_get,
     getUserById_get,
     createUser_post,
     updateUser_post,

@@ -1,10 +1,9 @@
-import { useFilter } from "./FilterContext.jsx";
+//import { useFilter } from "./FilterContext.jsx";
 import { FloatingLabel, Dropdown, DropdownItem, Button } from "flowbite-react";
 import ListingsDrawer from "../components/listingsDrawer.jsx";
 
+//onChange={(e) => setFilters({ ...filters, search: e.target.value })} (in FloatingLabel)
 const Filter = () => {
-	const { filters, setFilters } = useFilter();
-
 	return (
 		<div className="flex flex-col items-center gap-2 sm:flex-row">
 			<FloatingLabel
@@ -12,37 +11,37 @@ const Filter = () => {
 				variant="outlined"
 				label="Search listings"
 				color="error"
-				value={filters.search}
-				onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+				value="doesnt work rn"
+				readOnly
 			/>
 			<div className="flex sm:order-first gap-2">
 				<ListingsDrawer />
 				<Dropdown label="Categories" color="red">
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "" })}>
+					<DropdownItem>
 						All Categories
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "PhysicalGoods" })}>
+					<DropdownItem>
 						All physical goods
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "Services" })}>
+					<DropdownItem>
 						All services
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "Books" })}>
+					<DropdownItem>
 						Books (incl. textbooks)
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "Stationery"})}>
+					<DropdownItem>
 						Stationery
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "Homework" })}>
+					<DropdownItem>
 						Homework
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "Tutoring" })}>
+					<DropdownItem>
 						Tutoring
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "OldTestsOrExams" })}>
+					<DropdownItem>
 						Old tests/exams
 					</DropdownItem>
-					<DropdownItem onClick={() => setFilters({ ...filters, category: "LeakedTestsOrExams" })}>
+					<DropdownItem>
 						Leaked tests/exams??
 					</DropdownItem>
 				</Dropdown>

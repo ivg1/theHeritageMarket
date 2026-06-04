@@ -3,7 +3,7 @@ import { createTheme } from 'flowbite-react';
 export const lightTheme = createTheme({
     navbar: {
         root: {
-            base: 'border-b border-slate-200 bg-white/90 px-2 py-2.5 shadow-sm backdrop-blur-md sm:px-4',
+            base: 'border-b border-slate-200 bg-white/90 px-2 py-2.5 shadow-sm backdrop-blur-sm sm:px-4',
             rounded: {
                 on: 'rounded',
                 off: '',
@@ -58,24 +58,6 @@ export const lightTheme = createTheme({
 			bglessOnlytext: 'bg-transparent text-slate-900 hover:text-red-600 focus:ring-slate-200 p-2',
         },
     },
-    card: {
-        root: {
-            base: 'flex rounded-2xl border border-slate-200 bg-white shadow-lg',
-            children: 'flex h-full flex-col justify-center gap-4 p-6',
-            horizontal: {
-                off: 'flex-col',
-                on: 'flex-col md:max-w-xl md:flex-row',
-            },
-            href: 'hover:bg-slate-50',
-        },
-        img: {
-            base: '',
-            horizontal: {
-                off: 'rounded-t-lg',
-                on: 'h-96 w-full rounded-t-lg object-cover md:h-auto md:w-48 md:rounded-none md:rounded-l-lg',
-            },
-        },
-    },
     accordion: {
         root: {
             base: 'divide-y divide-slate-200 border-slate-200',
@@ -117,7 +99,7 @@ export const lightTheme = createTheme({
 export const darkTheme = createTheme({
     navbar: {
         root: {
-            base: 'border-b border-slate-800 bg-slate-950/95 px-2 py-2.5 shadow-sm backdrop-blur-md sm:px-4',
+            base: 'border-b border-slate-800 bg-slate-950/95 px-2 py-2.5 shadow-sm backdrop-blur-sm sm:px-4',
             rounded: {
                 on: 'rounded',
                 off: '',

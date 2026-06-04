@@ -6,6 +6,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const cors = require('cors');
+app.use(cors());
+
 const db = require("./db/db");
 
 const indexRouter = require("./routes/index");
@@ -22,6 +25,6 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, async () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+    console.log(`server running on http://localhost:${port}`);
     
 });

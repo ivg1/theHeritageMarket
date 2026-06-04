@@ -22,7 +22,8 @@ const createListing = async (
 
     try {
         const result = await pool.query(query, values);
-        return result;
+        console.log("listing created");
+        return result
     } catch (err) {
         console.error("error creating listing:", err);
     }

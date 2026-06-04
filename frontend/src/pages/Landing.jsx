@@ -97,7 +97,7 @@ export default function Landing() {
             <div className="contact-us flex flex-col gap-4 min-w-full min-h-fit p-10 mb-10 justify-center">
                 <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-6 text-center">FAQ</h1>
                 <div className="min-w-full">
-                    <Accordion collapseAll className="">
+                    <Accordion collapseAll alwaysOpen className="">
                         <AccordionPanel>
                             <AccordionTitle>Is this service free?</AccordionTitle>
                             <AccordionContent>

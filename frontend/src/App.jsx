@@ -3,8 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import "./App.css";
-import Header from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx";
+import Header from "./components/header/Header.jsx";
+import Footer from "./components/footer/Footer.jsx";
 import ComingSoon from './pages/comingsoon.jsx';
 
 import Landing from "./pages/Landing.jsx";
@@ -25,16 +25,18 @@ function AppShell() {
             <Router>
                 <div className={shellClassName}>
                     <Header />
-                    <Routes>
-                            <Route path="/" exact element={<Landing />} />
-                            <Route path="/listings" element={<Listings />} />
+                    <div className="padding-buffer pt-22 md:pt-18">
+                        <Routes>
+                                <Route path="/" exact element={<Landing />} />
+                                <Route path="/listings" element={<Listings />} />
 
-                            <Route path="/legal/terms-of-service" element={<ComingSoon />} />
-                            <Route path="/legal/privacy-policy" element={<ComingSoon />} />
-                            <Route path="/legal/relation-to-school" element={<ComingSoon />} />
+                                <Route path="/legal/terms-of-service" element={<ComingSoon />} />
+                                <Route path="/legal/privacy-policy" element={<ComingSoon />} />
+                                <Route path="/legal/relation-to-school" element={<ComingSoon />} />
 
-                            <Route path="*" element={<ComingSoon />} />
-                    </Routes>
+                                <Route path="*" element={<ComingSoon />} />
+                        </Routes>
+                    </div>
                     <Footer />
                 </div>
             </Router>

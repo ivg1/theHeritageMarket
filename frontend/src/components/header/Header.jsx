@@ -9,15 +9,18 @@ import {
     useThemeMode,
 } from "flowbite-react";
 
+import UserProfile from "./user/UserProfile";
+import LoginButton from "./user/LoginButton";
+
 export default function Header() {
     const { computedMode, toggleMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
 
     return (
-        <Navbar className="header py-2 px-5 max-w-screen smooth-trans">
+        <Navbar className="header py-2 px-5 min-w-screen smooth-trans fixed z-10">
             <NavbarBrand href="/">
-                <img draggable="false"src="/favicon.png" className="mr-3 h-6 sm:h-9" alt="Heritage Market Logo" />
-                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Heritage Market</span>
+                <img draggable="false"src="/favicon.png" className="mr-3 h-12" alt="Heritage Market Logo" />
+                <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white hidden md:flex ">Heritage Market</span>
             </NavbarBrand>
             <div className="flex md:order-2">
                 <Button
@@ -39,10 +42,9 @@ export default function Header() {
                         </svg>
                     )}
                 </Button>
-                <Button pill color="light" onClick={() => alert("this button, in fact, does not work")}>
-                    smthn   
-                </Button>
-                <NavbarToggle />
+                <LoginButton />
+                <NavbarToggle className="ml-2" />
+                
             </div>
             <NavbarCollapse className="flex-row">
                 <NavbarLink href="/listings">Listings</NavbarLink>

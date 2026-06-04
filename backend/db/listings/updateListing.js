@@ -7,6 +7,7 @@ const updateListingTitle = async (new_title, listing_id) => {
     try {
         const result = await pool.query(query, values);
         console.log(`title of listing id ${listing_id} changed`);
+        return "title";
     } catch (err) {
         console.error("error changing listing title:", err);
     }
@@ -19,6 +20,7 @@ const updateListingDescription = async (new_description, listing_id) => {
     try {
         const result = await pool.query(query, values);
         console.log(`description of listing id ${listing_id} changed`);
+        return "description";
     } catch (err) {
         console.error("error changing listing description:", err);
     }
@@ -31,6 +33,7 @@ const updateListingPrice = async (new_price, listing_id) => {
     try {
         const result = await pool.query(query, values);
         console.log(`price of listing id ${listing_id} changed`);
+        return "price";
     } catch (err) {
         console.error("error changing listing price:", err);
     }
@@ -43,6 +46,7 @@ const updateListingTags = async (new_tags, listing_id) => {
     try {
         const result = await pool.query(query, values);
         console.log(`tags of listing id ${listing_id} changed`);
+        return "tags";
     } catch (err) {
         console.error("error changing listing tags:", err);
     }

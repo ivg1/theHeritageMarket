@@ -1,10 +1,12 @@
 const pool = require("../db");
 
-
 const getAllListingsBasicView = async () => {
-    const query = "SELECT title, description, price, tags, created_at FROM listings WHERE visibility = TRUE";
+    const query = "SELECT title, description, price, tags, created_at FROM listings WHERE visibility = TRUE ORDER BY id DESC";
     try {
-        return await pool.query(query);
+        const result = await pool.query(query);
+        console.log(`basic data of ${result.rows.length} listings retreived`, result.rows.length);
+        //result.rows.push({numListings: result.rows.length}); (will check length in frontend)
+        return result.rows;
     } catch (err) {
         console.error("error getting hero data of all listings:", err);
     }
@@ -12,7 +14,7 @@ const getAllListingsBasicView = async () => {
 
 //i dont use rn, but ill leave it here
 const getAllListingsDetailedView = async () => {
-    const query = pool.query("SELECT * FROM listings WHERE visibility = TRUE");
+    const query = pool.query("SELECT * FROM listings WHERE visibility = TRUE ORDER BY id DESC");
     try {
         const result = await pool.query(query);
         return result.rows;
@@ -23,12 +25,11 @@ const getAllListingsDetailedView = async () => {
 
 const getListingDetails = async (id) => {
     const query = "SELECT * FROM listings WHERE id = $1";
-    console.log(id);
     try {
         const result = await pool.query(query, [id]);
         return result.rows;
     } catch (err) {
-        console.error("error getting details of listing:", err);
+        console.error("error getting details of listing in getListingDetails", err);
     }
 }
 

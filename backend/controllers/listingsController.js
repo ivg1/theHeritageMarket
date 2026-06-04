@@ -13,26 +13,37 @@ const { trulyDeleteListing, deleteListing } = require("../db/listings/deleteList
 //status 200 = ok
 //status 400 = bad
 
+//works
 //what is the name for listings that u display first to get attention? idk
 const getListingsHeroData = async (req, res, next) => {
     try {
-        res.status(200).json(await getAllListingsBasicView());
+        const result = await getAllListingsBasicView();
+        if (!result) res.status(400).json({ error: "failed getting hero data of all listings" });
+        res.status(200).json(result);
     } catch (err) {
         next(err);
     }
 };
 
+//works
 //read everything in a listing
 const dataOfListing_get = async (req, res, next) => {
     try {
         //const data = await getListingDetails();
-        const listing_id = req.params.id;
-        res.status(200).json(await getListingDetails(listing_id));
+        const { id } = req.query;
+        const result = await getListingDetails(id);
+        if (!result) {
+            console.log("error getting data of listing");
+            res.status(400).json({ error: "error getting data of listing in controller" });
+        }
+        console.log("data of listing retreived");
+        res.status(200).json(result);
     } catch (err) {
         next(err);
     }
 };
 
+//works
 //create listing
 const createListing_post = async (req, res, next) => {
     try {
@@ -47,10 +58,10 @@ const createListing_post = async (req, res, next) => {
         } = req.body;
 
         if (!title || !price || !seller_id) {
-            return res.status(400).json({ message: "missing must have items"});
+            return res.status(400).json({ message: "missing must have fields"});
         }
 
-        res.status(201).json(await createListing(
+        const result = await createListing(
             title, 
             description, 
             price, 
@@ -58,42 +69,51 @@ const createListing_post = async (req, res, next) => {
             seller_phone, 
             seller_id, 
             tags
-        ));
+        );
+        
+        if (!result) res.status(400).json({ error: "failed creating listing" });
+        res.status(201).json({ message: "listing created" });
     } catch (err) {
         next(err);
     }
 };
 
+//works
 //update listing 
 const updateListing_post = async (req, res, next) => {
     try {
-        const { listing_id } = req.params;
-        const { new_title, new_description, new_price, new_tags } = req.body;
+        const { id, title, description, price, tags } = req.body;
 
-        let listingChanges;
-        if (new_title) {
-            listingChanges = await updateListingTitle(new_title, listing_id);
+        let listingChanges = [];
+        if (title) {
+            listingChanges.push(await updateListingTitle(title, id));
         }
-        if (new_description) {
-            listingChanges = await updateListingDescription(new_description, listing_id);
+        if (description) {
+            listingChanges.push(await updateListingDescription(description, id));
         }
-        if (new_price) {
-            listingChanges = await updateListingPrice(new_price, listing_id);
+        if (price) {
+            listingChanges.push(await updateListingPrice(price, id));
         }
-        if (new_tags) {
-            listingChanges = await updateListingTags(new_tags, listing_id);
+        if (tags) {
+            listingChanges.push(await updateListingTags(tags, id));
         }
-
-        res.status(201).json(result);
+        console.log("listing updated");
+        res.status(201).json({ changes: listingChanges});
     } catch (err) {
         next(err);
     }
 };
 
+//works
 //delete listing
 const deleteListing_post = async (req, res, next) => {
-    //const id = req.params;
-    res.status(201).json(await deleteListing(req.params));
+    const { id } = req.query;
+    const result = await deleteListing(id);
+    if (!result) {
+        console.log("error deleting listing");
+        res.status(400).json({ error: "error deleting listing" });
+    }
+    res.status(201).json({ message: "listing deleted" });
 };
 
 module.exports = {

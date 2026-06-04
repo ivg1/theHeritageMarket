@@ -19,6 +19,7 @@ const deleteListing = async (listing_id) => {
     try {
         const result = await pool.query(query, [listing_id]);
         console.log(`listing of id ${listing_id} removed`);
+        return true;
     } catch (err) {
         console.error("error deleting listing:", err);
     }
