@@ -1,47 +1,31 @@
-const { getUsers, getUserById } = require("../db/users/getUsers");
-const { createUser } = require("../db/users/createUser");
-const { 
-    updateUserEmail, 
-    updateUserPhone, 
-    updateUserUsername 
-} = require("../db/users/updateUser");
-const { deleteUser } = require("../db/users/deleteUser");
+const Users = require("../db/users");
 
-//status 404 = not found
-//status 201 = created resource (for post)
-//status 200 = ok
-//status 400 = bad
-
-//next(err) goes to next error handler
-
-//fixed
-//get users
-const getNumUsers_get = async (req, res, next) => {
+const getNumUsers_get = async (req, res) => {
     try {
-        const usersList = await getUsers();
-        if (!usersList) res.status(400).json({ error: "failed getting all users" });
-        res.status(200).json(usersList);
+        const usersList = await Users.data.getNum();
+        return res.status(200).json(usersList);
     } catch (err) {
-        next(err);
+        console.error(err);
+        return res.status(400).json({ error: "failed getting all users" });
     }
-};
+}
 
-//fixed
-const getUserById_get = async (req, res, next) => {
+const getUserById_get = async (req, res) => {
     try {
         const { id } = req.query;
-        const user = await getUserById(id); 
+        const user = await Users.auth.getUserById(id);
         console.log(user);
-        if (!user) return res.status(404).json({ message: "user not found" });
-        res.status(200).json(user);
-    } catch (err) {
-        next(err);
-    }
-};
 
-//fixed
-//create user
-const createUser_post = async (req, res, next) => {
+        if (!user) return res.status(404).json({ message: "user not found" });
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed getting user by id (fatal error in function that shouldnt have failed)" });
+    }
+}
+
+const createUser_post = async (req, res) => {
     try {
         const { 
             username, 
@@ -50,56 +34,52 @@ const createUser_post = async (req, res, next) => {
             phone 
         } = req.body;
 
-        const user = await createUser(username, email, password_hash, phone);
-        
-        if (user) {
-            res.status(201).json({ message: "user created" });
-        } else {
-            res.status(400).json({ error: "user already exists" });
-        }
-        //res.status(201).json(user);
+        //todo: make separate checks for username and email (for better feedback)
+        const exists = await Users.checkUserExistence(username, email);
+
+        if (exists) return res.status(400).json({ error: "user already exists" });
+
+        const user = await Users.auth.signup(username, email, password_hash, phone);
+        return res.status(201).json({ message: "user created (signed up)", user });
     } catch (err) {
-        next(err);
+        console.error(err);
+        return res.status(400).json({ error: "failed creating user" });
     }
-};
+}
 
-//didnt check
-//update user stuff
-//todo: fix the userChanges overwritten each time (make it array..?)
-const updateUser_post = async (req, res, next) => {
+const updateUser_post = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { new_username, new_email, new_phone } = req.body;
+        const { id, username, email, phone } = req.body;
 
-        //not critical problem, but fixxx the userChanges getting overwritten and not stacking the changes to then send back
-        let userChanges;
+        let userChanges = [];
         if (username) {
-            userChanges = await updateUserUsername(new_email, id);
+            userChanges.push(await Users.update.username(username, id));
         }
         if (email) {
-            userChanges = await updateUserEmail(new_email, id);
+            userChanges.push(await Users.update.email(email, id));
         }
         if (phone) {
-            userChanges = await updateUserPhone(new_phone, id);
+            userChanges.push(await Users.update.phone(phone, id));
         } 
-        //else {
-        //    return res.status(400).json({ message: "no changes given" });
-        //}
-        
-        res.status(200).json(userChanges);
-    } catch (err) {
-        next(err);
-    }
-};
 
-//didnt check
-//delete the user
-const deleteUser_post = async (req, res, next) => {
+        console.log("user updated");
+        return res.status(200).json({ changes: userChanges });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed updating user in controller" });
+    }
+}
+
+//same thing here, SECURE ASAP (when done with auth)
+const deleteUser_post = async (req, res) => {
     try {
         const { id } = req.query;
-        res.status(200).json(await deleteUser(id));
+        const result = await Users.danger.delete(id);
+        return res.status(200).json({ deleted: result });
     } catch (err) {
-        next(err);
+        console.error(err);
+        return res.status(400).json({ error: "failed deleting user in controller"});
     }
 }
 

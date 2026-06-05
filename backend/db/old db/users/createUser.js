@@ -1,8 +1,8 @@
-const { pool } = require("../db");
+const { pool } = require("../../db");
 
-const checkUserExistence = async (username, email, phone) => {
+const checkUserExistence = async (username, email) => {
     const query = "SELECT * FROM users WHERE username = $1 OR email = $2 OR phone = $3";
-    const values = [username, email, phone];
+    const values = [username, email];
 
     try {
         const result = await pool.query(query, values);
@@ -18,7 +18,7 @@ const createUser = async (
     password_hash, 
     phone
 ) => {
-    const query = "INSERT INTO users (username, email, password_hash, phone) VALUES ($1, $2, $3, $4) RETURNING *";
+    const query = "INSERT INTO users (username, email, password_hash, phone) VALUES ($1, $2, $3, $4) RETURNING id, email";
     const values = [
         username, 
         email, 
@@ -28,7 +28,7 @@ const createUser = async (
 
     try {
         //todo: later add a method to tell user if it's username or email that is taken.
-        const userExists = await checkUserExistence(username, email, phone);
+        const userExists = await checkUserExistence(username, email);
         console.log("exists? ", userExists);
         if (userExists) {
             console.log("user creation stopped. already exists");
@@ -43,4 +43,8 @@ const createUser = async (
     }
 }
 
-module.exports = { createUser };
+const getUserByEmail = (email) => {
+    return pool.query("SELECT * FROM users WHERE email = $1", [email]);
+}
+
+module.exports = { createUser, getUserByEmail };

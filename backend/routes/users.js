@@ -5,7 +5,7 @@ const usersController = require("../controllers/usersController");
 
 /* (current functions)
 module.exports = {
-    getAllUsers_get,
+    getNumUsers_get,
     getUserById_get,
     createUser_post,
     updateUser_post,

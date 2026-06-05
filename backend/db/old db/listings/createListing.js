@@ -9,7 +9,7 @@ const createListing = async (
     seller_id, 
     tags
 ) => {
-    const query = "INSERT INTO listings (title, description, price, seller_email, seller_phone, seller_id, tags) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
+    const query = "INSERT INTO listings (title, description, price, seller_email, seller_phone, seller_id, tags) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id";
     const values = [
         title, 
         description, 

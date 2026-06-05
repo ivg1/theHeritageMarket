@@ -1,5 +1,5 @@
 
-const url = "http://87.228.167.59:3000";
+const url = "http://192.168.10.131:3000";
 
 export const Server = {
     listings: {

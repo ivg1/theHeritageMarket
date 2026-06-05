@@ -5,7 +5,7 @@ const listingsController = require("../controllers/listingsController");
 
 /* (current functions)
 module.exports = {
-    getListingsHeroData,
+    getListingsHeroData_get,
     dataOfListing_get,
     createListing_post,
     updateListing_post,
@@ -13,7 +13,7 @@ module.exports = {
 };
 */
 
-router.get("/getAll", listingsController.getListingsHeroData);
+router.get("/getAll", listingsController.getListingsHeroData_get);
 router.get("/read", listingsController.dataOfListing_get);
 
 router.post("/create", listingsController.createListing_post);

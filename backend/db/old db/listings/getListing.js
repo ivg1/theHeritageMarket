@@ -1,7 +1,7 @@
 const pool = require("../db");
 
 const getAllListingsBasicView = async () => {
-    const query = "SELECT title, description, price, tags, created_at FROM listings WHERE visibility = TRUE ORDER BY id DESC";
+    const query = "SELECT title, description, price, tags, images, created_at FROM listings WHERE visibility = TRUE ORDER BY id DESC";
     try {
         const result = await pool.query(query);
         console.log(`basic data of ${result.rows.length} listings retreived`, result.rows.length);
