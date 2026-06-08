@@ -6,20 +6,19 @@ function longAgo(listingTime) {
 	const listingDate = new Date(listingTime);
 
 	let differenceSeconds = Math.floor((currentDate - listingDate) / 1000);
-	console.log(differenceSeconds, "seconds");
 
 	if (differenceSeconds < 60) {
-		if (differenceSeconds === 1) return `1 second ago`;
+		if (differenceSeconds == 1) return `1 second ago`;
 		return `${differenceSeconds} seconds ago`;
 	} else {
 		let differenceMins = Math.floor((currentDate - listingDate) / (1000*60));
 		if (differenceMins < 60) {
-			if (differenceMins === 1) return `1 minute ago`;
+			if (differenceMins == 1) return `1 minute ago`;
 			return `${differenceMins} minutes ago`;
 		} else {
 			let differenceHours = Math.floor((currentDate - listingDate) / (1000*60*60));
 			if (differenceHours < 24) {
-				if (differenceHours === 1) return `1 hour ago`;
+				if (differenceHours == 1) return `1 hour ago`;
 				return `${differenceHours} hours ago`;
 			} else {
 				let differenceDays = Math.floor((currentDate - listingDate) / (1000*60*60*24));
@@ -70,12 +69,14 @@ export default function DisplayListings() {
 							{
 								(() => {
 									const images = listing.images;
-									let src = "/data.png";
+									let src = "/placeholderListing.png";
 									if (Array.isArray(images) && images.length > 0) {
 										src = images[0];
 									} else if (typeof images === "string" && images.length > 0) {
 										const maybe = images.replace(/^\{|\}$/g, "").split(',')[0];
 										src = maybe;
+									} else {
+										return <div className="flex justify-center items-center w-full h-full">NO IMAGE</div>
 									}
 									return <img src={src} alt={listing.title} className="listing-card-image" />;
 								})()

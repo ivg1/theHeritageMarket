@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const listingsController = require("../controllers/listingsController");
+const authJwt = require("../middleware/authJwt");
 
 /* (current functions)
 module.exports = {
@@ -16,8 +17,8 @@ module.exports = {
 router.get("/getAll", listingsController.getListingsHeroData_get);
 router.get("/read", listingsController.dataOfListing_get);
 
-router.post("/create", listingsController.createListing_post);
-router.post("/update", listingsController.updateListing_post);
-router.post("/delete", listingsController.deleteListing_post);
+router.post("/create", [authJwt.verifyToken], listingsController.createListing_post);
+router.post("/update", [authJwt.verifyToken], listingsController.updateListing_post);
+router.post("/delete", [authJwt.verifyToken], listingsController.deleteListing_post);
 
 module.exports = router;

@@ -13,9 +13,12 @@ create table listings (
 	description text,
 	price integer,
 	tags text[],
+	images text[],
 	seller_id integer references users(id),
 	seller_email text,
 	seller_phone text,
+	emailShow bool default false,
+	phoneShow bool default false,
 	created_at timestamp default current_timestamp,
 	visibility bool default true
 );

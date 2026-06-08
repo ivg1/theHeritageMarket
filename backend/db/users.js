@@ -2,9 +2,9 @@ const { pool } = require("./db.js");
 
 const Users = {
     auth: {
-        async signup(username, email, password_hash, phone) {
-            const query = "INSERT INTO users (username, email, password_hash, phone) VALUES ($1, $2, $3, $4) RETURNING id, email";
-            const values = [username, email, password_hash, phone];
+        async signup(username, email, password_hash, phone, fname, lname) {
+            const query = "INSERT INTO users (username, email, password_hash, phone, fname, lname) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email";
+            const values = [username, email, password_hash, phone, fname, lname];
 
             try {
                 const result = await pool.query(query, values);
@@ -15,9 +15,9 @@ const Users = {
                 throw err;
             }
         },
-        async login(email, password_hash) {
+        async login(username, password_hash) {
             const query = "SELECT * FROM users WHERE email = $1 AND password_hash = $2";
-            const values = [email, password_hash];
+            const values = [username, password_hash];
 
             try {
                 const result = await pool.query(query, values);
@@ -35,6 +35,19 @@ const Users = {
             try {
                 const result = await pool.query(query, values);
                 console.log("db fetched user by email");
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db getUserByEmail()", err);
+                throw err;
+            }
+        },
+        async getUserByUsername(username) {
+            const query = "SELECT * FROM users WHERE username = $1";
+            const values = [username];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log("db fetched user by username");
                 return result.rows[0] || null;
             } catch (err) {
                 console.error("error in users db getUserByEmail()", err);

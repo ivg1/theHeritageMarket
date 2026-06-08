@@ -3,7 +3,7 @@ import { createTheme } from 'flowbite-react';
 export const lightTheme = createTheme({
     navbar: {
         root: {
-            base: 'border-b border-slate-200 bg-white/90 px-2 py-2.5 shadow-sm backdrop-blur-sm sm:px-4',
+            base: 'border-b border-slate-200 bg-white/90 px-2 py-2 shadow-sm backdrop-blur-sm',
             rounded: {
                 on: 'rounded',
                 off: '',

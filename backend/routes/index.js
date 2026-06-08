@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
+const authJwt = require("../middleware/authJwt");
+
+router.get("/", [authJwt.verifyToken], (req, res) => {
     res.send("index route");
     //res.redirect("/listings");
 });

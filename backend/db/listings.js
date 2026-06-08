@@ -30,10 +30,10 @@ const Listings = {
         seller_id,
         tags,
         images,
-        phoneShow,
-        emailShow
+        phone_show,
+        email_show
     ) {
-        const query = "INSERT INTO listings (title, description, price, seller_email, seller_phone, seller_id, tags, images, phoneShow, emailShow) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id";
+        const query = "INSERT INTO listings (title, description, price, seller_email, seller_phone, seller_id, tags, images, phone_show, email_show) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id";
         const values = [
             title,
             description,
@@ -43,8 +43,8 @@ const Listings = {
             seller_id,
             tags,
             images,
-            phoneShow,
-            emailShow
+            phone_show,
+            email_show
         ];
 
         try {

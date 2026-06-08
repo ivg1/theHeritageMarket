@@ -46,7 +46,6 @@ const ProductsList = () => {
 		});
 	}, [listings, filters]);
 
-	// Exclude the final array item (it's used to store numListings)
 	const displayProducts = useMemo(() => {
 		const count = Math.max(0, filteredProducts.length - 1);
 		return filteredProducts.slice(0, count);

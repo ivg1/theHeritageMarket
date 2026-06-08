@@ -20,7 +20,9 @@ body {
     min-height: 100vh;
 }
 
-
+.black-bg {
+    background: rgb(10, 10, 10);
+}
 
 /* 
 button,

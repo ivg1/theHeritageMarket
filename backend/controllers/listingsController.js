@@ -11,8 +11,8 @@ const createListing_post = async (req, res) => {
             seller_id, 
             tags, 
             images, 
-            phoneShow, 
-            emailShow
+            phone_show, 
+            email_show
         } = req.body;
 
         if (!title || !price || !seller_id) return res.status(400).json({ message: "missing must have fields"});
@@ -26,8 +26,8 @@ const createListing_post = async (req, res) => {
             seller_id, 
             tags, 
             images, 
-            phoneShow, 
-            emailShow
+            phone_show, 
+            email_show
         );
         console.log("listing created", result);
         return res.status(201).json({ message: "listing created", listing: result });
@@ -54,7 +54,7 @@ const updateListing_post = async (req, res) => {
         if (tags) {
             listingChanges.push(await Listings.update.tags(tags, id));
         }
-        
+
         console.log("listing updated");
         return res.status(200).json({ changes: listingChanges});
 

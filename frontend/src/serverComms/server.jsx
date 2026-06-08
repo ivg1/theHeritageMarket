@@ -1,3 +1,4 @@
+import Auth from "../auth/auth";
 
 const url = "http://192.168.10.131:3000";
 
@@ -43,12 +44,36 @@ export const Server = {
             return await response.json();
         },
         async numUsers() {
-            const response = await fetch(`${this.modUrl}/getNum`);
+            const token = await Auth.getToken();
+            console.log(token);
+            const response = await fetch(`${this.modUrl}/getNum`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                }
+            });
+            console.log(response);
             return await response.text();
-        },
-        async create(body) {
-            const response = await fetch(`${this.modUrl}/create`, {
+        }
+    },
+    auth: {
+        modUrl: `${url}/auth`,
+        async signup(body) {
+            const response = await fetch(`${this.modUrl}/signup`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            return await response.json();
+        },
+        async login(body) {
+            const response = await fetch(`${this.modUrl}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(body)
             });
             return await response.json();

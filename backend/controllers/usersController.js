@@ -25,6 +25,7 @@ const getUserById_get = async (req, res) => {
     }
 }
 
+/*
 const createUser_post = async (req, res) => {
     try {
         const { 
@@ -46,6 +47,7 @@ const createUser_post = async (req, res) => {
         return res.status(400).json({ error: "failed creating user" });
     }
 }
+*/
 
 const updateUser_post = async (req, res) => {
     try {
@@ -86,7 +88,7 @@ const deleteUser_post = async (req, res) => {
 module.exports = {
     getNumUsers_get,
     getUserById_get,
-    createUser_post,
+    /* createUser_post, */
     updateUser_post,
     deleteUser_post
 }

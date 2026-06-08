@@ -14,10 +14,12 @@ const db = require("./db/db");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const listingsRouter = require("./routes/listings");
+const authRouter = require("./routes/auth");
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/listings", listingsRouter);
+app.use("/auth", authRouter);
 
 
 app.get("/", (req, res) => {

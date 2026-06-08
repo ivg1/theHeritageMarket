@@ -8,13 +8,34 @@ import {
     NavbarToggle,
     useThemeMode,
 } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import UserProfile from "./user/UserProfile";
 import LoginButton from "./user/LoginButton";
+import Auth from "../../auth/auth";
 
 export default function Header() {
     const { computedMode, toggleMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
+    
+    const location = useLocation();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        Auth.loginState().then((status) => {
+            if (isMounted) {
+                setIsLoggedIn(status);
+            }
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [location.pathname]);
+
 
     return (
         <Navbar className="header py-2 px-5 min-w-screen smooth-trans fixed z-100">
@@ -42,7 +63,7 @@ export default function Header() {
                         </svg>
                     )}
                 </Button>
-                <LoginButton />
+                {isLoggedIn ? <UserProfile /> : <LoginButton />}
                 <NavbarToggle className="ml-2" />
                 
             </div>
