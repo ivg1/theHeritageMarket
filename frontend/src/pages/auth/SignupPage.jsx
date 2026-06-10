@@ -1,10 +1,12 @@
 import { Button, Checkbox, Label, TextInput, useThemeMode } from "flowbite-react";
 import "./SignupPage.css";
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import Server from "../../serverComms/server";
 
 export default function SignupPage() {
+    const navigate = useNavigate();
+
     const { computedMode, toggleMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
 
@@ -36,6 +38,7 @@ export default function SignupPage() {
         try {
             const response = await Server.auth.signup(toSend);
             console.log("signup response", response);
+            navigate("/login");
         } catch (err) {
             console.error("signup failed", err);
         }
