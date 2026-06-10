@@ -175,7 +175,7 @@ export default function CreateListing({ open, onClose }) {
                                 {/* !! todo: rlly got to change this up later to use https://picrd.com/docs */}
                                 <div id="images-upload">
                                     <Label htmlFor="images" className="mb block">Upload images</Label>
-                                    <FileInput id="images" name="images" multiple />
+                                    <FileInput id="images" name="images" multiple required />
                                     <HelperText>Upload images for your listing (max. 10MB each).</HelperText>
                                 </div>
                             </div>

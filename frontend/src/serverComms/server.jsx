@@ -94,6 +94,8 @@ export const Server = {
                 },
                 body: JSON.stringify(body)
             });
+
+            if (!response.ok) throw new Error("WRONG CREDENTIALS"); //geez, how could i have forgotten to add this???
             return await response.json();
         }
     },
