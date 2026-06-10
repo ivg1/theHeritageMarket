@@ -70,6 +70,23 @@ const Users = {
                 console.error("error in users db auth.getUserById()", err);
                 throw err;
             }
+        },
+        async getListingDataByUsername(username) {
+            const query = "SELECT id, email, phone FROM users WHERE username = $1";
+
+            try {
+                const result = await pool.query(query, [username]);
+                if (result.rows.length > 0) {
+                    console.log(`user of username ${username} found`);
+                    return result.rows[0];
+                }
+
+                console.log("no user found");
+                return null;
+            } catch (err) {
+                console.error("error in users db auth.getListingDataByUsername()", err);
+                throw err;
+            }
         }
     },
     checkUserExistence: async function (username, email) {

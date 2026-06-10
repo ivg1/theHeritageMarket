@@ -33,7 +33,7 @@ function longAgo(listingTime) {
 	}
 }
 
-export default function DisplayListings() {
+export default function DisplayListings({ onListingClick }) {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -64,7 +64,7 @@ export default function DisplayListings() {
         <div className="listing-list min-w-full">
 			{listings.length > 0 ? (
 				listings.map((listing) => (
-					<div className="listing-card" key={listing.id}>
+					<div className="listing-card hover:cursor-pointer hover:bg-white dark:hover:bg-[#320505]" key={listing.id} listingid={listing.id} onClick={() => onListingClick?.(listing)}>
 						<div className="listing-card-image-container">
 							{
 								(() => {
@@ -82,7 +82,7 @@ export default function DisplayListings() {
 								})()
 							}
 						</div>
-						<div className="px-4 py-0 m-0">
+						<div className="px-4 py-0 m-0 flex flex-col items-start">
 							<h1 className="listing-card-price text-2xl font-bold text-left">${listing.price}</h1>
 							<h1 className="listing-card-title text-l font-bold text-left">{listing.title}</h1>
 							<p className="listing-card-date text-sm text-gray-500">{longAgo(listing.created_at)}</p>

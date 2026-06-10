@@ -27,6 +27,7 @@ export default function LoginPage() {
 			const response = await Server.auth.login(toSend);
 			console.log("login response", response);
 			Auth.storeToken(response);
+			Auth.storeUsername(values.username);
 			navigate("/");
 
 		} catch (err) {

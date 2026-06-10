@@ -4,7 +4,7 @@ const Listings = {
     data: {
         async getHeroAll() {
             try {
-                const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings");
+                const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings ORDER BY created_at DESC");
                 return result.rows;
             } catch (err) {
                 console.error("error in listings db data.getHeroAll()", err);
@@ -31,9 +31,11 @@ const Listings = {
         tags,
         images,
         phone_show,
-        email_show
+        email_show,
+        is_physical,
+        negotiable
     ) {
-        const query = "INSERT INTO listings (title, description, price, seller_email, seller_phone, seller_id, tags, images, phone_show, email_show) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id";
+        const query = "INSERT INTO listings (title, description, price, seller_email, seller_phone, seller_id, tags, images, phone_show, email_show, is_physical, negotiable) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id";
         const values = [
             title,
             description,
@@ -44,7 +46,9 @@ const Listings = {
             tags,
             images,
             phone_show,
-            email_show
+            email_show,
+            is_physical,
+            negotiable
         ];
 
         try {

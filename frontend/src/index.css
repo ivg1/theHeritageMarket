@@ -3,3 +3,13 @@
 @source "../.flowbite-react/class-list.json";
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+    --darkbg: #0D0D0D;
+    --darksurface: #181818;
+    --darksurface-2: #242424;
+
+    --darktext: #F5F5F5;
+    --darktext-secondary: #A0A0A0;
+
+    --darkborder: #333333;
+}

@@ -6,9 +6,9 @@ export default function Landing() {
 
     return (
         <div className="landing-page smooth-trans">
-            <div className="hero min-h-150 flex items-center justify-center">
+            <div className="hero min-h-150 flex items-center justify-center px-10">
                 <div className="text-center">
-                    <h1 className="lg:text-6xl text-5xl lg:px-0 px-6 font-bold text-slate-900 dark:text-white">Welcome to The Heritage Market!</h1>
+                    <h1 className="lg:text-7xl md:text-6xl text-5xl lg:px-0 px-6 font-bold text-slate-900 dark:text-white">Welcome to The Heritage Market!</h1>
                     <p className="py-6 text-slate-700 dark:text-gray-400 lg:px-0 px-6">
                         The platform for buying/selling/trading things and services of all kinds with your fellow classmates across the school.<br />
                     </p>
@@ -20,7 +20,7 @@ export default function Landing() {
             </div>
             <div className="explanation min-h-fit w-full flex p-10 mb-10">
                 <div className="grid lg:grid-cols-3 grid-cols-1 gap-2 min-h-full min-w-full text-center px-2">
-                    <Card className="max-w-full max-h-200 m-2 p-0px text-left">
+                    <Card className="max-w-full max-h-200 m-2 p-0px text-left dark:bg-(--darksurface) dark:border-(--darkborder)">
                         <div className="flex align-center">
                             <div className="flex justify-center align-center items-center mr-4 text-red-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:size-10 size-8">
@@ -33,7 +33,7 @@ export default function Landing() {
                         </div>
                         <p className="min-h-22 font-normal text-gray-700 dark:text-gray-400">Developed by a group of students, we strive to develop services that help students. <br />(or at least we try to)</p>
                     </Card>
-                    <Card className="max-w-full max-h-200 m-2 p-0px text-left">
+                    <Card className="max-w-full max-h-200 m-2 p-0px text-left dark:bg-(--darksurface) dark:border-(--darkborder)">
                         <div className="flex align-center">
                             <div className="flex justify-center align-center items-center mr-4 text-red-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:size-10 size-8">
@@ -47,7 +47,7 @@ export default function Landing() {
                         </div>
                         <p className="min-h-22 font-normal text-gray-700 dark:text-gray-400">This platform lets you reach a wider audience at any given time of day, be you in school to advertise/buy or not.</p>
                     </Card>
-                    <Card className="max-w-full max-h-200 m-2 p-0px text-left">
+                    <Card className="max-w-full max-h-200 m-2 p-0px text-left dark:bg-(--darksurface) dark:border-(--darkborder)">
                         <div className="flex align-center">
                             <div className="flex justify-center align-center items-center mr-4 text-red-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="md:size-10 size-8">
@@ -65,7 +65,9 @@ export default function Landing() {
             <HRTrimmed />
             <div className="process-steps flex flex-col gap-4 min-w-full min-h-fit p-10 mb-10">
                 <div className="step1 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">
-                    <div className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis min-h-80"></div>
+                    <div className="flex justify-center items-center w-full">
+                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                    </div>
                     <div className="steps-text-holder p-10 md:order-last order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">1. Create an account.</h2>
                         <p className="font-normal text-gray-700 dark:text-gray-400">Sign up with your school email to get access to the platform and start exploring and/or listing.</p>
@@ -76,10 +78,14 @@ export default function Landing() {
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">2. Explore/Create listings.</h2>
                         <p className="font-normal text-gray-700 dark:text-gray-400">Browse through existing listings or create your own to showcase your goods or services. Each listing includes detailed information about the item and the seller such as the seller's target price.</p>
                     </div>
-                    <div className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis min-h-80"></div>
+                    <div className="flex justify-center items-center w-full">
+                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                    </div>
                 </div>
                 <div className="step3 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">
-                    <div className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis min-h-80"></div>
+                    <div className="flex justify-center items-center w-full">
+                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                    </div>
                     <div className="steps-text-holder p-10 md:order-last order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">3. Begin the talks.</h2>
                         <p className="font-normal text-gray-700 dark:text-gray-400">Once you find something you like, reach out to the seller, or be reached out to, and discuss the details through our built-in messenger, such as price and meeting place.</p>
@@ -90,7 +96,9 @@ export default function Landing() {
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">4. Secure the deal.</h2>
                         <p className="font-normal text-gray-700 dark:text-gray-400">Once both parties agree on the terms, meet up at the agreed location to complete the transaction.</p>
                     </div>
-                    <div className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis min-h-80"></div>
+                    <div className="flex justify-center items-center w-full">
+                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                    </div>
                 </div>
             </div>
             <HRTrimmed />

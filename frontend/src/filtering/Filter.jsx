@@ -1,6 +1,6 @@
 //import { useFilter } from "./FilterContext.jsx";
 import { FloatingLabel, Dropdown, DropdownItem, Button } from "flowbite-react";
-import ListingsDrawer from "../components/listingsDrawer.jsx";
+import ListingsDrawer from "../components/ListingsDrawer.jsx";
 
 //onChange={(e) => setFilters({ ...filters, search: e.target.value })} (in FloatingLabel)
 const Filter = () => {

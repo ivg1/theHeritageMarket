@@ -16,8 +16,14 @@ export const Server = {
             return result;
         },
         async create(body) {
+            const token = await Auth.getToken();
+            console.log(token);
             const response = await fetch(`${this.modUrl}/create`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
                 body: JSON.stringify(body ?? {})
             });
             return await response.json();
@@ -25,6 +31,10 @@ export const Server = {
         async update(id, body) {
             const response = await fetch(`${this.modUrl}/update?id=${encodeURIComponent(id)}`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
                 body: JSON.stringify(body ?? {})
             });
             return await response.json();
@@ -32,6 +42,10 @@ export const Server = {
         async delete(id) {
             const response = await fetch(`${this.modUrl}/delete?id=${encodeURIComponent(id)}`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
                 //todo: add a body with username and pass or something to see if actual and not attack
             });
             return await response.json();
@@ -54,6 +68,10 @@ export const Server = {
             });
             console.log(response);
             return await response.text();
+        },
+        async getDataByUsername(username) {
+            const response = await fetch(`${this.modUrl}/getDataByUsername?username=${encodeURIComponent(username)}`);
+            return await response.json();
         }
     },
     auth: {
@@ -78,6 +96,21 @@ export const Server = {
             });
             return await response.json();
         }
+    },
+    async uploadImage(image) {
+        const formData = new FormData();
+        formData.append("file", image);
+
+        const response = await fetch(`${url}/upload`, {
+            method: "POST",
+            body: formData
+        });
+
+        console.log("status:", response.status);
+
+        if (!response.ok) throw new Error("upload of image failed");
+
+        return await response.json();
     }
 };
 

@@ -50,12 +50,12 @@ export const lightTheme = createTheme({
     },
     button: {
         color: {
-            alternative: 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-500',
-            light: 'border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-500',
-            red: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-200',
-            default: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-200',
-			bgless: 'bg-transparent text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-600',
-			bglessOnlytext: 'bg-transparent text-slate-900 hover:text-red-600 focus:ring-slate-200 p-2',
+            alternative: 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-500 hover:cursor-pointer',
+            light: 'border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-500 hover:cursor-pointer',
+            red: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-200 hover:cursor-pointer',
+            default: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-200 hover:cursor-pointer',
+			bgless: 'bg-transparent text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-600 hover:cursor-pointer',
+			bglessOnlytext: 'bg-transparent text-slate-900 hover:text-red-600 focus:ring-slate-200 p-2 hover:cursor-pointer',
         },
     },
     accordion: {
@@ -94,12 +94,17 @@ export const lightTheme = createTheme({
             base: 'text-xl font-semibold italic text-slate-900',
         },
     },
+    avatar: {
+        root: {
+            base: 'hover:cursor-pointer'
+        }
+    }
 });
 
 export const darkTheme = createTheme({
     navbar: {
         root: {
-            base: 'border-b border-slate-800 bg-slate-950/95 px-2 py-2.5 shadow-sm backdrop-blur-sm sm:px-4',
+            base: 'border-b border-slate-800 bg-black px-2 py-2.5 shadow-sm backdrop-blur-sm sm:px-4',
             rounded: {
                 on: 'rounded',
                 off: '',
@@ -146,12 +151,12 @@ export const darkTheme = createTheme({
     },
     button: {
         color: {
-            alternative: 'border border-slate-600 bg-slate-800 text-slate-100 hover:bg-slate-700 focus:ring-slate-700',
-            light: 'border border-slate-700 bg-slate-800 text-slate-100 hover:bg-slate-700 focus:ring-slate-700',
-            red: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-400',
-            default: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-400',
-			bgless: 'bg-transparent text-shadow-white hover:bg-slate-100 focus:ring-slate-200 hover:text-red-600',
-			bglessOnlytext: 'bg-transparent text-shadow-white hover:text-red-600 focus:ring-slate-200 p-2',
+            alternative: 'border border-slate-600 bg-slate-800 text-slate-100 hover:bg-slate-700 focus:ring-slate-700 hover:cursor-pointer',
+            light: 'border border-slate-700 bg-slate-800 text-slate-100 hover:bg-slate-700 focus:ring-slate-700 hover:cursor-pointer',
+            red: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 hover:cursor-pointer',
+            default: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 hover:cursor-pointer',
+			bgless: 'bg-transparent text-shadow-white hover:bg-slate-100 focus:ring-slate-200 hover:text-red-600 hover:cursor-pointer',
+			bglessOnlytext: 'bg-transparent text-shadow-white hover:text-red-600 focus:ring-slate-200 p-2 hover:cursor-pointer',
         },
     },
     card: {
@@ -208,6 +213,11 @@ export const darkTheme = createTheme({
             base: 'text-xl font-semibold italic text-slate-100',
         },
     },
+    avatar: {
+        root: {
+            base: 'hover:cursor-pointer'
+        }
+    }
 });
 
 export default darkTheme;

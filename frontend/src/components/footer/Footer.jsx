@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 export default function Footer() {
     return (
-        <div className="footer border-t border-slate-200 bg-white text-slate-900 p-10 min-h-fit h-100 max-w-screen dark:border-slate-700 dark:bg-slate-950 dark:text-white smooth-trans">
+        <div className="footer border-t border-slate-200 bg-white text-slate-900 p-10 min-h-fit h-100 max-w-screen dark:border-(--darkborder) dark:bg-(--darkbg) dark:text-white smooth-trans">
             <div className="footer-content flex flex-col lg:flex-row justify-between items-center mb-10">
                 <div className="footer-logo flex items-center mb-4 md:mb-0">
                     <img draggable="false" src="/favicon.png" alt="Heritage Market Logo" className="h-20 mr-2" />
@@ -35,7 +35,7 @@ export default function Footer() {
                 </div>
                 <div className="link-group flex flex-col m-2 mb-6">
                     <h1 className="text-xl font-bold mb-2">Contact us</h1>
-                    <p className="text-slate-600 dark:text-gray-400">Email:<br /> <Link to="mailto:info@hpsmarket.com" className="text-red-600 hover:text-red-500">info@hpsmarket.com</Link></p>
+                    <p className="text-slate-600 dark:text-gray-400">Email:<br /> <Link to="mailto:info@gmail.com" className="text-red-600 hover:text-red-500">info@gmail.com</Link></p>
                     <p className="text-slate-600 dark:text-gray-400">Phone:<br /> <Link to="tel:+00000000000" className="text-red-600 hover:text-red-500">+00000000000</Link></p>
                 </div>
             </div>

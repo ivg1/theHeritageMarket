@@ -43,8 +43,8 @@ export default function SignupPage() {
 
     return (
         <>
-            <div className="auth-container min-w-screen min-h-screen flex items-center justify-center py-10">
-                <div className="auth-holder w-100 h-fit bg-white dark:bg-black rounded-2xl px-4 pt-8 border-solid border-2 dark:border-gray-700 border-gray-200">
+            <div className="auth-container min-w-screen min-h-screen flex items-center justify-center sm:py-10">
+                <div className="auth-holder w-screen h-screen sm:w-100 sm:h-fit bg-white dark:bg-black sm:rounded-2xl px-4 pt-8 sm:border-solid sm:border-2 dark:border-gray-700 border-gray-200">
                     <div className="flex flex-col justify-center mb-6">
                         <h1 className="text-4xl font-bold text-center mb-2">Sign Up</h1>
                     </div>

@@ -3,16 +3,18 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 import "./App.css";
+
 import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import ComingSoon from "./pages/comingsoon.jsx";
 
 import SignupPage from "./pages/auth/SignupPage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
-
 import Landing from "./pages/landing/Landing.jsx";
+import About from "./pages/about/About.jsx";
 
 import Listings from "./pages/listings/Listings.jsx";
+import DisplayFullListing from "./pages/listings/DisplayFullListing.jsx";
 
 import { darkTheme, lightTheme } from "./themes.js";
 import { ThemeProvider, useThemeMode } from "flowbite-react";
@@ -52,11 +54,10 @@ function AppShell() {
                     <Routes>
                         <Route path="/" exact element={<Landing />} />
                         <Route path="/listings" element={<Listings />} />
+                        <Route path="/listings/:listingId" element={<DisplayFullListing />} />
 
                         <Route path="/messenger" element={<ComingSoon />} />
-                        <Route path="/about" element={<ComingSoon />} />
-                        <Route path="/account" element={<ComingSoon />} />
-                        <Route path="/support" element={<ComingSoon />} />
+                        <Route path="/about" element={<About />} />
                         
                         {/* <Route path="/auth" element={<Authentication />} /> */}
 

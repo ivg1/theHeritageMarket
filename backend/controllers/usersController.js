@@ -25,6 +25,21 @@ const getUserById_get = async (req, res) => {
     }
 }
 
+const getUserDataByUsername_get = async (req, res) => {
+    try {
+        const { username } = req.query;
+        const user = await Users.auth.getListingDataByUsername(username);
+        console.log(user);
+
+        if (!user) return res.status(404).json({ message: "user not found" });
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed getting user id by username (someone must be playing with the api)" });
+    }
+};
+
 /*
 const createUser_post = async (req, res) => {
     try {
@@ -88,7 +103,8 @@ const deleteUser_post = async (req, res) => {
 module.exports = {
     getNumUsers_get,
     getUserById_get,
-    /* createUser_post, */
+    // createUser_post,
+    getUserDataByUsername_get,
     updateUser_post,
     deleteUser_post
 }
