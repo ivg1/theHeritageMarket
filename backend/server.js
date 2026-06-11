@@ -29,12 +29,12 @@ app.use("/uploads", express.static("uploads"));
 
 app.post("/upload", upload.single("file"), async (req, res) => {
     try {
-        const outputFile = Date.now() + "_" + (Math.floor(Math.random() * 10000)) + ".jpg";
+        const outputFile = Date.now() + "_" + (Math.floor(Math.random() * 10000)) + ".jpeg";
         const outputPath = "uploads/" + outputFile;
 
         //compression
         await sharp(req.file.buffer)
-            .resize({ width: 1440 })
+            //.resize({ width: 1440 })
             .jpeg({ quality: 80 })
             .toFile(outputPath);
 

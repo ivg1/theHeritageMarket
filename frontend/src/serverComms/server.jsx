@@ -112,7 +112,7 @@ export const Server = {
 
         console.log("status:", response.status);
 
-        if (!response.ok) next(new Error("image upload failed"));
+        if (!response.ok) throw new Error("image upload failed");
 
         return await response.json();
     }
