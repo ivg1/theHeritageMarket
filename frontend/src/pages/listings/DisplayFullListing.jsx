@@ -61,7 +61,7 @@ export default function DisplayFullListing() {
 		<div className="min-w-screen min-h-screen p-6 flex flex-col lg:grid lg:grid-cols-2 gap-2">
 			<div className="min-w-full">
 				<div className="p-2 flex flex-col md:flex-row justify-start">
-					<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first">
+					<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden">
 						{images.length > 0 ? (
 							images.map((image) => (
 								<img className="w-15 h-15 aspect-square bg-gray-200 rounded-lg hover:cursor-pointer opacity-80 hover:opacity-100" key={image} src={image} onClick={() => { setMainImage(image, this) }}/>

@@ -1,5 +1,6 @@
-import { Button, Checkbox, Label, TextInput, useThemeMode } from "flowbite-react";
+import { Button, Checkbox, Label, TextInput, useThemeMode, Toast, ToastToggle } from "flowbite-react";
 import "./SignupPage.css";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
 import Server from "../../serverComms/server";
@@ -10,6 +11,9 @@ export default function LoginPage() {
 	const { computedMode, toggleMode } = useThemeMode();
 	const isDarkMode = computedMode === "dark";
 	const navigate = useNavigate();
+
+	const [someError, setSomeError] = useState("");
+	const [showError, setShowError] = useState(true);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -33,6 +37,8 @@ export default function LoginPage() {
 
 		} catch (err) {
 			console.error("login failed", err);
+			setSomeError("Wrong username or password.");
+			setShowError(true);
 		}
 	};
 
@@ -46,7 +52,7 @@ export default function LoginPage() {
 					<form className="flex min-w-full flex-col gap-4" id="login-form" onSubmit={handleSubmit}>
 						<div className="form-item">
 							<div className="mb-2 block">
-								<Label htmlFor="username">Username/email:&nbsp;<span className="text-red-600">*</span></Label>
+								<Label htmlFor="username">Username:&nbsp;<span className="text-red-600">*</span></Label>
 							</div>
 							<TextInput id="username" name="username" type="text" placeholder="user1234" required shadow />
 						</div>
@@ -87,6 +93,14 @@ export default function LoginPage() {
 			<div className="gohome-corner absolute left-0 top-0 p-4">
 				<Link to="/"><img draggable="false" src="/favicon.png" className="mr-3 h-12"></img></Link>
 			</div>
+			{someError && showError && (
+				<div className="min-w-screen fixed flex top-0 left-0 p-4">
+					<Toast className="rounded-xl bg-red-100 text-red-800 p-4 z-1000 min-w-full">
+                        {someError}
+                        <ToastToggle className="bg-red-100 hover:bg-red-200" onDismiss={() => setShowError(false)} />
+                    </Toast>
+				</div>
+			)}
 		</>
 	)
 }

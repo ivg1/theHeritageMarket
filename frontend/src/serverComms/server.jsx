@@ -84,6 +84,8 @@ export const Server = {
                 },
                 body: JSON.stringify(body)
             });
+            
+            if (!response.ok) throw new Error("SIGNUP FAILED");
             return await response.json();
         },
         async login(body) {
@@ -110,7 +112,7 @@ export const Server = {
 
         console.log("status:", response.status);
 
-        if (!response.ok) throw new Error("upload of image failed");
+        if (!response.ok) next(new Error("image upload failed"));
 
         return await response.json();
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Checkbox, Label, TextInput, Textarea, Radio, FileInput, HelperText } from "flowbite-react";
+import { Button, Checkbox, Label, TextInput, Textarea, Radio, FileInput, HelperText, Toast, ToastToggle } from "flowbite-react";
 import "./CreateListing.css";
 
 import Server from "../serverComms/server";
@@ -7,7 +7,9 @@ import Auth from "../auth/auth";
 
 export default function CreateListing({ open, onClose }) {
     const [isSubmitted, setIsSubmitted] = useState(false);
-    let hasInfo = true;
+    const [hasInfo, setHasInfo] = useState(true);
+    const [someError, setSomeError] = useState("");
+    const [showError, setShowError] = useState(true);
 
     //prevent background scrolling
     useEffect(() => {
@@ -39,7 +41,9 @@ export default function CreateListing({ open, onClose }) {
 
     const handleClose = () => {
         if (hasInfo && !window.confirm("Discard listing?")) return;
+
         setIsSubmitted(false);
+        setSomeError("");
         onClose();
     };
 
@@ -49,59 +53,88 @@ export default function CreateListing({ open, onClose }) {
         if (isSubmitted) return;
         setIsSubmitted(true);
 
+        setSomeError("");
+
         const formData = new FormData(e.target);
         const values = Object.fromEntries(formData.entries());
         console.log(values);
 
         const images = formData.getAll("images");
 
-        const uploadPromises = images.map(async (image) => Server.uploadImage(image) );
+        const allowedTypes = [
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/webp"
+        ];
+        
+        for (const image of images) {
+            if (!allowedTypes.includes(image.type)) {
+                setSomeError(`${image.name} is not a supported image type.`);
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+        }
 
-        const results = await Promise.all(uploadPromises);
-        const imageUrls = results.map((r) => r.image_url);
-        console.log(imageUrls);
-
-        const goodTags = values.tags.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
-
-        const username = await Auth.getUsername();
-        const userData = await Server.users.getDataByUsername(username); //yes i dont leak anything other than email, phone and id here
-        const sellerId = userData.id;
-        const sellerEmail = userData.email;
-        const sellerPhone = userData.phone;
-
-        const toSend = {
-            title: values.title,
-            description: values.desc,
-            price: Number(values.price),
-            tags: goodTags,
-            images: imageUrls,
-            seller_id: sellerId,
-            seller_email: sellerEmail,
-            seller_phone: sellerPhone,
-            email_show: (values.includeEmail === "on"),
-            phone_show: (values.includePhone === "on"),
-            is_physical: (values.type === "physical"),
-            negotiable: (values.negotiable === "on")
-        };
-        console.log(toSend);
+        let imageUrls = [];
+        try {
+            const uploadPromises = images.map(async (image) => Server.uploadImage(image) );
+            
+            const results = await Promise.all(uploadPromises);
+            imageUrls = results.map((r) => r.image_url);
+            console.log(imageUrls);
+        } catch (err) {
+            console.error(err);
+            setSomeError("Failed to upload one or more images.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
 
         try {
+            const goodTags = [...new Set(values.tags.split(",").map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0))];
+
+            const username = await Auth.getUsername();
+            const userData = await Server.users.getDataByUsername(username); //yes i dont leak anything other than email, phone and id here
+            const sellerId = userData.id;
+            const sellerEmail = (values.includeEmail === "on") ? userData.email : "";
+            const sellerPhone = (values.includePhone === "on") ? userData.phone : "";
+
+            const toSend = {
+                title: values.title,
+                description: values.desc,
+                price: Number(values.price),
+                tags: goodTags,
+                images: imageUrls,
+                seller_id: sellerId,
+                seller_email: sellerEmail,
+                seller_phone: sellerPhone,
+                email_show: (values.includeEmail === "on"),
+                phone_show: (values.includePhone === "on"),
+                is_physical: (values.type === "physical"),
+                negotiable: (values.negotiable === "on")
+            };
+            console.log(toSend);
+
 			const response = await Server.listings.create(toSend);
 			console.log("listing create response", response);
 
+            setHasInfo(false);
+            onClose();
+            window.location.reload();
 		} catch (err) {
 			console.error("listing creation failed", err);
+            setSomeError("Failed to create listing. (server might be down or double check everything)");
+            setShowError(true);
+            setIsSubmitted(false);
 		}
-
-        hasInfo = false;
-        onClose();
-        window.location.reload();
     };
 
     return (
-        <div className="create-listing-overlay fixed inset-0 flex items-start justify-center overflow-hidden sm:items-center z-2000">
+        <div className="create-listing-overlay fixed inset-0 flex items-start justify-center overflow-hidden sm:items-center z-900">
             <div className="create-listing-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" />
-            <div className="create-listing-panel relative z-10 w-full max-w-200 max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain sm:rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-950">
+            <div className="create-listing-panel relative z-1000 w-full max-w-200 max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain sm:rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-950">
                 <Button
                     onClick={handleClose}
                     color="bglessOnlyText"
@@ -172,11 +205,11 @@ export default function CreateListing({ open, onClose }) {
                                 </div>
                             </div>
                             <div className="form-item">
-                                {/* !! todo: rlly got to change this up later to use https://picrd.com/docs */}
+                                {/* !! todo: rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server*/}
                                 <div id="images-upload">
                                     <Label htmlFor="images" className="mb block">Upload images</Label>
-                                    <FileInput id="images" name="images" multiple required />
-                                    <HelperText>Upload images for your listing (max. 10MB each).</HelperText>
+                                    <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp" multiple required />
+                                    <HelperText>Upload images for your listing (max. 10MB each). Only PNG, JPG, JPEG, WEBP</HelperText>
                                 </div>
                             </div>
                             <div className="flex justify-end mt-10 mr-2 mb-2">
@@ -185,6 +218,14 @@ export default function CreateListing({ open, onClose }) {
                         </form>
                     </div>
                 </div>
+                {someError && showError && (
+                    <div className="min-w-screen fixed flex top-0 left-0 p-4">
+                        <Toast className="rounded-xl bg-red-100 text-red-800 p-4 z-1200 min-w-full">
+                            {someError}
+                            <ToastToggle className="bg-red-100 hover:bg-red-200" onDismiss={() => setShowError(false)} />
+                        </Toast>
+                    </div>
+			    )}
             </div>
         </div>
     )
