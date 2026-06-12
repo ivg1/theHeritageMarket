@@ -22,6 +22,8 @@ import RelationToSchool from "./pages/legal/RelationToSchool.jsx";
 import { darkTheme, lightTheme } from "./themes.js";
 import { ThemeProvider, useThemeMode } from "flowbite-react";
 
+import ScrollToTop from "./components/ScrollToTop";
+
 function AppShell() {
     const location = useLocation();
 
@@ -78,6 +80,7 @@ function AppShell() {
 export default function App() {
     return (
         <Router>
+            <ScrollToTop />
             <AppShell />
         </Router>
     );
