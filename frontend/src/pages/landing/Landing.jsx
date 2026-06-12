@@ -88,7 +88,7 @@ export default function Landing() {
                     </div>
                     <div className="steps-text-holder p-10 md:order-last order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">3. Begin the talks.</h2>
-                        <p className="font-normal text-gray-700 dark:text-gray-400">Once you find something you like, reach out to the seller, or be reached out to, and discuss the details through our built-in messenger, such as price and meeting place.</p>
+                        <p className="font-normal text-gray-700 dark:text-gray-400">Once you find something you like, reach out to the seller, and discuss the details through our built-in messenger, such as price and meeting place.</p>
                     </div>
                 </div>
                 <div className="step4 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">

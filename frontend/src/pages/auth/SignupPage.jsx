@@ -108,8 +108,12 @@ export default function SignupPage() {
                             <Checkbox id="agree" name="agree" color="red" />
                             <Label htmlFor="agree" className="flex">
                                 I agree with the&nbsp;
-                                <Link to="/tos" className="text-red-600 hover:underline">
-                                    terms and conditions
+                                <Link to="/legal/terms-of-service" target="_blank" className="text-red-600 hover:underline">
+                                    terms of service
+                                </Link>
+                                &nbsp;and&nbsp;
+                                <Link to="/legal/privacy-policy" target="_blank" className="text-red-600 hover:underline">
+                                    privacy policy
                                 </Link>
                             </Label>
                         </div>

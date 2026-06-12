@@ -14,6 +14,7 @@ app.listen(port, async () => {
     
 });
 
+//uploading images code
 const multer = require("multer");
 const path = require("path");
 const sharp = require("sharp");
@@ -29,13 +30,13 @@ app.use("/uploads", express.static("uploads"));
 
 app.post("/upload", upload.single("file"), async (req, res) => {
     try {
-        const outputFile = Date.now() + "_" + (Math.floor(Math.random() * 10000)) + ".jpeg";
+        const outputFile = Date.now() + "_" + (Math.floor(Math.random() * 10000)) + ".webp";
         const outputPath = "uploads/" + outputFile;
 
         //compression
         await sharp(req.file.buffer)
             //.resize({ width: 1440 })
-            .jpeg({ quality: 80 })
+            .webp({ quality: 85, effort: 2 })
             .toFile(outputPath);
 
 

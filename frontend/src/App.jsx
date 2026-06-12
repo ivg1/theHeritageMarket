@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
@@ -15,6 +14,10 @@ import About from "./pages/about/About.jsx";
 
 import Listings from "./pages/listings/Listings.jsx";
 import DisplayFullListing from "./pages/listings/DisplayFullListing.jsx";
+
+import TermsOfService from "./pages/legal/TermsOfService.jsx";
+import PrivacyPolicy from "./pages/legal/Privacy.jsx";
+import RelationToSchool from "./pages/legal/RelationToSchool.jsx";
 
 import { darkTheme, lightTheme } from "./themes.js";
 import { ThemeProvider, useThemeMode } from "flowbite-react";
@@ -52,18 +55,16 @@ function AppShell() {
                 <Header />
                 <div className="padding-buffer pt-22 md:pt-18">
                     <Routes>
-                        <Route path="/" exact element={<Landing />} />
+                        <Route path="/" element={<Landing />} />
                         <Route path="/listings" element={<Listings />} />
                         <Route path="/listings/:listingId" element={<DisplayFullListing />} />
 
                         <Route path="/messenger" element={<ComingSoon />} />
                         <Route path="/about" element={<About />} />
-                        
-                        {/* <Route path="/auth" element={<Authentication />} /> */}
 
-                        <Route path="/legal/terms-of-service" element={<ComingSoon />} />
-                        <Route path="/legal/privacy-policy" element={<ComingSoon />} />
-                        <Route path="/legal/relation-to-school" element={<ComingSoon />} />
+                        <Route path="/legal/terms-of-service" element={<TermsOfService />} />
+                        <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
+                        <Route path="/legal/relation-to-school" element={<RelationToSchool />} />
 
                         <Route path="*" element={<ComingSoon />} />
                     </Routes>
