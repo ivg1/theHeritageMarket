@@ -85,6 +85,12 @@ export default function CreateListing({ open, onClose }) {
                 setIsSubmitted(false);
                 return;
             }
+            if (image.size > 10 * 1024 * 1024) {
+                setSomeError(`${image.name} exceeds 10MB.`);
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
         }
 
         let imageUrls = [];
@@ -96,7 +102,7 @@ export default function CreateListing({ open, onClose }) {
             console.log(imageUrls);
         } catch (err) {
             console.error(err);
-            setSomeError("Failed to upload one or more images.", err);
+            setSomeError(`Failed to upload one or more images: ${err}`);
             setShowError(true);
             setIsSubmitted(false);
             return;
