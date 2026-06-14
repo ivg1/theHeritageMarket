@@ -40,7 +40,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
             .toFile(outputPath);
 
 
-        res.json({ image_url: `${process.env.SERVER_URL}/uploads/${outputFile}` });
+        res.status(200).json({ image_url: `${process.env.SERVER_URL}/uploads/${outputFile}` });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "upload failed" });
