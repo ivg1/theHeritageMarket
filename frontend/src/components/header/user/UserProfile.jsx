@@ -16,7 +16,7 @@ export default function UserProfile() {
 	return (
 		<Dropdown
 			label={
-				<Avatar alt="User account" img="" rounded className="pr-2" />
+				<Avatar alt="User account" img="" rounded className="pr-2 hover:cursor-pointer" />
 			}
 			arrowIcon={false}
 			inline

@@ -59,7 +59,6 @@ export const Server = {
         },
         async numUsers() {
             const token = await Auth.getToken();
-            console.log(token);
             const response = await fetch(`${this.modUrl}/getNum`, {
                 headers: {
                     "Content-Type": "application/json",
@@ -70,7 +69,27 @@ export const Server = {
             return await response.text();
         },
         async getDataByUsername(username) {
-            const response = await fetch(`${this.modUrl}/getDataByUsername?username=${encodeURIComponent(username)}`);
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/getDataByUsername?username=${encodeURIComponent(username)}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                }
+            });
+            return await response.json();
+        },
+
+        //new thing im doing rn, dont forget to finish
+        async update(body) {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/update`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify(body ?? {})
+            });
             return await response.json();
         }
     },
@@ -114,6 +133,18 @@ export const Server = {
 
         if (!response.ok) throw new Error("image upload failed");
 
+        return await response.json();
+    },
+    async me() {
+        const token = await Auth.getToken();
+        const response = await fetch(`${url}/me`, {
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token
+            }
+        });
+
+        if (!response.ok) throw new Error("WRONG CREDENTIALS"); //geez, how could i have forgotten to add this???
         return await response.json();
     }
 };

@@ -1,6 +1,14 @@
 const { pool } = require("./db.js");
 
 const Users = {
+    async me(id) {
+        try {
+            const result = await pool.query("SELECT id, username FROM users WHERE id = $1", [id]);
+            return result.rows[0];
+        } catch (err) {
+            console.error("error in users db me()", err);
+        }
+    },
     auth: {
         async signup(username, email, password_hash, phone, fname, lname) {
             const query = "INSERT INTO users (username, email, password_hash, phone, fname, lname) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email";
@@ -55,7 +63,7 @@ const Users = {
             }
         },
         async getUserById(id) {
-            const query = "SELECT id, username, email, phone FROM users WHERE id = $1";
+            const query = "SELECT id, username, email, profile_image, fname, lname, created_at, listings_posted, about FROM users WHERE id = $1";
 
             try {
                 const result = await pool.query(query, [id]);
@@ -71,8 +79,8 @@ const Users = {
                 throw err;
             }
         },
-        async getListingDataByUsername(username) {
-            const query = "SELECT id, email, phone FROM users WHERE username = $1";
+        async getUserDataByUsername(username) {
+            const query = "SELECT id, username, email, profile_image, fname, lname, created_at, listings_posted, about FROM users WHERE username = $1";
 
             try {
                 const result = await pool.query(query, [username]);
@@ -163,7 +171,59 @@ const Users = {
                 console.error("error in users db update.phone()", err);
                 throw err;
             }
-        }
+        },
+        async about(about, id) {
+            const query = "UPDATE users SET about = $1 WHERE id = $2 RETURNING *";
+            const values = [about, id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db changed about for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.about()", err);
+                throw err;
+            }
+        },
+        async fname(fname, id) {
+            const query = "UPDATE users SET fname = $1 WHERE id = $2 RETURNING *";
+            const values = [fname, id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db changed fname for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.fname()", err);
+                throw err;
+            }
+        },
+        async lname(lname, id) {
+            const query = "UPDATE users SET lname = $1 WHERE id = $2 RETURNING *";
+            const values = [lname, id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db changed lname for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.lname()", err);
+                throw err;
+            }
+        },
+        async profile_image(profile_image, id) {
+            const query = "UPDATE users SET profile_image = $1 WHERE id = $2 RETURNING *";
+            const values = [profile_image, id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db changed profile_image for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.profile_image()", err);
+                throw err;
+            }
+        },
     },
     danger: {
         async delete(id) {

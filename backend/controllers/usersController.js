@@ -28,7 +28,7 @@ const getUserById_get = async (req, res) => {
 const getUserDataByUsername_get = async (req, res) => {
     try {
         const { username } = req.query;
-        const user = await Users.auth.getListingDataByUsername(username);
+        const user = await Users.auth.getUserDataByUsername(username);
         console.log(user);
 
         if (!user) return res.status(404).json({ message: "user not found" });
@@ -66,7 +66,9 @@ const createUser_post = async (req, res) => {
 
 const updateUser_post = async (req, res) => {
     try {
-        const { id, username, email, phone } = req.body;
+        const { username, email, phone, about, fname, lname, profile_image } = req.body;
+        //this is new over here. dont forget to finish
+        const id = req.userId;
 
         let userChanges = [];
         if (username) {
@@ -77,7 +79,19 @@ const updateUser_post = async (req, res) => {
         }
         if (phone) {
             userChanges.push(await Users.update.phone(phone, id));
-        } 
+        }
+        if (about) {
+            userChanges.push(await Users.update.about(about, id));
+        }
+        if (fname) {
+            userChanges.push(await Users.update.fname(fname, id));
+        }
+        if (lname) {
+            userChanges.push(await Users.update.lname(lname, id));
+        }
+        if (profile_image) {
+            userChanges.push(await Users.update.profile_image(profile_image, id));
+        }
 
         console.log("user updated");
         return res.status(200).json({ changes: userChanges });

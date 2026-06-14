@@ -6,6 +6,7 @@ import "./App.css";
 import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
 import ComingSoon from "./pages/comingsoon.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 import SignupPage from "./pages/auth/SignupPage.jsx";
 import LoginPage from "./pages/auth/LoginPage.jsx";
@@ -18,6 +19,9 @@ import DisplayFullListing from "./pages/listings/DisplayFullListing.jsx";
 import TermsOfService from "./pages/legal/TermsOfService.jsx";
 import PrivacyPolicy from "./pages/legal/Privacy.jsx";
 import RelationToSchool from "./pages/legal/RelationToSchool.jsx";
+
+import Profile from "./pages/account/Profile.jsx";
+import Settings from "./pages/account/Settings.jsx";
 
 import { darkTheme, lightTheme } from "./themes.js";
 import { ThemeProvider, useThemeMode } from "flowbite-react";
@@ -55,7 +59,7 @@ function AppShell() {
         <ThemeProvider theme={activeTheme}>
             <div className={shellClassName}>
                 <Header />
-                <div className="padding-buffer pt-22 md:pt-18">
+                <div className="padding-buffer pt-16">
                     <Routes>
                         <Route path="/" element={<Landing />} />
                         <Route path="/listings" element={<Listings />} />
@@ -64,11 +68,15 @@ function AppShell() {
                         <Route path="/messenger" element={<ComingSoon />} />
                         <Route path="/about" element={<About />} />
 
+                        <Route path="/profile/:userId" element={<Profile />} />
+                        <Route path="/dashboard" element={<ComingSoon />} />
+                        <Route path="/settings" element={<Settings />} />
+
                         <Route path="/legal/terms-of-service" element={<TermsOfService />} />
                         <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
                         <Route path="/legal/relation-to-school" element={<RelationToSchool />} />
 
-                        <Route path="*" element={<ComingSoon />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
                 <Footer />
@@ -79,9 +87,11 @@ function AppShell() {
 
 export default function App() {
     return (
-        <Router>
-            <ScrollToTop />
-            <AppShell />
-        </Router>
+        <div className="">
+            <Router>
+                <ScrollToTop />
+                <AppShell />
+            </Router>   
+        </div>
     );
 }

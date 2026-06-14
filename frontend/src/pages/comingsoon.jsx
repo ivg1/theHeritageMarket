@@ -4,7 +4,7 @@ export default function ComingSoon() {
             <div className="text-center">
                 <h1 className="md:text-6xl text-4xl font-bold text-black dark:text-white">Coming soon</h1>
                 <p className="py-6 text-gray-400">
-                    Page currently under development
+                    Currently in the making.
                 </p>
             </div>
         </div>

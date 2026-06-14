@@ -61,7 +61,7 @@ export default function DisplayFullListing() {
 		<div className="min-w-screen min-h-screen p-6 flex flex-col lg:grid lg:grid-cols-2 gap-2">
 			<div className="min-w-full">
 				<div className="p-2 flex flex-col md:flex-row justify-start">
-					<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden">
+					<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden max-h-screen scrollbar-thumb-black md:[direction:rtl] scrollbar-thin pl-1">
 						{images.length > 0 ? (
 							images.map((image) => (
 								<img className="w-15 h-15 aspect-square bg-gray-200 rounded-lg hover:cursor-pointer opacity-80 hover:opacity-100" key={image} src={image} onClick={() => { setMainImage(image, this) }}/>
@@ -89,7 +89,7 @@ export default function DisplayFullListing() {
 						</div>
 						<div className="mb-6">
 							<h2 className="text-2xl font-semibold">Description:</h2>
-							<p>{listing.description}</p>
+							<p className="whitespace-pre-wrap">{listing.description}</p>
 						</div>
 						<div className=" flex mb-6 gap-2">
 							{tags.length > 0 ? (
@@ -101,6 +101,28 @@ export default function DisplayFullListing() {
 							) : (
 								<div className="">(no tags given)</div>
 							)}
+						</div>
+						<div className="md:flex md:flex-col grid grid-cols-2 min-w-full gap-4 my-4">
+							{listing.email_show ? (
+								<div className="contact-card bg-red-800 text-white md:w-1/2 min-h-20 rounded-2xl">
+									<Link to={`mailto:${listing.seller_email}`}>
+										<div className="min-w-full min-h-full rounded-2xl p-3">
+											<h1 className="text-xl font-bold">Email:</h1>
+											<p className="">{listing.seller_email}</p>
+										</div>
+									</Link>
+								</div>
+							) : (<></>)}
+							{listing.phone_show ? (
+								<div className="contact-card bg-green-800 text-white md:w-1/2 min-h-20 rounded-2xl">
+									<Link to={`phone:${listing.seller_phone}`}>
+										<div className="min-w-full min-h-full rounded-2xl p-3">
+											<h1 className="text-xl font-bold">Phone number:</h1>
+											<p className="">{listing.seller_phone}</p>
+										</div>
+									</Link>
+								</div>
+							) : (<></>)}
 						</div>
 					</div>
 					<div className="other mt-20">

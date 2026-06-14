@@ -38,7 +38,7 @@ export default function Header() {
     }, [location.pathname]);
 
     return (
-        <Navbar className="header py-2 px-5 min-w-screen smooth-trans fixed z-11 dark:bg-(--darkbg) dark:backdrop-blur-sm">
+        <Navbar className="header py-2 px-5 min-w-screen smooth-trans fixed z-11">
             <NavbarBrand href="/">
                 <img draggable="false"src="/favicon.png" className="mr-3 h-12" alt="Heritage Market Logo" />
                 <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white hidden md:flex ">Heritage Market</span>

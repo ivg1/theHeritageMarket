@@ -65,10 +65,20 @@ export default function CreateListing({ open, onClose }) {
             "image/jpeg",
             "image/jpg",
             "image/png",
-            "image/webp"
+            "image/webp",
+            "image/heic",
+            "image/heif"
         ];
+
+        if (images.length > 6) {
+            setSomeError("Select less images. (Limit 12)");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
         
         for (const image of images) {
+            console.log(image.type);
             if (!allowedTypes.includes(image.type)) {
                 setSomeError(`${image.name} is not a supported image type.`);
                 setShowError(true);
@@ -86,7 +96,7 @@ export default function CreateListing({ open, onClose }) {
             console.log(imageUrls);
         } catch (err) {
             console.error(err);
-            setSomeError("Failed to upload one or more images.");
+            setSomeError("Failed to upload one or more images.", err);
             setShowError(true);
             setIsSubmitted(false);
             return;
@@ -125,7 +135,7 @@ export default function CreateListing({ open, onClose }) {
             window.location.reload();
 		} catch (err) {
 			console.error("listing creation failed", err);
-            setSomeError("Failed to create listing. (server might be down or double check everything)");
+            setSomeError("Failed to create listing. (server might be down or double check everything)", err);
             setShowError(true);
             setIsSubmitted(false);
 		}
@@ -134,11 +144,11 @@ export default function CreateListing({ open, onClose }) {
     return (
         <div className="create-listing-overlay fixed inset-0 flex items-start justify-center overflow-hidden sm:items-center z-900">
             <div className="create-listing-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" />
-            <div className="create-listing-panel relative z-1000 w-full max-w-200 max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain sm:rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-950">
+            <div className="create-listing-panel relative z-1000 w-full max-w-200 max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain sm:rounded-2xl bg-white p-6 shadow-2xl dark:bg-(--darkbg)">
                 <Button
                     onClick={handleClose}
                     color="bglessOnlyText"
-                    className="absolute right-4 top-4 rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="absolute right-4 top-4 rounded-full p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-(--darksurface-2) dark:hover:text-white"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                         <path fillRule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
@@ -205,15 +215,15 @@ export default function CreateListing({ open, onClose }) {
                                 </div>
                             </div>
                             <div className="form-item">
-                                {/* !! todo: rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server*/}
+                                {/* todo: rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server */}
                                 <div id="images-upload">
                                     <Label htmlFor="images" className="mb block">Upload images</Label>
                                     <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp" multiple required />
-                                    <HelperText>Upload images for your listing (max. 10MB each). Only PNG, JPG, JPEG, WEBP</HelperText>
+                                    <HelperText>Upload up to 6 images for your listing (max. 10MB each). Only PNG, JPG, JPEG, WEBP.</HelperText>
                                 </div>
                             </div>
                             <div className="flex justify-end mt-10 mr-2 mb-2">
-                                <Button type="submit" color="red" disabled={isSubmitted}>Create listing</Button>
+                                <Button type="submit" color="red" disabled={isSubmitted}>{isSubmitted ? "Uploading..." : "Create listing"}</Button>
                             </div>
                         </form>
                     </div>
