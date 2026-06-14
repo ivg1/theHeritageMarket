@@ -130,10 +130,9 @@ export const Server = {
         });
 
         console.log("status:", response.status);
-        alert(1);
         console.log(response.status);
 
-        if (response.status !== 200) throw new Error("image upload failed");
+        if (!response.ok) throw new Error("image upload failed");
 
         return await response.json();
     },
