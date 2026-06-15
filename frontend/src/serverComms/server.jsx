@@ -130,7 +130,6 @@ export const Server = {
         });
 
         console.log("status:", response.status);
-        alert(1);
         console.log(response.status);
 
         if (response.status !== 200) throw new Error("image upload failed");
@@ -146,7 +145,7 @@ export const Server = {
             }
         });
 
-        if (!response.ok) throw new Error("WRONG CREDENTIALS"); //geez, how could i have forgotten to add this???
+        if (!response.ok) throw new Error("you seem to not exist mate");
         return await response.json();
     }
 };

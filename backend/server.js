@@ -30,6 +30,10 @@ app.use("/uploads", express.static("uploads"));
 
 app.post("/upload", upload.single("file"), async (req, res) => {
     try {
+        console.log("content-type:", req.headers["content-type"]);
+        console.log("files:", req.files);
+        console.log("body:", req.body);
+
         const outputFile = Date.now() + "_" + (Math.floor(Math.random() * 10000)) + ".webp";
         const outputPath = "uploads/" + outputFile;
 

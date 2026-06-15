@@ -93,6 +93,8 @@ export default function CreateListing({ open, onClose }) {
             }
         }
 
+        //here i could just go through each image in a for loop and upload them one by one
+        //but i thought why not have parallel uploads so its faster
         let imageUrls = [];
         try {
             const uploadPromises = images.map(async (image) => Server.uploadImage(image) );
