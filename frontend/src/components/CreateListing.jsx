@@ -52,23 +52,15 @@ export default function CreateListing({ open, onClose }) {
 
         if (isSubmitted) return;
         setIsSubmitted(true);
-
         setSomeError("");
 
         const formData = new FormData(e.target);
+        const values = Object.fromEntries(formData.entries());
 
-console.log("all entries:");
-for (const [k, v] of formData.entries()) {
-    console.log(k, v, typeof v);
-}
+        console.log(values);
 
-const values = Object.fromEntries(formData.entries());
-
-console.log(values);
-
-const images = formData.getAll("images");
-
-console.log(images);
+        const images = formData.getAll("images");
+        console.log(images);
 
         const allowedTypes = [
             "image/jpeg",
@@ -250,9 +242,9 @@ console.log(images);
                 </div>
                 {someError && showError && (
                     <div className="min-w-screen fixed flex top-0 left-0 p-4">
-                        <Toast className="rounded-xl bg-red-100 text-red-800 p-4 z-1200 min-w-full">
+                        <Toast>
                             {someError}
-                            <ToastToggle className="bg-red-100 hover:bg-red-200" onDismiss={() => setShowError(false)} />
+                            <ToastToggle onDismiss={() => setShowError(false)} />
                         </Toast>
                     </div>
 			    )}

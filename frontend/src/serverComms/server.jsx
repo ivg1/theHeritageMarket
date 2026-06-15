@@ -121,13 +121,14 @@ export const Server = {
         }
     },
     async uploadImage(image) {
-        console.log(image);
-        console.log(typeof image);
-        console.log(image instanceof File);
-        console.log(image.name);
-        console.log(image.size);
-        console.log(image.type);
-        
+        //debug in case
+        //console.log(image);
+        //console.log(typeof image);
+        //console.log(image instanceof File);
+        //console.log(image.name);
+        //console.log(image.size);
+        //console.log(image.type);
+
         const formData = new FormData();
         formData.append("file", image);
 
@@ -137,8 +138,7 @@ export const Server = {
         });
 
         console.log("status:", response.status);
-        console.log(response.status);
-
+        
         if (!response.ok) throw new Error("image upload failed");
 
         return await response.json();

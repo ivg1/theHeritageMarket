@@ -87,6 +87,14 @@ export const lightTheme = createTheme({
         colors: {
             gray: "focus:border-red-600 focus:ring-red-600"
         }
+    },
+    toast: {
+        root: {
+            base: "rounded-xl bg-red-100 text-red-800 p-4 z-1200 min-w-full"
+        },
+        toggle: {
+            base: "bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-800"
+        }
     }
 });
 
@@ -209,6 +217,14 @@ export const darkTheme = createTheme({
         root: {
             base: "dark:bg-(--darksurface)",
             backdrop: "dark:bg-(--darkbg)/80"
+        }
+    },
+    toast: {
+        root: {
+            base: "dark:rounded-xl dark:bg-red-800 dark:text-red-200 dark:p-4 dark:z-1200 dark:min-w-full"
+        },
+        toggle: {
+            base: "dark:bg-red-800 dark:text-red-400 dark:hover:bg-red-700 dark:hover:text-red-200"
         }
     }
 });

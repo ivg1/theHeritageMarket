@@ -95,9 +95,9 @@ export default function LoginPage() {
 			</div>
 			{someError && showError && (
 				<div className="min-w-screen fixed flex top-0 left-0 p-4">
-					<Toast className="rounded-xl bg-red-100 text-red-800 p-4 z-1000 min-w-full">
+					<Toast>
                         {someError}
-                        <ToastToggle className="bg-red-100 hover:bg-red-200" onDismiss={() => setShowError(false)} />
+                        <ToastToggle onDismiss={() => setShowError(false)} />
                     </Toast>
 				</div>
 			)}
