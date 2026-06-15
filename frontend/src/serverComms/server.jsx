@@ -121,6 +121,13 @@ export const Server = {
         }
     },
     async uploadImage(image) {
+        console.log(image);
+        console.log(typeof image);
+        console.log(image instanceof File);
+        console.log(image.name);
+        console.log(image.size);
+        console.log(image.type);
+        
         const formData = new FormData();
         formData.append("file", image);
 
