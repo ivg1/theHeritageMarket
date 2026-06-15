@@ -60,11 +60,12 @@ export default function DisplayListings({ onListingClick }) {
     if (loading) return <p className="text-gray-500 text-center">Loading...</p>;
 	if (error) return <p className="text-red-500 text-center">Error loading products</p>;
     
+	//dark:hover:bg-[#320505]
     return (
         <div className="listing-list min-w-full">
 			{listings.length > 0 ? (
 				listings.map((listing) => (
-					<div className="listing-card hover:cursor-pointer hover:bg-white dark:hover:bg-[#320505]" key={listing.id} listingid={listing.id} onClick={() => onListingClick?.(listing)}>
+					<div className="listing-card hover:cursor-pointer hover:bg-white dark:hover:bg-[#151515]" key={listing.id} listingid={listing.id} onClick={() => onListingClick?.(listing)}>
 						<div className="listing-card-image-container">
 							{
 								(() => {

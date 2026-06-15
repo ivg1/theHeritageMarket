@@ -91,6 +91,19 @@ export const Server = {
                 body: JSON.stringify(body ?? {})
             });
             return await response.json();
+        },
+        private: {
+            modUrl: `${url}/users/private`,
+            async getDataById(id) {
+                const token = await Auth.getToken();
+                const response = await fetch(`${this.modUrl}/getDataById`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                    }
+                });
+                return await response.json();
+            }
         }
     },
     auth: {
@@ -138,7 +151,7 @@ export const Server = {
         });
 
         console.log("status:", response.status);
-        
+
         if (!response.ok) throw new Error("image upload failed");
 
         return await response.json();
@@ -154,7 +167,7 @@ export const Server = {
 
         if (!response.ok) throw new Error("you seem to not exist mate");
         return await response.json();
-    }
+    },
 };
 
 export default Server;

@@ -7,11 +7,30 @@ import {
 } from "flowbite-react";
 
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import Auth from "../../../auth/auth";
+import Data from "../../../auth/data";
 
 export default function UserProfile() {
 	const navigate = useNavigate();
+
+	const [me, setMe] = useState(null);
+
+	useEffect(() => {
+		const getMe = async () => {
+			try {
+				const me = await Data.me();
+				//console.log(me);
+				if (!me) throw new Error("it seems u dont exist yet");
+
+				setMe(me);
+			} catch (err) {
+				console.error(err);
+			}
+		}
+		getMe();
+	}, [])
 
 	return (
 		<Dropdown
@@ -23,10 +42,11 @@ export default function UserProfile() {
 			
 		>
 			<DropdownHeader>
-				<span className="block text-l  text-center">{Auth.getUsername()}</span>
+				<span className="block text-l  text-center">{me?.username ?? "Guest"}</span>
 			</DropdownHeader>
 			<DropdownDivider />
-			<DropdownItem onClick={() => { navigate("/profile") }}>
+			{/* here im thinking better store the me, so that u dont have to fetch it every time */}
+			<DropdownItem onClick={() => { if (me) navigate(`/profile/${me.id}`); }}>
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 mr-2">
 					<path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
 				</svg>

@@ -1,0 +1,7 @@
+.sidebar-item {
+    padding: 4px;
+}
+
+.sidebar-item:hover {
+    background-color: black;
+}

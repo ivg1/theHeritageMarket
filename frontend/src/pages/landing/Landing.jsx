@@ -8,7 +8,7 @@ export default function Landing() {
         <div className="landing-page smooth-trans">
             <div className="hero min-h-150 flex items-center justify-center px-10">
                 <div className="text-center">
-                    <h1 className="lg:text-7xl md:text-6xl text-5xl lg:px-0 px-6 font-bold text-slate-900 dark:text-white">Welcome to The Heritage Market!</h1>
+                    <h1 className="md:text-8xl text-7xl lg:px-0 px-6 font-bold text-slate-900 dark:text-white max-w-200">Welcome to The Heritage Market!</h1>
                     <p className="py-6 text-slate-700 dark:text-gray-400 lg:px-0 px-6">
                         The platform for buying/selling/trading things and services of all kinds with your fellow classmates across the school.<br />
                     </p>

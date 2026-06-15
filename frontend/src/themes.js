@@ -24,6 +24,7 @@ export const lightTheme = createTheme({
             default: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-200 hover:cursor-pointer",
 			bgless: "bg-transparent text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-600 hover:cursor-pointer",
 			bglessOnlytext: "bg-transparent text-slate-900 hover:text-red-600 focus:ring-slate-200 p-2 hover:cursor-pointer",
+            sidebarButton: "bg-transparent text-gray-600 hover:text-red-600 hover:cursor-pointer hover:bg-gray-100 flex justify-start gap-2"
         },
     },
     accordion: {
@@ -95,7 +96,24 @@ export const lightTheme = createTheme({
         toggle: {
             base: "bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-800"
         }
+    },
+    /* i dont wanna style this component anymore, ill just make my own settings sidebar.
+    sidebar: {
+        root: {
+            base: "",
+            inner: "bg-white rounded-2xl py-3"
+        },
+        collapse: {
+            button: "rounded-2xl hover:bg-red-300",
+            icon: {
+                base: "text-red-600",
+                open: {
+                    on: "text-red-600"
+                }
+            }
+        }
     }
+    */
 });
 
 export const darkTheme = createTheme({
@@ -130,6 +148,7 @@ export const darkTheme = createTheme({
             default: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 hover:cursor-pointer",
 			bgless: "bg-transparent text-shadow-white hover:text-red-600 hover:cursor-pointer",
 			bglessOnlytext: "bg-transparent text-shadow-white hover:text-red-600 focus:ring-slate-200 p-2 hover:cursor-pointer",
+            sidebarButton: "bg-transparent text-gray-300 hover:text-red-700 hover:cursor-pointer hover:bg-(--darksurface) flex justify-start gap-2"
         },
     },
     accordion: {
@@ -226,7 +245,8 @@ export const darkTheme = createTheme({
         toggle: {
             base: "dark:bg-red-800 dark:text-red-400 dark:hover:bg-red-700 dark:hover:text-red-200"
         }
-    }
+    },
+    
 });
 
 export default darkTheme;

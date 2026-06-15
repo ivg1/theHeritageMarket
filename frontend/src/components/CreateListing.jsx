@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Checkbox, Label, TextInput, Textarea, Radio, FileInput, HelperText, Toast, ToastToggle } from "flowbite-react";
+import { Button, Checkbox, Label, TextInput, Textarea, Radio, FileInput, HelperText, Toast, ToastToggle, Spinner } from "flowbite-react";
 import "./CreateListing.css";
 
 import Server from "../serverComms/server";
@@ -72,7 +72,7 @@ export default function CreateListing({ open, onClose }) {
         ];
 
         if (images.length > 6) {
-            setSomeError("Select less images. (Limit 12)");
+            setSomeError("Select less images. (Limit 6)");
             setShowError(true);
             setIsSubmitted(false);
             return;
@@ -115,13 +115,20 @@ export default function CreateListing({ open, onClose }) {
         }
 
         try {
-            const goodTags = [...new Set(values.tags.split(",").map(tag => tag.trim().toLowerCase()).filter(tag => tag.length > 0))];
+            const goodTags = [...new Set(
+                values.tags
+                    .split(",")
+                    .map(tag => tag.trim().toLowerCase())
+                    .filter(tag => tag.length > 0)
+                    .map(tag => tag.charAt(0).toUpperCase() + tag.slice(1))
+            )];
 
-            const username = await Auth.getUsername();
+            const me = await Server.me();
+            const username = me.username;
             const userData = await Server.users.getDataByUsername(username); //yes i dont leak anything other than email, phone and id here
             const sellerId = userData.id;
-            const sellerEmail = (values.includeEmail === "on") ? userData.email : "";
-            const sellerPhone = (values.includePhone === "on") ? userData.phone : "";
+            const sellerEmail = (values.includeEmail === "on") ? userData.email : null; //honestly idk how this might happen to set null but ok
+            const sellerPhone = (values.includePhone === "on") ? userData.phone : null;
 
             const toSend = {
                 title: values.title,
@@ -133,7 +140,7 @@ export default function CreateListing({ open, onClose }) {
                 seller_email: sellerEmail,
                 seller_phone: sellerPhone,
                 email_show: (values.includeEmail === "on"),
-                phone_show: (values.includePhone === "on"),
+                phone_show: (values.includePhone === "on" && sellerPhone !== null), //for now this will work, but later to add a feedback saying user doesnt have phone added
                 is_physical: (values.type === "physical"),
                 negotiable: (values.negotiable === "on")
             };
@@ -230,12 +237,12 @@ export default function CreateListing({ open, onClose }) {
                                 {/* todo: rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server */}
                                 <div id="images-upload">
                                     <Label htmlFor="images" className="mb block">Upload images</Label>
-                                    <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp" multiple required />
-                                    <HelperText>Upload up to 6 images for your listing (max. 10MB each). Only PNG, JPG, JPEG, WEBP.</HelperText>
+                                    <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp, image/heic, image/heif" multiple required />
+                                    <HelperText>Upload up to 6 images for your listing (max. 10MB each). Only images (incl. PNG, JPG, HEIC).</HelperText>
                                 </div>
                             </div>
                             <div className="flex justify-end mt-10 mr-2 mb-2">
-                                <Button type="submit" color="red" disabled={isSubmitted}>{isSubmitted ? "Uploading..." : "Create listing"}</Button>
+                                <Button type="submit" color="red" disabled={isSubmitted}>{isSubmitted ? (<><Spinner size="sm" className="me-3" light /> Uploading...</>) : "Create listing"}</Button>
                             </div>
                         </form>
                     </div>

@@ -22,7 +22,9 @@ router.get("/", (req, res) => {
 
 router.get("/getNum", usersController.getNumUsers_get);
 router.get("/getById", usersController.getUserById_get);
-router.get("/getDataByUsername", usersController.getUserDataByUsername_get)
+router.get("/getDataByUsername", usersController.getUserDataByUsername_get);
+router.get("/private/getDataById", authJwt.verifyToken, usersController.privateGetDataById_get);
+
 
 //router.post("/create", usersController.createUser_post);
 router.post("/update", authJwt.verifyToken, usersController.updateUser_post);

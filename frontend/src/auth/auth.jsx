@@ -16,6 +16,7 @@ const Auth = {
         if (token === undefined) return false;
         return true;
     },
+    /* (NOT USED, instead i use Data.me() now to get username)
     async storeUsername(username) {
         Cookies.set("username", username, { expires: 7 });
         console.log("username cookie set");
@@ -26,6 +27,7 @@ const Auth = {
     async deleteUsernameCookie() {
         Cookies.remove("username");
     }
+    */
 }
 
 export default Auth;

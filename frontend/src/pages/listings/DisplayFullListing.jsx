@@ -102,23 +102,23 @@ export default function DisplayFullListing() {
 								<div className="">(no tags given)</div>
 							)}
 						</div>
-						<div className="md:flex md:flex-col grid grid-cols-2 min-w-full gap-4 my-4">
-							{listing.email_show ? (
-								<div className="contact-card bg-red-800 text-white md:w-1/2 min-h-20 rounded-2xl">
+						<div className="md:flex md:flex-col grid sm:grid-cols-2 grid-cols-1 min-w-full gap-4 my-4">
+							{listing.email_show && listing.seller_email ? (
+								<div className="contact-card bg-red-700 dark:bg-red-900 text-white md:w-1/2 min-h-20 rounded-2xl overflow-x-hidden">
 									<Link to={`mailto:${listing.seller_email}`}>
 										<div className="min-w-full min-h-full rounded-2xl p-3">
 											<h1 className="text-xl font-bold">Email:</h1>
-											<p className="">{listing.seller_email}</p>
+											<p className="wrap-break-word">{listing.seller_email}</p>
 										</div>
 									</Link>
 								</div>
 							) : (<></>)}
-							{listing.phone_show ? (
-								<div className="contact-card bg-green-800 text-white md:w-1/2 min-h-20 rounded-2xl">
+							{listing.phone_show && listing.seller_phone ? (
+								<div className="contact-card bg-green-700 dark:bg-green-900 text-white md:w-1/2 min-h-20 rounded-2xl overflow-x-hidden">
 									<Link to={`phone:${listing.seller_phone}`}>
 										<div className="min-w-full min-h-full rounded-2xl p-3">
 											<h1 className="text-xl font-bold">Phone number:</h1>
-											<p className="">{listing.seller_phone}</p>
+											<p className="wrap-break-word">{listing.seller_phone}</p>
 										</div>
 									</Link>
 								</div>

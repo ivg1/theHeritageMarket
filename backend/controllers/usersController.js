@@ -40,6 +40,21 @@ const getUserDataByUsername_get = async (req, res) => {
     }
 };
 
+const privateGetDataById_get = async (req, res) => {
+    try {
+        const id = req.userId;
+        const user = await Users.auth.private.getDataById(id);
+        console.log(user);
+
+        if (!user) return res.status(404).json({ message: "user not found" });
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed getting data by id in privateGetDataById_get" });
+    }
+}
+
 /*
 const createUser_post = async (req, res) => {
     try {
@@ -120,5 +135,7 @@ module.exports = {
     // createUser_post,
     getUserDataByUsername_get,
     updateUser_post,
-    deleteUser_post
+    deleteUser_post,
+
+    privateGetDataById_get
 }

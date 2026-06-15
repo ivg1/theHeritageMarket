@@ -12,20 +12,20 @@ export default function Footer() {
                 <div className="quotation lg:m-0 mt-4">
                     <Blockquote className="text-lg font-normal text-slate-600 flex flex-col dark:text-gray-400">
                         <div className="text-lg font-normal text-slate-600 flex flex-col dark:text-gray-400">
-                        "A friend is someone who knows all about you and still loves you." <br /><span className="text-right">- Elbert Hubbard</span>
+                        "The only way to do great work is to love what you do." <br /><span className="text-right">- Steve Jobs</span>
                         </div>
                     </Blockquote>
                 </div>
             </div>
             <div className="footer-links md:grid lg:grid-cols-7 md:grid-cols-5 sm:flex sm:flex-col sm:align-center gap-4">
                 <div className="link-group flex flex-col m-2 mb-6">
-                    <h1 className="text-xl font-bold mb-2">Common Links</h1>
+                    <h1 className="text-xl font-bold mb-2">Links</h1>
                     <Link to="/" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Home</Link>
                     <Link to="/listings" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Listings</Link>
-                    <Link to="/account" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Account</Link>
                     <Link to="/messenger" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Messenger</Link>
+                    <Link to="/profile" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Profile</Link>
                     <Link to="/about" className="text-slate-600 hover:text-red-600 dark:text-gray-400">About Us</Link>
-                    <Link to="/support" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Support</Link>
+                    {/* <Link to="/support" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Support</Link> */}
                 </div>
                 <div className="link-group flex flex-col m-2 mb-6">
                     <h1 className="text-xl font-bold mb-2">Legal</h1>

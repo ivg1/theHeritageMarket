@@ -32,7 +32,7 @@ export default function LoginPage() {
 
 			console.log("login response", response);
 			Auth.storeToken(response);
-			Auth.storeUsername(values.username);
+			
 			navigate("/");
 
 		} catch (err) {

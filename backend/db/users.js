@@ -36,6 +36,7 @@ const Users = {
                 throw err;
             }
         },
+        //use only on server
         async getUserByEmail(email) {
             const query = "SELECT * FROM users WHERE email = $1";
             const values = [email];
@@ -49,6 +50,7 @@ const Users = {
                 throw err;
             }
         },
+
         async getUserByUsername(username) {
             const query = "SELECT * FROM users WHERE username = $1";
             const values = [username];
@@ -63,6 +65,7 @@ const Users = {
             }
         },
         async getUserById(id) {
+            //i didnt put phone here cus idk if this might get leaked in the profile page (cus the entire response is in the network tab)
             const query = "SELECT id, username, email, profile_image, fname, lname, created_at, listings_posted, about FROM users WHERE id = $1";
 
             try {
@@ -94,6 +97,25 @@ const Users = {
             } catch (err) {
                 console.error("error in users db auth.getListingDataByUsername()", err);
                 throw err;
+            }
+        },
+        private: {
+            async getDataById(id) {
+                const query = "SELECT id, username, email, phone, profile_image, fname, lname, created_at, listings_posted, about, role, is_admin FROM users WHERE id = $1";
+
+                try {
+                    const result = await pool.query(query, [id]);
+                    if (result.rows.length > 0) {
+                        console.log(`user of id ${id} found`);
+                        return result.rows[0];
+                    }
+
+                    console.log("no user found");
+                    return null;
+                } catch (err) {
+                    console.error("error in users db auth.getUserById()", err);
+                    throw err;
+                }
             }
         }
     },
