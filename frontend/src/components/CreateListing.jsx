@@ -56,10 +56,19 @@ export default function CreateListing({ open, onClose }) {
         setSomeError("");
 
         const formData = new FormData(e.target);
-        const values = Object.fromEntries(formData.entries());
-        console.log(values);
 
-        const images = formData.getAll("images");
+console.log("all entries:");
+for (const [k, v] of formData.entries()) {
+    console.log(k, v, typeof v);
+}
+
+const values = Object.fromEntries(formData.entries());
+
+console.log(values);
+
+const images = formData.getAll("images");
+
+console.log(images);
 
         const allowedTypes = [
             "image/jpeg",
@@ -97,10 +106,13 @@ export default function CreateListing({ open, onClose }) {
         //but i thought why not have parallel uploads so its faster
         let imageUrls = [];
         try {
-            for (const image in images) {
-				const result = await Server.uploadImage(image);
-				imageUrls.push(result.image_url);
-			}
+            const uploadPromises = images.map(image =>
+                Server.uploadImage(image)
+            );
+
+            const results = await Promise.all(uploadPromises);
+            imageUrls = results.map(result => result.image_url);
+
             console.log(imageUrls);
         } catch (err) {
             console.error(err);
