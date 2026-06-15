@@ -97,10 +97,10 @@ export default function CreateListing({ open, onClose }) {
         //but i thought why not have parallel uploads so its faster
         let imageUrls = [];
         try {
-            const uploadPromises = images.map(async (image) => Server.uploadImage(image) );
-            
-            const results = await Promise.all(uploadPromises);
-            imageUrls = results.map((r) => r.image_url);
+            for (const image in images) {
+				const result = await Server.uploadImage(image);
+				imageUrls.push(result.image_url);
+			}
             console.log(imageUrls);
         } catch (err) {
             console.error(err);
