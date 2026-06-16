@@ -25,7 +25,10 @@ const userLogin_post = async (req, res) => {
         const compareState = await bcrypt.compare(password, user.password_hash);
 
         if (compareState) {
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+            const token = jwt.sign({ 
+                id: user.id
+            }, process.env.JWT_SECRET);
+
             console.log("token verify: ", jwt.verify(token, process.env.JWT_SECRET));
             return res.status(200).json({ token });
         } else {

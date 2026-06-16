@@ -35,7 +35,13 @@ export default function UserProfile() {
 	return (
 		<Dropdown
 			label={
-				<Avatar alt="User account" img="" rounded className="pr-2 hover:cursor-pointer" />
+				<div className="w-11 h-11 rounded-full overflow-hidden mr-2">
+                    <img
+                        src={ (me && me.profile_image !== null) ? me.profile_image : "/placeholderProfile.png" }
+                        alt="Profile picture"
+						className="w-full h-full object-cover"
+            		/>
+            	</div>
 			}
 			arrowIcon={false}
 			inline
@@ -71,8 +77,16 @@ export default function UserProfile() {
 				</svg>
 				Settings
 			</DropdownItem>
+			{me && me.is_mod ? (
+				<DropdownItem onClick={() => { navigate("/moderation") }}>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4 mr-2">
+						<path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
+					</svg>
+					For Mods
+				</DropdownItem>
+			) : (<></>)}
 			<DropdownDivider />
-			<DropdownItem className="flex justify-between" onClick={() => { Auth.deleteToken(); Auth.deleteUsernameCookie(); window.location.reload() }}>
+			<DropdownItem className="flex justify-between" onClick={() => { Auth.deleteToken(); Data.deleteMe(); window.location.reload() }}>
 				Logout
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5 ml-2">
 					<path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />

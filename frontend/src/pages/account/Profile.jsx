@@ -1,6 +1,6 @@
 import Server from "../../serverComms/server";
 import Auth from "../../auth/auth";
-import { Avatar, HR, Button, TextInput } from "flowbite-react";
+import { HR, Button, TextInput, Textarea } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -13,7 +13,6 @@ export default function Profile() {
 
     const [editAccess, setEditAccess] = useState(false);
     const [editingAbout, setEditingAbout] = useState(false);
-    const [someError, setSomeError] = useState("");
     const [newAbout, setNewAbout] = useState("");
 
     const [isSubmitted, setSubmitted] = useState(false);
@@ -97,16 +96,18 @@ export default function Profile() {
             return;
         }
 
-        setSomeError("");
+        setError("");
 
         const formData = new FormData(e.target);
         const values = Object.fromEntries(formData.entries());
         console.log(values);
 
         try {
+            let about = newAbout;
+            if (about === "") about = "{no about}";
             //foolproof i hope, cus this avoids errors if user changed html name attribute
             const toSend = {
-                about: values.about
+                about: about
             }
 
             const response = await Server.users.update(toSend);
@@ -114,14 +115,14 @@ export default function Profile() {
 
             setUser({
                 ...user,
-                about: newAbout
+                about: about
             });
 
             setEditingAbout(false);
             setSubmitted(false);
         } catch (err) {
             console.error("updating about failed", err);
-            setSomeError("Failed to update about.");
+            setError("Failed to update about.");
             setShowError(true);
             setSubmitted(false);
             //setEditingAbout(false);
@@ -133,7 +134,13 @@ export default function Profile() {
             <div className="w-full max-w-screen min-h-200 rounded-2xl dark:border-(--darkbg)">
                 <div className="flex md:flex-row flex-col items-center justify-between p-6 ">
                     <div className="flex items-center">
-                        <Avatar img={user.profile_image} size="lg" rounded />
+                        <div className="w-30 h-30 rounded-full overflow-hidden dark:border-(--darkborder) border border-gray-200">
+                            <img
+                                src={user.profile_image !== null ? user.profile_image : "/placeholderProfile.png"}
+                                alt="Profile picture"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
                         <div className="flex md:flex-row flex-col items-center">
                             <h1 className="text-4xl font-bold ml-6">{user.username}</h1>
                             <p className="text-gray-500 ml-4">({user.fname} {user.lname})</p>
@@ -177,13 +184,13 @@ export default function Profile() {
                                 </h1>
                                 {editingAbout ? (
                                     <form onSubmit={handleAboutEdit}>
-                                        <TextInput id="about" name="about" value={newAbout} className="my-2" onChange={(e) => {
+                                        <Textarea id="about" name="about" value={newAbout} className="my-2" rows={4} onChange={(e) => {
                                             setNewAbout(e.target.value);
                                         }} />
                                         <Button color="red" type="submit" disabled={isSubmitted}>{isSubmitted ? "Saving..." : "Save"}</Button>
                                     </form>
                                 ) : (
-                                    <p>{user.about}</p>
+                                    <p className="whitespace-pre-wrap">{user.about}</p>
                                 )}
                             </div>
                         </div>

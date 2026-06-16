@@ -1,4 +1,6 @@
 const Users = require("../db/users");
+const bcrypt = require("bcrypt");
+const { hashPassword } = require("../middleware/hashPassword");
 
 const getNumUsers_get = async (req, res) => {
     try {
@@ -117,6 +119,33 @@ const updateUser_post = async (req, res) => {
     }
 }
 
+const privateResetPass_post = async (req, res) => {
+    try {
+        const { old_password, new_password } = req.body;
+        console.log(old_password, new_password);
+        const id = req.userId;
+
+        const passHash = await Users.auth.returnPassHash(id);
+        console.log(passHash);
+
+        const match = await bcrypt.compare(old_password, passHash);
+        console.log(match);
+
+        if (!match) return res.status(401).json({ error: "old password doesnt match" });
+
+        const password_hash = await hashPassword(new_password);
+        const response2 = await Users.update.password(password_hash, id);
+        if (!response2) return res.status(400).json({ error: "error storing new password hash" });
+        
+        console.log(response2);
+        return res.status(201).json({ message: "new password set" });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed resetting password in controller" });
+    }
+}
+
 //same thing here, SECURE ASAP (when done with auth)
 const deleteUser_post = async (req, res) => {
     try {
@@ -137,5 +166,6 @@ module.exports = {
     updateUser_post,
     deleteUser_post,
 
-    privateGetDataById_get
+    privateGetDataById_get,
+    privateResetPass_post
 }

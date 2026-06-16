@@ -43,7 +43,7 @@ export default function Header() {
                 <img draggable="false"src="/favicon.png" className="mr-3 h-12" alt="Heritage Market Logo" />
                 <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white hidden md:flex ">Heritage Market</span>
             </NavbarBrand>
-            <div className="flex md:order-2">
+            <div className="flex md:order-2 items-center">
                 <Button
                     type="button"
                     color="bglessOnlytext"

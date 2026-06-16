@@ -28,6 +28,8 @@ router.get("/private/getDataById", authJwt.verifyToken, usersController.privateG
 
 //router.post("/create", usersController.createUser_post);
 router.post("/update", authJwt.verifyToken, usersController.updateUser_post);
+router.post("/private/resetPass", authJwt.verifyToken, usersController.privateResetPass_post);
+
 //router.post("/delete", authJwt.verifyToken, roleCheck.requirePrivilege,  usersController.deleteUser_post);
 
 module.exports = router;

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Button } from "flowbite-react";
+import { Button, Checkbox, Label, Radio, Textarea, TextInput } from "flowbite-react";
 
 import Server from "../../serverComms/server";
+import Auth from "../../auth/auth";
 
 export default function DisplayFullListing() {
 	const navigate = useNavigate();
@@ -12,27 +13,103 @@ export default function DisplayFullListing() {
 	const [found, setFound] = useState(false);
 	const [error, setError] = useState(null);
 
+	const [editAccess, setEditAccess] = useState(false);
+	const [editing, setEditing] = useState(false);
+	const [formValues, setFormValues] = useState(null);
+	const [modAccess, setModAccess] = useState(false);
+
 	const { listingId } = useParams();
 	const id = Number(listingId);
 	
 	useEffect(() => {
 		let mounted = true;
+		let listing = null;
+
 		setLoading(true);
-		Server.listings
-			.getOne(id)
-			.then((data) => {
+		Server.listings.getOne(id)
+			.then(async (data) => {
 				if (!mounted) return;
+				listing = data;
+
 				setListing(data);
+				setFormValues(data);
+
 				setLoading(false);
 				setFound(true);
+
+				if (await Auth.loginState()) return Server.me();
+			})
+			.then(async (me) => {
+				if (!mounted) return;
+
+				console.log(me);
+				if (me && (me.id === listing.seller_id || me.is_mod)) {
+                    console.log("can edit");
+                    setEditAccess(true);
+                } else {
+                    console.log("cannot edit");
+                }
+
+				if (me && me.is_mod) setModAccess(true);
+				
 			})
 			.catch((err) => {
 				if (!mounted) return;
 				setError(err);
 				setLoading(false);
 			});
-		return () => { mounted = false };
+		return () => { 
+			mounted = false 
+		};
 	}, []);
+
+	const handleSaveChanges = async (e) => {
+		e.preventDefault();
+
+		const changes = await JSON.stringify(listing) !== JSON.stringify(formValues);
+
+		if (!changes) {
+			console.log("no changes made");
+			setEditing(false);
+			return;			
+		}
+
+		setListing(formValues);
+
+		console.log("changes made");
+
+		//formValues used
+
+		console.log(formValues);
+
+		console.log(listing.id);
+		try {
+			const toSend = {
+				id: Number(listing.id),
+				seller_id: Number(listing.seller_id),
+
+				title: formValues.title,
+				price: formValues.price,
+				negotiable: formValues.negotiable,
+				description: formValues.description,
+				seller_email: formValues.seller_email,
+				seller_phone: formValues.seller_phone,
+				email_show: formValues.email_show,
+				phone_show: formValues.phone_show
+			}
+
+			const response = await Server.listings.update(toSend);
+			console.log(response);
+
+			console.log("updated listing");
+
+			setEditing(false);
+		} catch (err) {
+			console.error(err);
+			setError(err);
+			setShowError(true);
+		}
+	}
 
 	console.log(listing);
 
@@ -50,87 +127,222 @@ export default function DisplayFullListing() {
 
 	return (
 		<div>
-		<div>
-			<Button color="bgless" className="mx-6 mt-4" onClick={() => { navigate(-1) }}>
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
-					<path fillRule="evenodd" d="M9.53 2.47a.75.75 0 0 1 0 1.06L4.81 8.25H15a6.75 6.75 0 0 1 0 13.5h-3a.75.75 0 0 1 0-1.5h3a5.25 5.25 0 1 0 0-10.5H4.81l4.72 4.72a.75.75 0 1 1-1.06 1.06l-6-6a.75.75 0 0 1 0-1.06l6-6a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
-				</svg>&nbsp;
-				Back
-			</Button>
-		</div>
-		<div className="min-w-screen min-h-screen p-6 flex flex-col lg:grid lg:grid-cols-2 gap-2">
-			<div className="min-w-full">
-				<div className="p-2 flex flex-col md:flex-row justify-start">
-					<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden max-h-screen scrollbar-thumb-black md:[direction:rtl] scrollbar-thin pl-1">
-						{images.length > 0 ? (
-							images.map((image) => (
-								<img className="w-15 h-15 aspect-square bg-gray-200 rounded-lg hover:cursor-pointer opacity-80 hover:opacity-100" key={image} src={image} onClick={() => { setMainImage(image, this) }}/>
-							))
-						) : (
-							<div className="w-15 h-15 bg-gray-200 rounded-lg flex justify-center items-center">kein<br/>images</div>
-						)}
-					</div>
-					{images.length > 0 ? (
-						<img src={images[0]} className="main-image min-w-0 flex-1 aspect-square object-contain bg-white dark:bg-black rounded-lg" />
-					) : (
-						<div className="main-image min-w-0 flex-1 flex justify-center items-center aspect-square bg-white dark:bg-black rounded-lg">NO IMAGE</div>
-					)}
-					
+			<form onSubmit={handleSaveChanges}>
+				<div className="flex justify-between">
+					<Button color="bgless" type="button" className="mx-6 mt-4" onClick={() => { navigate("/listings") }}>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
+							<path fillRule="evenodd" d="M9.53 2.47a.75.75 0 0 1 0 1.06L4.81 8.25H15a6.75 6.75 0 0 1 0 13.5h-3a.75.75 0 0 1 0-1.5h3a5.25 5.25 0 1 0 0-10.5H4.81l4.72 4.72a.75.75 0 1 1-1.06 1.06l-6-6a.75.75 0 0 1 0-1.06l6-6a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
+						</svg>&nbsp;
+						Back
+					</Button>
+					{editAccess ? (
+						<Button color={editing ? "red" : "bgless"} className="mx-6 mt-4" onClick={(e) => { 
+							if (!editing) {
+								setEditing(true);
+							} else {
+								e.target.form?.requestSubmit();
+							}
+						}}>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
+								<path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+								<path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+							</svg>&nbsp;
+							{editing ? "Save" : "Edit"}
+						</Button>
+					) : (<></>)}
 				</div>
-			</div>
-			<div className=" min-w-full">
-				<div className="flex flex-col  p-4">
-					<div>
-						<div className="flex flex-col mb-6">
-							<h1 className="text-4xl font-bold">{listing.title}</h1>
-						</div>
-						<div className="flex mb-6">
-							<h2 className="flex text-2xl font-semibold items-center">Price:&nbsp;<span className="text-3xl">€{listing.price}</span>&nbsp;{listing.negotiable ? <span className="text-sm text-red-700 flex items">(negotiable)</span> : <></>}</h2>
-						</div>
-						<div className="mb-6">
-							<h2 className="text-2xl font-semibold">Description:</h2>
-							<p className="whitespace-pre-wrap">{listing.description}</p>
-						</div>
-						<div className=" flex mb-6 gap-2">
-							{tags.length > 0 ? (
-								tags.map((tag) => (
-									<div className="border-solid border-gray-500 border rounded-2xl px-2" key={tag}>
-										{tag}
-									</div>
-								))
+				<div className="min-w-screen min-h-screen p-6 flex flex-col lg:grid lg:grid-cols-2 gap-2">
+					<div className="min-w-full">
+						<div className="p-2 flex flex-col md:flex-row justify-start">
+							<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden max-h-screen scrollbar-thumb-black md:[direction:rtl] scrollbar-thin pl-1">
+								{images.length > 0 ? (
+									images.map((image) => (
+										<img className="w-15 h-15 aspect-square bg-gray-200 rounded-lg hover:cursor-pointer opacity-80 hover:opacity-100" key={image} src={image} onClick={() => { setMainImage(image, this) }}/>
+									))
+								) : (
+									<div className="w-15 h-15 bg-gray-200 rounded-lg flex justify-center items-center">kein<br/>images</div>
+								)}
+							</div>
+							{images.length > 0 ? (
+								<img src={images[0]} className="main-image min-w-0 flex-1 aspect-square object-contain bg-white dark:bg-black rounded-lg" />
 							) : (
-								<div className="">(no tags given)</div>
+								<div className="main-image min-w-0 flex-1 flex justify-center items-center aspect-square bg-white dark:bg-black rounded-lg">NO IMAGE</div>
 							)}
-						</div>
-						<div className="md:flex md:flex-col grid sm:grid-cols-2 grid-cols-1 min-w-full gap-4 my-4">
-							{listing.email_show && listing.seller_email ? (
-								<div className="contact-card bg-red-700 dark:bg-red-900 text-white md:w-1/2 min-h-20 rounded-2xl overflow-x-hidden">
-									<Link to={`mailto:${listing.seller_email}`}>
-										<div className="min-w-full min-h-full rounded-2xl p-3">
-											<h1 className="text-xl font-bold">Email:</h1>
-											<p className="wrap-break-word">{listing.seller_email}</p>
-										</div>
-									</Link>
-								</div>
-							) : (<></>)}
-							{listing.phone_show && listing.seller_phone ? (
-								<div className="contact-card bg-green-700 dark:bg-green-900 text-white md:w-1/2 min-h-20 rounded-2xl overflow-x-hidden">
-									<Link to={`phone:${listing.seller_phone}`}>
-										<div className="min-w-full min-h-full rounded-2xl p-3">
-											<h1 className="text-xl font-bold">Phone number:</h1>
-											<p className="wrap-break-word">{listing.seller_phone}</p>
-										</div>
-									</Link>
-								</div>
-							) : (<></>)}
+							
 						</div>
 					</div>
-					<div className="other mt-20">
-						<p className="text-[12px] text-gray-500">ID: {listing.id} | Created: {listing.created_at} | Seller ID: {listing.seller_id}</p>
+					<div className=" min-w-full">
+						<div className="flex flex-col  p-4">
+							<div>
+								<div className="flex flex-col mb-6">
+									{editing ? (
+										<>
+											<Label htmlFor="title">Title:</Label>
+											<TextInput id="title" name="title" value={formValues.title} 
+												onChange={(e) => {
+													setFormValues({
+														...formValues,
+														title: e.target.value
+													});
+												}}
+											/>
+										</>
+									) : (
+										<h1 className="text-4xl font-bold">{formValues.title}</h1>
+									)}
+								</div>
+								<div className="flex mb-6">
+									<h2 className="flex text-2xl font-semibold items-center">
+										{editing ? (
+											<div className="flex flex-col mb-2">
+												<span className="text-3xl flex items-center gap-2">
+													<span className="text-2xl">Price:</span>
+													€
+													<TextInput id="price" name="price" value={formValues.price} type="number" 
+														onChange={(e) => {
+															setFormValues({
+																...formValues,
+																price: Number(e.target.value)
+															});
+														}}
+													/>
+												</span>
+												<div className="flex items-center gap-1 text-xl">
+													<Checkbox color="red" id="negotiable" name="negotiable" checked={formValues.negotiable} 
+														onChange={(e) => {
+															setFormValues({
+																...formValues,
+																negotiable: e.target.checked
+															});
+														}}
+													/>
+													<Label htmlFor="negotiable" className="text-red-600"><span className="text-sm font-bold text-red-700">Negotiable</span></Label>
+												</div>
+											</div>
+										) : (
+											<>
+												Price:&nbsp;
+												<span className="text-3xl">
+													€{formValues.price}
+												</span>&nbsp;
+												{formValues.negotiable ? <span className="text-sm text-red-700 flex items-center">(negotiable)</span> : <></>}
+											</>
+										)}
+									</h2>
+								</div>
+								<div className="mb-6">
+									<h2 className="text-2xl font-semibold">Description:</h2>
+									{editing ? (
+										<Textarea id="description" name="description" value={formValues.description} rows={4} 
+											onChange={(e) => {
+												setFormValues({
+													...formValues,
+													description: e.target.value
+												});
+											}}
+										/>
+
+									) : (
+										<p className="whitespace-pre-wrap">{formValues.description}</p>
+									)}
+								</div>
+								<div className=" flex mb-6 gap-2">
+									{tags.length > 0 ? (
+										tags.map((tag) => (
+											<div className="border-solid border-gray-500 border rounded-2xl px-2" key={tag}>
+												{tag}
+											</div>
+										))
+									) : (
+										<div className="">(no tags given)</div>
+									)}
+								</div>
+								<div className="flex flex-col min-w-full gap-4 my-4">
+									{editing ? (
+										<>
+										<div className="contact-card bg-red-700 dark:bg-red-900 text-white xl:w-1/2 w-full min-h-fit rounded-2xl overflow-x-hidden">
+											<div className="min-w-full min-h-full rounded-2xl p-3">
+												<h1 className="text-xl font-bold">Email:</h1>
+												<TextInput id="email" name="email" value={formValues.seller_email} 
+													onChange={(e) => {
+														setFormValues({
+															...formValues,
+															seller_email: e.target.value
+														});
+													}}
+												/>
+											</div>
+											<div className="flex items-center gap-1 text-xl pl-4 mb-4">
+												<Checkbox color="red" id="showEmail" name="showEmail" checked={formValues.email_show} 
+													onChange={(e) => {
+														setFormValues({
+															...formValues,
+															email_show: e.target.checked
+														});
+													}}
+												/>
+												<Label htmlFor="showEmail"><span className="text-sm">Show email</span></Label>
+											</div>
+										</div>
+										<div className="contact-card bg-green-700 dark:bg-green-900 text-white xl:w-1/2 w-full min-h-fit rounded-2xl overflow-x-hidden">
+											<div className="min-w-full min-h-full rounded-2xl p-3">
+												<h1 className="text-xl font-bold">Phone number:</h1>
+												{/* later make only mods allowed to change email and phone here ... oh and i need to fix bug where if user changes their email (for now its blocked), the listing email is still the same */}
+												<TextInput id="phone" name="phone" value={formValues.seller_phone} 
+													onChange={(e) => {
+														setFormValues({
+															...formValues,
+															seller_phone: e.target.value
+														});
+													}}
+												/>
+											</div>
+											<div className="flex items-center gap-1 text-xl pl-4 mb-4">
+												<Checkbox color="red" id="showPhone" name="showPhone" checked={formValues.phone_show} 
+													onChange={(e) => {
+														setFormValues({
+															...formValues,
+															phone_show: e.target.checked
+														});
+													}}
+												/>
+												<Label htmlFor="showPhone"><span className="text-sm">Show phone</span></Label>
+											</div>
+										</div>
+										</>
+									) : (
+										<>
+											{formValues.email_show && formValues.seller_email ? (
+												<div className="contact-card bg-red-700 dark:bg-red-900 text-white xl:w-1/2 w-full min-h-20 rounded-2xl overflow-x-hidden">
+													<Link to={`mailto:${formValues.seller_email}`}>
+														<div className="min-w-full min-h-full rounded-2xl p-3">
+															<h1 className="text-xl font-bold">Email:</h1>
+															<p className="wrap-break-word">{formValues.seller_email}</p>
+														</div>
+													</Link>
+												</div>
+											) : (<></>)}
+											{formValues.phone_show && formValues.seller_phone ? (
+												<div className="contact-card bg-green-700 dark:bg-green-900 text-white xl:w-1/2 w-full min-h-20 rounded-2xl overflow-x-hidden">
+													<Link to={`phone:${formValues.seller_phone}`}>
+														<div className="min-w-full min-h-full rounded-2xl p-3">
+															<h1 className="text-xl font-bold">Phone number:</h1>
+															<p className="wrap-break-word">{formValues.seller_phone}</p>
+														</div>
+													</Link>
+												</div>
+											) : (<></>)}
+										</>
+									)}
+								</div>
+							</div>
+							<div className="other mt-20">
+								<p className="text-[12px] text-gray-500">ID: {listing.id} | Created: {listing.created_at} | Seller ID: {listing.seller_id}</p>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+			</form>
 		</div>
 	);
 }

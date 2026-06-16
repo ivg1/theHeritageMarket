@@ -3,7 +3,7 @@ const { pool } = require("./db.js");
 const Users = {
     async me(id) {
         try {
-            const result = await pool.query("SELECT id, username FROM users WHERE id = $1", [id]);
+            const result = await pool.query("SELECT id, username, profile_image, role, is_mod FROM users WHERE id = $1", [id]);
             return result.rows[0];
         } catch (err) {
             console.error("error in users db me()", err);
@@ -33,6 +33,21 @@ const Users = {
                 return result.rows[0] || null;
             } catch (err) {
                 console.error("error in users db login()", err);
+                throw err;
+            }
+        },
+        //use only on server
+        //i think i might not use this function
+        async returnPassHash(id) {
+            const query = "SELECT password_hash FROM users WHERE id = $1";
+            const values = [id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log("db returned a password_hash");
+                return result.rows[0].password_hash || null;
+            } catch (err) {
+                console.error("error in user db checkPassMatch()", err);
                 throw err;
             }
         },
@@ -101,7 +116,7 @@ const Users = {
         },
         private: {
             async getDataById(id) {
-                const query = "SELECT id, username, email, phone, profile_image, fname, lname, created_at, listings_posted, about, role, is_admin FROM users WHERE id = $1";
+                const query = "SELECT id, username, email, phone, profile_image, fname, lname, created_at, listings_posted, about, role, is_mod FROM users WHERE id = $1";
 
                 try {
                     const result = await pool.query(query, [id]);
@@ -119,7 +134,7 @@ const Users = {
             }
         }
     },
-    checkUserExistence: async function (username, email) {
+    async checkUserExistence(username, email) {
         const query = "SELECT id FROM users WHERE username = $1 OR email = $2";
         try {
             const result = await pool.query(query, [username, email]);

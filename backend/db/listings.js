@@ -4,7 +4,7 @@ const Listings = {
     data: {
         async getHeroAll() {
             try {
-                const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings ORDER BY created_at DESC");
+                const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings WHERE visibility = true AND awaiting_moderation = false ORDER BY created_at DESC");
                 return result.rows;
             } catch (err) {
                 console.error("error in listings db data.getHeroAll()", err);
@@ -19,7 +19,19 @@ const Listings = {
                 console.error("error in listings db data.getFullData()", err);
                 throw err;
             }
-        }
+        },
+        mods: {
+            async getHeroAll() {
+                try {
+                    const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings ORDER BY created_at DESC");
+                    return result.rows;
+                } catch (err) {
+                    console.error("error in listings db data.getHeroAll()", err);
+                    throw err;
+                }
+            },
+        }   
+
     },
     async create(
         title,
@@ -126,6 +138,62 @@ const Listings = {
                 throw err;
             }
         },
+        async negotiable(negotiable, id) {
+            const query = "UPDATE listings SET negotiable = $1 WHERE id = $2 RETURNING *";
+            const values = [negotiable, id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.negotiable()", err);
+                throw err;
+            }
+        },
+        async seller_email(seller_email, id) {
+            const query = "UPDATE listings SET seller_email = $1 WHERE id = $2 RETURNING *";
+            const values = [seller_email, id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.seller_email()", err);
+                throw err;
+            }
+        },
+        async seller_phone(seller_phone, id) {
+            const query = "UPDATE listings SET seller_phone = $1 WHERE id = $2 RETURNING *";
+            const values = [seller_phone, id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.seller_phone()", err);
+                throw err;
+            }
+        },
+        async email_show(email_show, id) {
+            const query = "UPDATE listings SET email_show = $1 WHERE id = $2 RETURNING *";
+            const values = [email_show, id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.email_show()", err);
+                throw err;
+            }
+        },
+        async phone_show(phone_show, id) {
+            const query = "UPDATE listings SET phone_show = $1 WHERE id = $2 RETURNING *";
+            const values = [phone_show, id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.phone_show()", err);
+                throw err;
+            }
+        },
+
         async visibility(new_state, id) {
             const query = "UPDATE listings SET visibility = $1 WHERE id = $2 RETURNING *";
             const values = [new_state, id];
@@ -145,6 +213,30 @@ const Listings = {
                 return result.rows[0] || null;
             } catch (err) {
                 console.error("error in listings db danger.delete()", err);
+                throw err;
+            }
+        }
+    },
+    mods: {
+        async accept(id) {
+            const query = "UPDATE listings SET awaiting_moderation = false WHERE id = $1 RETURNING *";
+            const values = [id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.mods.approve()", err);
+                throw err;
+            }
+        },
+        async reject(id) {
+            const query = "UPDATE listings SET awaiting_moderation = true WHERE id = $1 RETURNING *";
+            const values = [id];
+            try {
+                const result = await pool.query(query, values);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in listings db update.mods.reject()", err);
                 throw err;
             }
         }

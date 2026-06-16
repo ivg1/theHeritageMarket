@@ -12,7 +12,7 @@ export default function LoginPage() {
 	const isDarkMode = computedMode === "dark";
 	const navigate = useNavigate();
 
-	const [someError, setSomeError] = useState("");
+	const [error, setError] = useState("");
 	const [showError, setShowError] = useState(true);
 
 	const handleSubmit = async (e) => {
@@ -37,7 +37,7 @@ export default function LoginPage() {
 
 		} catch (err) {
 			console.error("login failed", err);
-			setSomeError("Wrong username or password.");
+			setError("Wrong username or password.");
 			setShowError(true);
 		}
 	};
@@ -93,10 +93,10 @@ export default function LoginPage() {
 			<div className="gohome-corner absolute left-0 top-0 p-4">
 				<Link to="/"><img draggable="false" src="/favicon.png" className="mr-3 h-12"></img></Link>
 			</div>
-			{someError && showError && (
+			{error && showError && (
 				<div className="min-w-screen fixed flex top-0 left-0 p-4">
 					<Toast>
-                        {someError}
+                        {error}
                         <ToastToggle onDismiss={() => setShowError(false)} />
                     </Toast>
 				</div>

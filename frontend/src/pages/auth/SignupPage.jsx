@@ -11,7 +11,7 @@ export default function SignupPage() {
     const { computedMode, toggleMode } = useThemeMode();
     const isDarkMode = computedMode === "dark";
 
-    const [someError, setSomeError] = useState("");
+    const [error, setError] = useState("");
     const [showError, setShowError] = useState(true);
 
     const handleSubmit = async (e) => {
@@ -23,13 +23,13 @@ export default function SignupPage() {
 
         if (values.password !== values["password-repeat"]) {
             console.error("passwords do not match");
-            setSomeError("Passwords do not match.");
+            setError("Passwords do not match.");
             setShowError(true);
             return;
         }
         if (formData.get("agree") !== "on") {
             console.error("user didnt agree to terms");
-            setSomeError("Didnt agree to terms & conditions.");
+            setError("Didnt agree to terms & conditions.");
             setShowError(true);
             return;
         }
@@ -49,7 +49,7 @@ export default function SignupPage() {
             navigate("/login");
         } catch (err) {
             console.error("signup failed", err);
-            setSomeError("User already exists with that username or email.");
+            setError("User already exists with that username or email.");
             setShowError(true);
         }
     };
@@ -149,10 +149,10 @@ export default function SignupPage() {
             <div className="gohome-corner absolute left-0 top-0 p-4">
                 <Link to="/"><img draggable="false" src="/favicon.png" className="mr-3 h-12"></img></Link>
             </div>
-            {someError && showError && (
+            {error && showError && (
 				<div className="min-w-screen fixed flex top-0 left-0 p-4">
 					<Toast>
-                        {someError}
+                        {error}
                         <ToastToggle onDismiss={() => setShowError(false)} />
                     </Toast>
 				</div>

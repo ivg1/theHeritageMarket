@@ -8,7 +8,7 @@ import Auth from "../auth/auth";
 export default function CreateListing({ open, onClose }) {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [hasInfo, setHasInfo] = useState(true);
-    const [someError, setSomeError] = useState("");
+    const [error, setError] = useState("");
     const [showError, setShowError] = useState(true);
 
     //prevent background scrolling
@@ -43,7 +43,7 @@ export default function CreateListing({ open, onClose }) {
         if (hasInfo && !window.confirm("Discard listing?")) return;
 
         setIsSubmitted(false);
-        setSomeError("");
+        setError("");
         onClose();
     };
 
@@ -52,7 +52,7 @@ export default function CreateListing({ open, onClose }) {
 
         if (isSubmitted) return;
         setIsSubmitted(true);
-        setSomeError("");
+        setError("");
 
         const formData = new FormData(e.target);
         const values = Object.fromEntries(formData.entries());
@@ -72,7 +72,7 @@ export default function CreateListing({ open, onClose }) {
         ];
 
         if (images.length > 6) {
-            setSomeError("Select less images. (Limit 6)");
+            setError("Select less images. (Limit 6)");
             setShowError(true);
             setIsSubmitted(false);
             return;
@@ -81,13 +81,13 @@ export default function CreateListing({ open, onClose }) {
         for (const image of images) {
             console.log(image.type);
             if (!allowedTypes.includes(image.type)) {
-                setSomeError(`${image.name} is not a supported image type.`);
+                setError(`${image.name} is not a supported image type.`);
                 setShowError(true);
                 setIsSubmitted(false);
                 return;
             }
             if (image.size > 10 * 1024 * 1024) {
-                setSomeError(`${image.name} exceeds 10MB.`);
+                setError(`${image.name} exceeds 10MB.`);
                 setShowError(true);
                 setIsSubmitted(false);
                 return;
@@ -108,7 +108,7 @@ export default function CreateListing({ open, onClose }) {
             console.log(imageUrls);
         } catch (err) {
             console.error(err);
-            setSomeError(`Failed to upload one or more images: ${err}`);
+            setError(`Failed to upload one or more images: ${err}`);
             setShowError(true);
             setIsSubmitted(false);
             return;
@@ -154,7 +154,7 @@ export default function CreateListing({ open, onClose }) {
             window.location.reload();
 		} catch (err) {
 			console.error("listing creation failed", err);
-            setSomeError("Failed to create listing. (server might be down or double check everything)", err);
+            setError("Failed to create listing. (server might be down or double check everything)", err);
             setShowError(true);
             setIsSubmitted(false);
 		}
@@ -247,10 +247,10 @@ export default function CreateListing({ open, onClose }) {
                         </form>
                     </div>
                 </div>
-                {someError && showError && (
+                {error && showError && (
                     <div className="min-w-screen fixed flex top-0 left-0 p-4">
                         <Toast>
-                            {someError}
+                            {error}
                             <ToastToggle onDismiss={() => setShowError(false)} />
                         </Toast>
                     </div>

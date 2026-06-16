@@ -13,7 +13,7 @@ export default function Landing() {
                         The platform for buying/selling/trading things and services of all kinds with your fellow classmates across the school.<br />
                     </p>
                     <div className="flex justify-center gap-4">
-                        <Button pill color="alternative" size="lg" onClick={() => navigate("/learn-more")}>Learn more</Button>
+                        <Button pill color="alternative" size="lg" onClick={() => navigate("/about")}>Learn more</Button>
                         <Button pill color="red" size="lg" onClick={() => navigate("/listings")}>Explore listings</Button>
                     </div>
                 </div>

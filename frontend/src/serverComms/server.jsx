@@ -28,15 +28,20 @@ export const Server = {
             });
             return await response.json();
         },
-        async update(id, body) {
-            const response = await fetch(`${this.modUrl}/update?id=${encodeURIComponent(id)}`, {
+        async update(body) {
+            //const response = await fetch(`${this.modUrl}/update?id=${encodeURIComponent(id)}`, {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/update`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "x-access-token": token
                 },
+                //rn i have id and seller id in body too
                 body: JSON.stringify(body ?? {})
             });
+            if (!response.ok) throw new Error("updating listing failed");
+
             return await response.json();
         },
         async delete(id) {
@@ -50,6 +55,49 @@ export const Server = {
             });
             return await response.json();
         },
+        mods: {
+            modUrl: `${url}/listings/formods`,
+            async getAll() {
+                const token = await Auth.getToken();
+                const response = await fetch(`${this.modUrl}/getAll`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                },
+                });
+                const result = await response.json();
+                console.log(result);
+                return result;
+            },
+            async accept(body) {
+                const token = await Auth.getToken();
+                const response = await fetch(`${this.modUrl}/accept`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                    },
+                    body: JSON.stringify(body ?? {})
+                });
+                const result = await response.json();
+                console.log(result);
+                return result;
+            },
+            async reject(body) {
+                const token = await Auth.getToken();
+                const response = await fetch(`${this.modUrl}/reject`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                    },
+                    body: JSON.stringify(body ?? {})
+                });
+                const result = await response.json();
+                console.log(result);
+                return result;
+            }
+        }
     },
     users: {
         modUrl: `${url}/users`,
@@ -102,6 +150,20 @@ export const Server = {
                         "x-access-token": token
                     }
                 });
+                return await response.json();
+            },
+            async resetPass(body) {
+                const token = await Auth.getToken();
+                const response = await fetch(`${this.modUrl}/resetPass`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                    },
+                    body: JSON.stringify(body ?? {})
+                });
+                if (response.status === 401) throw new Error("Wrong current password")
+                if (!response.ok) throw new Error("failed resetting password");
                 return await response.json();
             }
         }

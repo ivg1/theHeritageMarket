@@ -1,8 +1,10 @@
 const Roles = require("../db/roles");
 
 const needPrivilege = async (req, res, next) => {
-    const role = await Roles.getRole(req.userId);
-    if (role !== "admin" && role !== "mod") return res.status(403).json({ message: "forbidden" });
+    const response = await Roles.getRole(req.userId);
+    const modState = response.is_mod;
+    const role = response.role;
+    if ((role !== "admin" && role !== "mod") || !modState) return res.status(403).json({ message: "forbidden" });
 
     next();
 }

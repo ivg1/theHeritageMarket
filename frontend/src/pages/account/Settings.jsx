@@ -1,14 +1,59 @@
 import { Button } from "flowbite-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import AccountDetails from "./settingsPages/AccountDetails";
 import Security from "./settingsPages/Security";
 
+import Server from "../../serverComms/server";
+import Data from "../../auth/data";
+
 export default function Settings() {
     const [openMenu, setOpenMenu] = useState("account-details");
+    const [details, setDetails] = useState(null);
+    const [me, setMe] = useState(null);
+    const [error, setError] = useState("");
+    const [showError, setShowError] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        let mounted = true;
+        setLoading(true);
+
+        Server.me()
+            .then((me) => {
+                if (!mounted) return;
+
+                setMe(me);
+                const id = me.id;
+                return Server.users.private.getDataById(id);
+            })
+            .then((data) => {
+                if (!mounted) return;
+
+                if (!data) {
+                    setError("Failed getting user data.");
+                    setShowError(true);
+                    setLoading(false);
+                }
+
+                setDetails(data);
+
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error(err);
+                setError(`Error getting account details. ${err}`);
+                setShowError(true);
+                setLoading(false);
+            })
+
+        return () => {
+            mounted = false;
+        }
+    }, []);
 
     return (
-        <div className="profile-page min-w-screen min-h-screen flex flex-col justify-center p-10">
+        <div className="settings-page min-w-screen min-h-screen flex flex-col justify-center pt-10 sm:p-10">
             <h1 className="text-4xl font-bold ml-6 mb-2">Settings</h1>
             <div className="w-full max-w-screen bg-white dark:bg-(--darkbg) min-h-200 rounded-2xl dark:border-(--darkbg) grid md:grid-cols-[1fr_3fr] lg:grid-cols-[1fr_4fr] py-2">
                 <div className="sidebar p-4 flex flex-col gap-2 border-gray-200 dark:border-(--darkborder) border-r-2">
@@ -26,8 +71,8 @@ export default function Settings() {
                     </Button>
                 </div>
                 <div className="px-4 py-2">
-                    {openMenu === "account-details" && <AccountDetails />}
-                    {openMenu === "security" && <Security />}
+                    {openMenu === "account-details" && <AccountDetails details={details} loading={loading} loadingError={error} />}
+                    {openMenu === "security" && <Security details={details} loading={loading} loadingError={error} />}
                 </div>
             </div>
         </div>

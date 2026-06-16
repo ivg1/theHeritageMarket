@@ -18,7 +18,7 @@ export const lightTheme = createTheme({
 
     button: {
         color: {
-            alternative: "border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-500 hover:cursor-pointer",
+            alternative: "border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus:ring-red-200 hover:text-red-500 hover:cursor-pointer",
             light: "border border-slate-300 bg-slate-50 text-slate-900 hover:bg-slate-100 focus:ring-slate-200 hover:text-red-500 hover:cursor-pointer",
             red: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-200 hover:cursor-pointer",
             default: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-200 hover:cursor-pointer",
@@ -91,7 +91,7 @@ export const lightTheme = createTheme({
     },
     toast: {
         root: {
-            base: "rounded-xl bg-red-100 text-red-800 p-4 z-1200 min-w-full"
+            base: "rounded-xl bg-red-100 text-red-800 p-4 fixed top-0 left-0 m-4 z-3000 min-w-[98vw] max-w-[98vw] "
         },
         toggle: {
             base: "bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-800"
@@ -142,7 +142,7 @@ export const darkTheme = createTheme({
     },
     button: {
         color: {
-            alternative: "dark:border dark:border-[#494949] dark:hover:border-red-600 dark:bg-(--darkbutton-1) dark:text-slate-100 dark:hover:bg-(--darkbutton-2) dark:hover:text-red-600 dark:focus:ring-slate-700 dark:hover:cursor-pointer",
+            alternative: "dark:border dark:border-[#494949] dark:hover:border-red-600 dark:bg-(--darkbutton-1) dark:text-slate-100 dark:hover:bg-(--darkbutton-2) dark:hover:text-red-600 dark:focus:ring-red-700 dark:hover:cursor-pointer",
             light: "dark:border dark:border-[#494949] dark:hover:border-red-600 dark:bg-(--darkbutton-1) dark:text-slate-100 dark:hover:bg-(--darkbutton-2) dark:hover:text-red-600 dark:focus:ring-slate-700 dark:hover:cursor-pointer",
             red: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 hover:cursor-pointer",
             default: "bg-red-500 text-white hover:bg-red-600 focus:ring-red-400 hover:cursor-pointer",
@@ -184,7 +184,10 @@ export const darkTheme = createTheme({
     },
     avatar: {
         root: {
-            base: ""
+            base: "",
+            img: {
+                base: "object-cover"
+            }
         }
     },
     hr: {
@@ -240,7 +243,7 @@ export const darkTheme = createTheme({
     },
     toast: {
         root: {
-            base: "dark:rounded-xl dark:bg-red-800 dark:text-red-200 dark:p-4 dark:z-1200 dark:min-w-full"
+            base: "dark:rounded-xl dark:bg-red-800 dark:text-red-200 dark:m-4 dark:p-4 dark:min-w-[98vw] dark:max-w-[98vw] dark:z-3000 dark:fixed dark:top-0 dark:left-0"
         },
         toggle: {
             base: "dark:bg-red-800 dark:text-red-400 dark:hover:bg-red-700 dark:hover:text-red-200"

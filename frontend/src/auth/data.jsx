@@ -1,15 +1,17 @@
 import Server from "../serverComms/server";
 
 const Data = {
-    async me() {
-        const storedMe = sessionStorage.getItem("me");
+    async me(overrideRefresh = false) {
+        if (!overrideRefresh) {
+            const storedMe = sessionStorage.getItem("me");
 
-        if (storedMe) {
-            try {
-                return JSON.parse(storedMe);
-            } catch (err) {
-                console.log("creating storedMe in sessionStorage");
-                sessionStorage.removeItem("me");
+            if (storedMe) {
+                try {
+                    return JSON.parse(storedMe);
+                } catch (err) {
+                    console.log("creating storedMe in sessionStorage");
+                    sessionStorage.removeItem("me");
+                }
             }
         }
 
@@ -17,6 +19,9 @@ const Data = {
         sessionStorage.setItem("me", JSON.stringify(me));
 
         return me;
+    },
+    async deleteMe() {
+        sessionStorage.removeItem("me");
     }
 }
 

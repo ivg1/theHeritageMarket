@@ -16,6 +16,8 @@ import About from "./pages/about/About.jsx";
 import Listings from "./pages/listings/Listings.jsx";
 import DisplayFullListing from "./pages/listings/DisplayFullListing.jsx";
 
+import Moderation from "./pages/listings/mods/Moderation.jsx";
+
 import TermsOfService from "./pages/legal/TermsOfService.jsx";
 import PrivacyPolicy from "./pages/legal/Privacy.jsx";
 import RelationToSchool from "./pages/legal/RelationToSchool.jsx";
@@ -64,6 +66,9 @@ function AppShell() {
                         <Route path="/" element={<Landing />} />
                         <Route path="/listings" element={<Listings />} />
                         <Route path="/listings/:listingId" element={<DisplayFullListing />} />
+
+                        <Route path="/moderation" element={<Moderation />} />
+                        <Route path="/moderation/:listingId" element={<DisplayFullListing />} />
 
                         <Route path="/messenger" element={<ComingSoon />} />
                         <Route path="/about" element={<About />} />
