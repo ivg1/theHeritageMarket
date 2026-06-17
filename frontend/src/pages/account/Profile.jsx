@@ -2,11 +2,13 @@ import Server from "../../serverComms/server";
 import Auth from "../../auth/auth";
 import { HR, Button, TextInput, Textarea } from "flowbite-react";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import DisplayListingsByUser from "../../components/DisplayListingsByUser";
 
 export default function Profile() {
+    const navigate = useNavigate();
+
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -200,7 +202,12 @@ export default function Profile() {
                     <div className="py-4 px-6">
                         <div className="border dark:border-(--darkborder) border-gray-300 rounded-2xl p-4">
                             <h1 className="text-3xl font-bold mb-2">{user.fname} {user.lname}'s current listings</h1>
-                            <DisplayListingsByUser onListingClick={() => {alert(1)}} profileId={id} />
+                            <DisplayListingsByUser 
+                                onListingClick={(listing) => {
+                                    navigate(`/listings/${listing.id}`);
+                                }} 
+                                profileId={id} 
+                            />
                         </div>
                     </div>
                 </div>

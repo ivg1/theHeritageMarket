@@ -54,6 +54,7 @@ export default function Listings() {
                         onListingClick={(listing) => {
                             navigate(`${listing.id}`);
                         }}
+						className="z-30"
                     />
                 </div>
             </div>
