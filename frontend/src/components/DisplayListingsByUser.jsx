@@ -103,22 +103,6 @@ export default function DisplayListings({ onListingClick, profileId }) {
             console.error("failed accepting listing");
         }
     }
-
-    const handleDelete = async (id) => {
-		if (!mod) return console.log("you aint mod buddy");
-        if (!window.confirm("Confirm deleting listing?")) return;
-        try {
-            const toSend = {
-                id: id
-            }
-            const response = await Server.listings.delete(toSend);
-            console.log(response);
-        } catch (err) {
-            console.error("failed deleting listing");
-        }
-    }
-
-
     
     if (loading) return <p className="text-gray-500 text-center">Loading...</p>;
 	if (error) return <p className="text-red-500 text-center">Error loading products</p>;
@@ -163,7 +147,7 @@ export default function DisplayListings({ onListingClick, profileId }) {
 
 						{listing.awaiting_moderation && (
 							<>
-							<div className="absolute top-0 left-0 w-full h-full dark:bg-black/80 bg-black/40 overflow-hidden">
+							<div className="absolute top-0 left-0 w-full h-full dark:bg-black/80 bg-black/20 overflow-hidden">
 								<div className="absolute top-1/2 left-[-30%] w-[160%] -rotate-40 bg-red-800 py-2 text-center tracking-widest">
 									<span className="font-bold text-white">
 										AWAITING MODERATION
@@ -172,7 +156,7 @@ export default function DisplayListings({ onListingClick, profileId }) {
 							</div>
 							{yourId === Number(listing.seller_id) && (
 								<div className="absolute top-[60%] left-[-25%] w-[160%] -rotate-40 text-center">
-									<span className="text-md text-white/80">
+									<span className="text-md rounded-2xl bg-white p-2 dark:bg-transparent">
 										(your listing)
 									</span>
 								</div>

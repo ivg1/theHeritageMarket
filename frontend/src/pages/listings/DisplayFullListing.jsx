@@ -165,6 +165,20 @@ export default function DisplayFullListing() {
 			console.error("failed accepting listing");
 		}
 	}
+	
+	const handleDelete = async (id) => {
+		if (!editAccess) return console.log("you aint mod buddy nor are you the creator of this listing");
+        if (!window.confirm("Confirm deleting listing?")) return;
+        try {
+            const toSend = {
+                id: id
+            }
+            const response = await Server.listings.delete(toSend);
+            console.log(response);
+        } catch (err) {
+            console.error("failed deleting listing");
+        }
+    }
 
 	if (loading) return <div className="min-w-screen min-h-screen flex justify-center items-center text-gray-500">Loading...</div>
 	if (error) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">{error}</div>
@@ -392,25 +406,29 @@ export default function DisplayFullListing() {
 									)}
 								</div>
 							</div>
-							{mod && (
+							{editAccess && (
 								<>
 									<HR className="my-2" />
 									<div className="flex gap-2 justify-end z-10">
 										<div className="flex gap-2">
-											{listing.awaiting_moderation && (
-												<Button color="red" className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
-													onClick={() => { handleAccept(listing.id) }}
-												>
-													Accept
-												</Button>
+											{mod && (
+												<div className="flex gap-2">
+													{listing.awaiting_moderation && (
+														<Button color="red" className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
+															onClick={() => { handleAccept(listing.id) }}
+														>
+															Accept
+														</Button>
+													)}
+													<Button color="red"
+														onClick={() => { handleReject(listing.id) }}
+													>
+														Reject
+													</Button>
+												</div>
 											)}
 											<Button color="red"
-												onClick={() => { handleReject(listing.id) }}
-											>
-												Reject
-											</Button>
-											<Button color="red"
-												onClick={() => { handleReject(listing.id) }}
+												onClick={() => { handleDelete(listing.id) }}
 											>
 												Delete
 											</Button>
