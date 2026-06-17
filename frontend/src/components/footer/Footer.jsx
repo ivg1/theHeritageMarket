@@ -1,7 +1,27 @@
 import { Blockquote } from "flowbite-react";
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
+
+import Data from "../../auth/data";
 
 export default function Footer() {
+
+    const [me, setMe] = useState(null);
+    useEffect(() => {
+		const getMe = async () => {
+			try {
+				const me = await Data.me();
+				//console.log(me);
+				if (!me) throw new Error("it seems u dont exist yet");
+
+				setMe(me);
+			} catch (err) {
+				console.error(err);
+			}
+		}
+		getMe();
+	}, [])
+
     return (
         <div className="footer border-t border-slate-200 bg-white text-slate-900 p-10 min-h-fit h-100 max-w-screen dark:border-(--darkborder) dark:bg-(--darkbg) dark:text-white smooth-trans">
             <div className="footer-content flex flex-col lg:flex-row justify-between items-center mb-10">
@@ -23,7 +43,7 @@ export default function Footer() {
                     <Link to="/" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Home</Link>
                     <Link to="/listings" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Listings</Link>
                     <Link to="/messenger" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Messenger</Link>
-                    <Link to="/profile" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Profile</Link>
+                    {me && (<Link to="/settings" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Settings</Link>) }
                     <Link to="/about" className="text-slate-600 hover:text-red-600 dark:text-gray-400">About Us</Link>
                     {/* <Link to="/support" className="text-slate-600 hover:text-red-600 dark:text-gray-400">Support</Link> */}
                 </div>

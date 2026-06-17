@@ -437,7 +437,7 @@ export default function DisplayFullListing() {
 								</>
 							)}
 							<div className="other mt-20">
-								<p className="text-[12px] text-gray-500">ID: {listing.id} | Created: {listing.created_at} | Seller ID: {listing.seller_id}</p>
+								<p className="text-[12px] text-gray-500">ID: {listing.id} | Created: {listing.created_at} | Seller ID: {listing.seller_id} | Physical: {String(listing.is_physical)}</p>
 							</div>
 						</div>
 					</div>

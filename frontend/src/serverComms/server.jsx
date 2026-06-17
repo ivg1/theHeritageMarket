@@ -184,6 +184,22 @@ export const Server = {
                 if (!response.ok) throw new Error("failed resetting password");
                 return await response.json();
             }
+        },
+
+
+        async setMod(body) {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/mods/setMod`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify(body ?? {})
+            });
+            if (response.status === 401) throw new Error("Wrong current password")
+            if (!response.ok) throw new Error("failed resetting password");
+            return await response.json();
         }
     },
     auth: {

@@ -31,7 +31,7 @@ export default function Landing() {
                                 Made by students,<br /> for students.
                             </h5>
                         </div>
-                        <p className="min-h-22 font-normal text-gray-700 dark:text-gray-400">Developed by a group of students, we strive to develop services that help students. <br />(or at least we try to)</p>
+                        <p className="min-h-22 font-normal text-gray-700 dark:text-gray-400">Developed by a <i>group</i> of students, we strive to develop services that help students. <br />(or at least we try to)</p>
                     </Card>
                     <Card className="max-w-full max-h-200 m-2 p-0px text-left dark:bg-(--darksurface) dark:border-(--darkborder)">
                         <div className="flex align-center">
@@ -66,7 +66,7 @@ export default function Landing() {
             <div className="process-steps flex flex-col gap-4 min-w-full min-h-fit p-10 mb-10">
                 <div className="step1 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">
                     <div className="flex justify-center items-center w-full">
-                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                        <img src="/steps/step1.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
                     </div>
                     <div className="steps-text-holder p-10 md:order-last order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">1. Create an account.</h2>
@@ -79,25 +79,25 @@ export default function Landing() {
                         <p className="font-normal text-gray-700 dark:text-gray-400">Browse through existing listings or create your own to showcase your goods or services. Each listing includes detailed information about the item and the seller such as the seller's target price.</p>
                     </div>
                     <div className="flex justify-center items-center w-full">
-                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                        <img src="/steps/step2.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
                     </div>
                 </div>
                 <div className="step3 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">
                     <div className="flex justify-center items-center w-full">
-                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                        <img src="/steps/step3.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
                     </div>
                     <div className="steps-text-holder p-10 md:order-last order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">3. Begin the talks.</h2>
-                        <p className="font-normal text-gray-700 dark:text-gray-400">Once you find something you like, reach out to the seller, and discuss the details through our built-in messenger, such as price and meeting place.</p>
+                        <p className="font-normal text-gray-700 dark:text-gray-400">Once you find something you like, reach out to the seller through the listed contacts, and discuss details such as final price and meeting place.</p>
                     </div>
                 </div>
                 <div className="step4 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">
                     <div className="steps-text-holder p-10 md:order-first order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">4. Secure the deal.</h2>
-                        <p className="font-normal text-gray-700 dark:text-gray-400">Once both parties agree on the terms, meet up at the agreed location to complete the transaction.</p>
+                        <p className="font-normal text-gray-700 dark:text-gray-400">Once both parties agree, meet up at the agreed location to complete the transaction.</p>
                     </div>
                     <div className="flex justify-center items-center w-full">
-                        <img src="/signupStep.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
+                        <img src="/steps/step4.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
                     </div>
                 </div>
             </div>

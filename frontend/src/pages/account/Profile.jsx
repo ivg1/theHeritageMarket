@@ -13,11 +13,17 @@ export default function Profile() {
     const [username, setUsername] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showError, setShowError] = useState(false);
     const [found, setFound] = useState(false);
+
+    const [good, setGood] = useState("");
+    const [showGood, setShowGood] = useState(false);
 
     const [editAccess, setEditAccess] = useState(false);
     const [editingAbout, setEditingAbout] = useState(false);
     const [newAbout, setNewAbout] = useState("");
+
+    const [mod, setMod] = useState(false);
 
     const [isSubmitted, setSubmitted] = useState(false);
 
@@ -58,6 +64,10 @@ export default function Profile() {
                     console.log("cannot edit");
                 }
 
+                if (me && me.is_mod) {
+                    setMod(true);
+                }
+
                 setLoading(false);
             })
             .catch((err) => {
@@ -73,7 +83,7 @@ export default function Profile() {
     }, [id]);
 
     if (loading) return <div className="min-w-screen min-h-screen flex justify-center items-center text-gray-500">Loading...</div>
-	if (error) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">{error}</div>
+	if (error && !showError) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">{error}</div>
 	if (!found) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">User not found.</div>
 
     //console.log(username);
@@ -130,6 +140,22 @@ export default function Profile() {
             setShowError(true);
             setSubmitted(false);
             //setEditingAbout(false);
+        }
+    }
+
+    const handleSetUserMod = async () => {
+        try {
+            const toSend = {
+                id: id
+            };
+
+            const response = await Server.users.setMod(toSend);
+            console.log("user set as mod");
+            setGood("Set user as mod");
+            setShowGood(true);
+        } catch (err) {
+            setError("Failed setting user as mod");
+            setShowError(true);
         }
     }
 
@@ -202,15 +228,35 @@ export default function Profile() {
                     <div className="py-4 px-6">
                         <div className="border dark:border-(--darkborder) border-gray-300 rounded-2xl p-4">
                             <h1 className="text-3xl font-bold mb-2">{user.fname} {user.lname}'s current listings</h1>
-                            <DisplayListingsByUser 
-                                onListingClick={(listing) => {
-                                    navigate(`/listings/${listing.id}`);
-                                }} 
-                                profileId={id} 
-                            />
+                            <div className="flex">
+                                <div className="w-full flex justify-center">
+                                    <DisplayListingsByUser 
+                                        onListingClick={(listing) => {
+                                            navigate(`/listings/${listing.id}`);
+                                        }} 
+                                        profileId={id} 
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {mod && (
+                    <>
+                    <HR className="m-0" />
+                    <div className="mod-stuff p-4 flex justify-between items-center pr-8">
+                        <div className="flex flex-col">
+                            {showError && (
+                                <p className="text-red-600 text-xl">{error}</p>
+                            )}
+                            {showGood && (
+                                <p className="text-green-600 text-xl">{good}</p>
+                            )}
+                        </div>
+                        <Button color="red" onClick={handleSetUserMod}>Set as Mod</Button>
+                    </div>
+                    </>
+                )}
             </div>
         </div>
     )

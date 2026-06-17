@@ -275,6 +275,20 @@ const Users = {
                 console.error("error in users db update.incrementCreatedStat()", err);
                 throw err;
             }
+        },
+
+        async setMod(id) {
+            const query = "UPDATE users SET is_mod = true, role = 'mod' WHERE id = $1 RETURNING *";
+            const values = [id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db set admin true for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.setAdmin()", err);
+                throw err;
+            }
         }
     },
     danger: {

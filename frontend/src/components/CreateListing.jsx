@@ -12,7 +12,8 @@ export default function CreateListing({ open, onClose }) {
     const [showError, setShowError] = useState(true);
 
     //todo: later make the form update through this, with onChange events
-    //const [newListing, setNewListing] = useState([]);
+    const [newListing, setNewListing] = useState([]);
+    // ^ sir yes sir, doing now (17/6/26)
 
     //prevent background scrolling
     useEffect(() => {
@@ -60,11 +61,14 @@ export default function CreateListing({ open, onClose }) {
         const formData = new FormData(e.target);
         const values = Object.fromEntries(formData.entries());
 
+
+
         console.log(values);
 
         const images = formData.getAll("images");
         console.log(images);
 
+        //validate images
         const allowedTypes = [
             "image/jpeg",
             "image/jpg",
@@ -98,7 +102,7 @@ export default function CreateListing({ open, onClose }) {
         }
 
         //here i could just go through each image in a for loop and upload them one by one
-        //but i thought why not have parallel uploads so its faster
+        //but why not have parallel uploads so its faster. speeeeed
         let imageUrls = [];
         try {
             const uploadPromises = images.map(image =>

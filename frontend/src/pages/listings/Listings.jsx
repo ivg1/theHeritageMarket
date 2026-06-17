@@ -36,7 +36,7 @@ export default function Listings() {
     }, [location.pathname]);
 
     return (
-        <div className="listings-page px-10 min-h-screen">
+        <div className="listings-page md:px-10 min-h-screen">
             <div className="listings-settings p-4 min-w-full flex flex-col justify-between items-center sm:flex-row gap-2">
 				<div className="flex">
 					<Button color="red" className="create-button px-4" onClick={async () => { (isLoggedIn) ? setCreateListingOpen(true) : navigate("/login") }}>
@@ -48,7 +48,7 @@ export default function Listings() {
 				</div>
                 <Filter />
             </div>
-            <div className="listings-content flex items-center justify-center p-4">
+            <div className="listings-content flex items-center justify-center md:p-4">
                 <div className="container">
                     <DisplayListings
                         onListingClick={(listing) => {

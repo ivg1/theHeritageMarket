@@ -162,7 +162,7 @@ const dataOfListing_get = async (req, res) => {
     } 
 }
 
-//todo: when i make auth, make this secure ASAP
+//todo: when i make auth, make this secure ASAP... i think i did now
 const deleteListing_post = async (req, res) => {
     try {
         const { id } = req.body;

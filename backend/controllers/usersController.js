@@ -158,6 +158,26 @@ const deleteUser_post = async (req, res) => {
     }
 }
 
+
+//special for getting users as admin
+const setUserMod_post = async (req, res) => {
+    try {
+        const { id } = req.body;
+        //idk how to name this guy
+        const userRequester = await Users.auth.private.getDataById(req.userId);
+        //i hope this will not fail me...
+        if (!userRequester.is_mod) return res.status(400).json({ error: "mate, you arent privileged to be allowed to do that lol"});
+
+        const result = await Users.update.setMod(id);
+        console.log(`set user of id ${id} as mod`);
+        return res.status(200).json({ message: `set user of id ${id} as mod` });
+    } catch (err) {
+        console.error(err);
+        console.log(`failed setting user of id ${id} as mod in controller`);
+        return res.status(400).json({ error: `failed setting user of id ${id} as mod in controller`});
+    }
+}
+
 module.exports = {
     getNumUsers_get,
     getUserById_get,
@@ -167,5 +187,7 @@ module.exports = {
     deleteUser_post,
 
     privateGetDataById_get,
-    privateResetPass_post
+    privateResetPass_post,
+
+    setUserMod_post
 }

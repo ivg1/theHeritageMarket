@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { Button, HR } from "flowbite-react";
 import Auth from "../auth/auth.jsx";
 
+//the styles from Listings.css work here, dont touch them.
+//if it works it works.
+
 function longAgo(listingTime) {
     const currentDate = new Date();
 	const listingDate = new Date(listingTime);
@@ -109,7 +112,7 @@ export default function DisplayListings({ onListingClick, profileId }) {
     
 	//dark:hover:bg-[#320505]
     return (
-        <div className="listing-list min-w-full">
+        <div className="listing-list min-w-fit md:min-w-full max-w-full">
 			{listings.length > 0 ? (
 				listings.map((listing) => (
 					<div className="listing-card relative min-h-fit  hover:bg-white hover:cursor-pointer dark:hover:bg-[#151515] overflow-hidden" key={listing.id} listingid={listing.id}>
