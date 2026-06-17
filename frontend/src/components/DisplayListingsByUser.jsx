@@ -57,7 +57,7 @@ export default function DisplayListings({ onListingClick, profileId }) {
 
 				if (await Auth.loginState()) return Server.me();
 			})
-			.then((me) => {
+			.then(async (me) => {
 				if (!mounted) return;
 				if (!me) return;
 
@@ -166,7 +166,7 @@ export default function DisplayListings({ onListingClick, profileId }) {
 					</div>
 				))
 			) : (
-				<p className="text-gray-500 text-center">No products found</p>
+				<p className="text-gray-500 text-center">No listings found.</p>
 			)}
 		</div>
     )

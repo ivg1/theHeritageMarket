@@ -56,7 +56,7 @@ export default function DisplayListings({ onListingClick }) {
 
 				if (await Auth.loginState()) return Server.me();
 			})
-			.then((me) => {
+			.then(async (me) => {
 				if (!mounted) return;
 				if (!me) return;
 
@@ -144,8 +144,7 @@ export default function DisplayListings({ onListingClick }) {
 								<Button color="bgless" onClick={() => onListingClick?.(listing)}>View</Button>
 							) : (<></>)}
 						</div>
-
-						{listing.awaiting_moderation && (
+						{(listing.awaiting_moderation === true) && (
 							<>
 							<div className="absolute top-0 left-0 w-full h-full dark:bg-black/80 bg-black/20 overflow-hidden">
 								<div className="absolute top-1/2 left-[-30%] w-[160%] -rotate-40 bg-red-800 py-2 text-center tracking-widest">
@@ -166,7 +165,7 @@ export default function DisplayListings({ onListingClick }) {
 					</div>
 				))
 			) : (
-				<p className="text-gray-500 text-center">No products found</p>
+				<p className="text-gray-500 text-center">No listings found.</p>
 			)}
 		</div>
 	)
