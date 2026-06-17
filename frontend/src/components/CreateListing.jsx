@@ -11,6 +11,9 @@ export default function CreateListing({ open, onClose }) {
     const [error, setError] = useState("");
     const [showError, setShowError] = useState(true);
 
+    //todo: later make the form update through this, with onChange events
+    //const [newListing, setNewListing] = useState([]);
+
     //prevent background scrolling
     useEffect(() => {
         if (!open) return;
@@ -217,8 +220,8 @@ export default function CreateListing({ open, onClose }) {
                                 <div className="mb block">
                                     <Label htmlFor="tags">Tags:</Label>
                                 </div>
-                                <Textarea id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." required shadow />
-                                <HelperText>Adding tags makes it easier to find your listing.</HelperText>
+                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." required shadow />
+                                <HelperText>Adding tags makes it easier to find your listing. Separate them by commas.</HelperText>
                             </div>
                             <div className="form-item flex flex-col gap-1">
                                 <div className="md block">

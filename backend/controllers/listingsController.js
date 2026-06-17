@@ -18,8 +18,10 @@ const createListing_post = async (req, res) => {
             negotiable
         } = req.body;
 
-        if (!title || !price || !seller_id) return res.status(400).json({ message: "missing must have fields"});
+        if (seller_id !== req.userId) return res.status(400).json({ error: "you are not showing yourself for who you are" });
 
+        if (!title || !price || !seller_id || !description || (is_physical === undefined)) return res.status(400).json({ message: "missing must have fields"});
+        
         const result = await Listings.create(
             title, 
             description, 
@@ -35,10 +37,14 @@ const createListing_post = async (req, res) => {
             negotiable
         );
         console.log("listing created", result);
+
+        const increaseStatCreated = await Users.update.incrementCreatedStat(req.userId);
+        if (!increaseStatCreated) return res.status(400).json({ error: "could not increment listings_posted stat" });
+
         return res.status(201).json({ message: "listing created", listing: result });
     } catch (err) {
         console.error(err);
-        return res.status(400).json({ error: "error creating listing"});
+        return res.status(400).json({ error: "error creating listing" });
     }
 }
 
@@ -111,6 +117,7 @@ const getListingsHeroData_get = async (req, res) => {
         const rows = await Listings.data.getHeroAll();
 
         console.log("hero data of all listings retrieved");
+
         return res.status(200).json(rows);
     } catch (err) {
         console.error(err);
@@ -119,9 +126,30 @@ const getListingsHeroData_get = async (req, res) => {
     }
 };
 
+const getListingsHeroDataByUser_post = async (req, res) => {
+    try {
+        const { id } = req.body;
+        const rows = await Listings.data.getHeroAllByUser(id);
+
+        console.log("hero data of all listings retrieved");
+
+        return res.status(201).json(rows);
+    } catch (err) {
+        console.error(err);
+        console.error("error getting hero data of listings by user id");
+        return res.status(400).json({ error: "failed getting hero data of all listings by user id" });
+    }
+};
+
 const dataOfListing_get = async (req, res) => {
     try {
         const { id } = req.query;
+        
+        if (!id) {
+            console.error("no listing id");
+            return res.status(400).json({ error: "missing listing id" });
+        }
+
         const listing = await Listings.data.getFullData(id);
         if (!listing) return res.status(404).json({ message: "listing not found" });
 
@@ -137,10 +165,22 @@ const dataOfListing_get = async (req, res) => {
 //todo: when i make auth, make this secure ASAP
 const deleteListing_post = async (req, res) => {
     try {
-        const { id } = req.query;
+        const { id } = req.body;
+
+        if (!id) {
+            console.error("no listing id");
+            return res.status(400).json({ error: "missing listing id" });
+        }
+
+        const listing = await Listings.data.getFullData(id);
+        const user = await Users.auth.private.getDataById(req.userId);
+        if (req.userId !== listing.seller_id && !user.is_mod) return res.status(403).json({ error: "you dont own the listing" });
+
         const deleted = await Listings.danger.delete(id);
         if (!deleted) return res.status(404).json({ message: "listing not found" });
-        return res.status(200).json({ deleted });
+
+        console.log(`deleted listing of id ${id}`);
+        return res.status(200).json({ deleted, message: "deleted listing" });
     } catch (err) {
         console.error(err);
         return res.status(400).json({ error: "error deleting listing" });
@@ -197,5 +237,7 @@ module.exports = {
 
     modsListingHeroData_get,
     modsRejectListing_post,
-    modsAcceptListing_post
+    modsAcceptListing_post,
+
+    getListingsHeroDataByUser_post
 };

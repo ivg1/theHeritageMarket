@@ -26,4 +26,6 @@ router.get("/formods/getAll", [authJwt.verifyToken], [roleCheck.needPrivilege], 
 router.post("/formods/accept", [authJwt.verifyToken], [roleCheck.needPrivilege], listingsController.modsAcceptListing_post);
 router.post("/formods/reject", [authJwt.verifyToken], [roleCheck.needPrivilege], listingsController.modsRejectListing_post);
 
+router.post("/getAllByUser", listingsController.getListingsHeroDataByUser_post);
+
 module.exports = router;

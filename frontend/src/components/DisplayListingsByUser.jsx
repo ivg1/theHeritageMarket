@@ -35,7 +35,7 @@ function longAgo(listingTime) {
 	}
 }
 
-export default function DisplayListings({ onListingClick }) {
+export default function DisplayListings({ onListingClick, profileId }) {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -48,7 +48,8 @@ export default function DisplayListings({ onListingClick }) {
 	useEffect(() => {
 		let mounted = true;
 		setLoading(true);
-		Server.listings.getAll()
+        console.log(profileId);
+		Server.listings.getAllByUser({ id: profileId })
 			.then(async (data) => {
 				if (!mounted) return;
 				setListings(Array.isArray(data) ? data : []);

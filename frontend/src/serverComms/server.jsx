@@ -15,6 +15,20 @@ export const Server = {
             console.log(result);
             return result;
         },
+        async getAllByUser(body) {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/getAllByUser`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify(body ?? {})
+            });
+            const result = await response.json();
+            console.log(result);
+            return result;
+        },
         async create(body) {
             const token = await Auth.getToken();
             console.log(token);
@@ -44,15 +58,19 @@ export const Server = {
 
             return await response.json();
         },
-        async delete(id) {
-            const response = await fetch(`${this.modUrl}/delete?id=${encodeURIComponent(id)}`, {
+        async delete(body) {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/delete`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "x-access-token": token
                 },
+                body: JSON.stringify(body ?? {})
                 //todo: add a body with username and pass or something to see if actual and not attack
             });
+            if (!response.ok) throw new Error("failed deleting listing (in server file)");
+
             return await response.json();
         },
         mods: {

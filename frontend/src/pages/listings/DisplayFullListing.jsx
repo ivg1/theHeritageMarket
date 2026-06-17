@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Button, Checkbox, Label, Radio, Textarea, TextInput } from "flowbite-react";
+import { Button, Checkbox, Label, Radio, Textarea, TextInput, HR } from "flowbite-react";
 
 import Server from "../../serverComms/server";
 import Auth from "../../auth/auth";
@@ -16,7 +16,8 @@ export default function DisplayFullListing() {
 	const [editAccess, setEditAccess] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [formValues, setFormValues] = useState(null);
-	const [modAccess, setModAccess] = useState(false);
+	const [mod, setMod] = useState(false);
+	const [specialMessage, setSpecialMessage] = useState("");
 
 	const { listingId } = useParams();
 	const id = Number(listingId);
@@ -24,17 +25,22 @@ export default function DisplayFullListing() {
 	useEffect(() => {
 		let mounted = true;
 		let listing = null;
+		let editAccess = false;
 
 		setLoading(true);
 		Server.listings.getOne(id)
 			.then(async (data) => {
 				if (!mounted) return;
+				if (!data.id) {
+					console.error("no such listing");
+					setError("There is no such listing.");
+					setLoading(false);
+					mounted = false;
+					return;
+				}
+
 				listing = data;
 
-				setListing(data);
-				setFormValues(data);
-
-				setLoading(false);
 				setFound(true);
 
 				if (await Auth.loginState()) return Server.me();
@@ -43,14 +49,32 @@ export default function DisplayFullListing() {
 				if (!mounted) return;
 
 				console.log(me);
+
 				if (me && (me.id === listing.seller_id || me.is_mod)) {
                     console.log("can edit");
+					editAccess = true;
                     setEditAccess(true);
+
+					if (listing.awaiting_moderation) {
+						setSpecialMessage("This listing is awaiting moderation. \nOnly you and moderators can view it.")
+					}
                 } else {
                     console.log("cannot edit");
                 }
+				if (me && me.is_mod) setMod(true);
 
-				if (me && me.is_mod) setModAccess(true);
+				if (listing.awaiting_moderation && !editAccess) {
+					console.error("not permitted to view at the moment");
+					setError("You are not permitted to view this listing at the moment.");
+					setLoading(false);
+					mounted = false;
+					return;
+				}
+
+				setListing(listing);
+				setFormValues(listing);
+				setLoading(false);
+				
 				
 			})
 			.catch((err) => {
@@ -113,8 +137,37 @@ export default function DisplayFullListing() {
 
 	console.log(listing);
 
+	//moderator stuff
+	const handleReject = async (id) => {
+		if (!mod) return console.log("you aint mod buddy");
+		if (!window.confirm("Confirm reject listing?")) return;
+		try {
+			const toSend = {
+				id: id
+			}
+			const response = await Server.listings.mods.reject(toSend);
+			console.log(response);
+		} catch (err) {
+			console.error("failed rejecting listing");
+		}
+	}
+
+	const handleAccept = async (id) => {
+		if (!mod) return console.log("you aint mod buddy");
+		if (!window.confirm("Confirm accept listing?")) return;
+		try {
+			const toSend = {
+				id: id
+			}
+			const response = await Server.listings.mods.accept(toSend);
+			console.log(response);
+		} catch (err) {
+			console.error("failed accepting listing");
+		}
+	}
+
 	if (loading) return <div className="min-w-screen min-h-screen flex justify-center items-center text-gray-500">Loading...</div>
-	if (error) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">Error displaying listing.</div>
+	if (error) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">{error}</div>
 	if (!found) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">Listing not found.</div>
 
 	const tags = listing.tags;
@@ -174,6 +227,9 @@ export default function DisplayFullListing() {
 					<div className=" min-w-full">
 						<div className="flex flex-col  p-4">
 							<div>
+								{editAccess && specialMessage !== "" && (
+									<p className="whitespace-pre-wrap text-red-600 mb-2">{specialMessage}</p>
+								)}
 								<div className="flex flex-col mb-6">
 									{editing ? (
 										<>
@@ -336,6 +392,32 @@ export default function DisplayFullListing() {
 									)}
 								</div>
 							</div>
+							{mod && (
+								<>
+									<HR className="my-2" />
+									<div className="flex gap-2 justify-end z-10">
+										<div className="flex gap-2">
+											{listing.awaiting_moderation && (
+												<Button color="red" className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
+													onClick={() => { handleAccept(listing.id) }}
+												>
+													Accept
+												</Button>
+											)}
+											<Button color="red"
+												onClick={() => { handleReject(listing.id) }}
+											>
+												Reject
+											</Button>
+											<Button color="red"
+												onClick={() => { handleReject(listing.id) }}
+											>
+												Delete
+											</Button>
+										</div>
+									</div>
+								</>
+							)}
 							<div className="other mt-20">
 								<p className="text-[12px] text-gray-500">ID: {listing.id} | Created: {listing.created_at} | Seller ID: {listing.seller_id}</p>
 							</div>

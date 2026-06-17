@@ -4,10 +4,54 @@ const Listings = {
     data: {
         async getHeroAll() {
             try {
-                const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings WHERE visibility = true AND awaiting_moderation = false ORDER BY created_at DESC");
+                const result = await pool.query(`
+                    SELECT
+                        id,
+                        seller_id,
+                        CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE title END AS title,
+                        CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE description END AS description,
+                        CASE WHEN awaiting_moderation THEN 0 ELSE price END AS price,
+                        CASE WHEN awaiting_moderation THEN NULL ELSE tags END AS tags,
+                        CASE WHEN awaiting_moderation THEN NULL ELSE images END AS images,
+                        CASE WHEN awaiting_moderation THEN CURRENT_TIMESTAMP ELSE created_at END AS created_at,
+                        awaiting_moderation
+                    FROM listings
+                    WHERE visibility = true
+                    ORDER BY 
+                        awaiting_moderation ASC,
+                        created_at DESC
+                `);
+                //      ^ pg puts false first
+
                 return result.rows;
             } catch (err) {
                 console.error("error in listings db data.getHeroAll()", err);
+                throw err;
+            }
+        },
+        async getHeroAllByUser(id) {
+            try {
+                const result = await pool.query(`
+                    SELECT
+                        id,
+                        seller_id,
+                        CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE title END AS title,
+                        CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE description END AS description,
+                        CASE WHEN awaiting_moderation THEN 0 ELSE price END AS price,
+                        CASE WHEN awaiting_moderation THEN NULL ELSE tags END AS tags,
+                        CASE WHEN awaiting_moderation THEN NULL ELSE images END AS images,
+                        CASE WHEN awaiting_moderation THEN CURRENT_TIMESTAMP ELSE created_at END AS created_at,
+                        awaiting_moderation
+                    FROM listings
+                    WHERE 
+                        visibility = true AND
+                        seller_id = $1
+                    ORDER BY created_at DESC
+                `, [id]);
+
+                return result.rows;
+            } catch (err) {
+                console.error("error in listings db data.getHeroAllByUser()", err);
                 throw err;
             }
         },
@@ -204,7 +248,7 @@ const Listings = {
                 console.error("error in listings db update.visibility()", err);
                 throw err;
             }
-        }
+        },
     },
     danger: {
         async delete(id) {
@@ -219,7 +263,7 @@ const Listings = {
     },
     mods: {
         async accept(id) {
-            const query = "UPDATE listings SET awaiting_moderation = false WHERE id = $1 RETURNING *";
+            const query = "UPDATE listings SET awaiting_moderation = false, visibility = true WHERE id = $1 RETURNING *";
             const values = [id];
             try {
                 const result = await pool.query(query, values);
@@ -230,7 +274,7 @@ const Listings = {
             }
         },
         async reject(id) {
-            const query = "UPDATE listings SET awaiting_moderation = true WHERE id = $1 RETURNING *";
+            const query = "UPDATE listings SET awaiting_moderation = true, visibility = false WHERE id = $1 RETURNING *";
             const values = [id];
             try {
                 const result = await pool.query(query, values);

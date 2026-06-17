@@ -261,6 +261,21 @@ const Users = {
                 throw err;
             }
         },
+
+        //stats
+        async incrementCreatedStat(id) {
+            const query = "UPDATE users SET listings_posted = listings_posted + 1 WHERE id = $1 RETURNING *";
+            const values = [id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db incremented listings_posted stat for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.incrementCreatedStat()", err);
+                throw err;
+            }
+        }
     },
     danger: {
         async delete(id) {

@@ -80,6 +80,19 @@ export default function DisplayListingsForMods({ onListingClick }) {
         }
     }
 
+    const handleDelete = async (id) => {
+        if (!window.confirm("Confirm deleting listing?")) return;
+        try {
+            const toSend = {
+                id: id
+            }
+            const response = await Server.listings.delete(toSend);
+            console.log(response);
+        } catch (err) {
+            console.error("failed deleting listing");
+        }
+    }
+
     
     if (loading) return <p className="text-gray-500 text-center">Loading...</p>;
     if (error) return <p className="text-red-500 text-center">Error loading products</p>;
@@ -122,6 +135,11 @@ export default function DisplayListingsForMods({ onListingClick }) {
                                 onClick={() => { handleReject(listing.id) }}
                             >
                                 Reject
+                            </Button>
+                            <Button color="red"
+                                onClick={() => { handleDelete(listing.id) }}
+                            >
+                                Delete
                             </Button>
                             <Button color="bgless" onClick={() => onListingClick?.(listing)}>View listing</Button>
                         </div>

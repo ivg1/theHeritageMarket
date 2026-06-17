@@ -4,6 +4,8 @@ import { HR, Button, TextInput, Textarea } from "flowbite-react";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
+import DisplayListingsByUser from "../../components/DisplayListingsByUser";
+
 export default function Profile() {
     const [user, setUser] = useState(null);
     const [username, setUsername] = useState(null);
@@ -77,7 +79,7 @@ export default function Profile() {
 
     const userCreated = new Date(user.created_at);
     //console.log(userCreated);
-    const formattedDate = userCreated.toLocaleDateString("en-GB", {
+    const formattedDate = userCreated.toLocaleDateString("en-US", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -153,23 +155,7 @@ export default function Profile() {
                 <HR className="m-0" />
                 <div className="mt-4">
                     <div className="py-4 px-6">
-                        <div className="bg-gray min-w-full min-h-40 grid grid-cols-1 sm:grid-cols-3 gap-4 divide-x dark:divide-(--darkborder) divide-gray-300 border dark:border-(--darkborder) border-gray-300 rounded-2xl py-4">
-                            <div className="flex flex-col items-center py-4">
-                                <h1 className="text-3xl font-bold ">Listings Posted</h1>
-                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
-                            </div>
-                            <div className="flex flex-col items-center py-4">
-                                <h1 className="text-3xl font-bold ">Listings Posted</h1>
-                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
-                            </div>
-                            <div className="flex flex-col items-center py-4">
-                                <h1 className="text-3xl font-bold ">Listings Posted</h1>
-                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="py-4 px-6">
-                        <div className="bg-gray min-w-full min-h-40 flex flex-col gap-4">
+                        <div className="bg-gray min-w-full min-h-30 flex flex-col gap-4">
                             <div className="mb-4">
                                 <h1 className="text-2xl font-semibold">
                                     About
@@ -193,6 +179,28 @@ export default function Profile() {
                                     <p className="whitespace-pre-wrap">{user.about}</p>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                    <div className="py-4 px-6">
+                        <div className="bg-gray min-w-full min-h-40 grid grid-cols-1 sm:grid-cols-3 gap-4 divide-x dark:divide-(--darkborder) divide-gray-300 border dark:border-(--darkborder) border-gray-300 rounded-2xl py-4">
+                            <div className="flex flex-col items-center py-4">
+                                <h1 className="text-3xl font-bold ">Listings posted</h1>
+                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                                <h1 className="text-3xl font-bold ">Listings Posted</h1>
+                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
+                            </div>
+                            <div className="flex flex-col items-center py-4">
+                                <h1 className="text-3xl font-bold ">Listings Posted</h1>
+                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="py-4 px-6">
+                        <div className="border dark:border-(--darkborder) border-gray-300 rounded-2xl p-4">
+                            <h1 className="text-3xl font-bold mb-2">{user.fname} {user.lname}'s current listings</h1>
+                            <DisplayListingsByUser onListingClick={() => {alert(1)}} profileId={id} />
                         </div>
                     </div>
                 </div>

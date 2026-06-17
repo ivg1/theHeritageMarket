@@ -4,7 +4,7 @@ const needPrivilege = async (req, res, next) => {
     const response = await Roles.getRole(req.userId);
     const modState = response.is_mod;
     const role = response.role;
-    if ((role !== "admin" && role !== "mod") || !modState) return res.status(403).json({ message: "forbidden" });
+    if (!modState) return res.status(403).json({ message: "forbidden" });
 
     next();
 }
