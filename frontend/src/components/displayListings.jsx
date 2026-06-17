@@ -56,7 +56,7 @@ export default function DisplayListings({ onListingClick }) {
 
 				if (await Auth.loginState()) return Server.me();
 			})
-			.then(async (me) => {
+			.then((me) => {
 				if (!mounted) return;
 				if (!me) return;
 
@@ -112,7 +112,7 @@ export default function DisplayListings({ onListingClick }) {
 		<div className="listing-list min-w-full">
 			{listings.length > 0 ? (
 				listings.map((listing) => (
-					<div className="listing-card relative min-h-fit  hover:bg-white hover:cursor-pointer dark:hover:bg-[#151515] overflow-hidden" key={listing.id} listingid={listing.id}>
+					<div className="listing-card relative min-h-fit hover:bg-white hover:cursor-pointer dark:hover:bg-[#151515] overflow-hidden" key={listing.id} listingid={listing.id}>
 						<div className="flex flex-col gap-2" onClick={() => { onListingClick?.(listing) }}>
 							<div className="listing-card-image-container">
 								{
@@ -144,7 +144,8 @@ export default function DisplayListings({ onListingClick }) {
 								<Button color="bgless" onClick={() => onListingClick?.(listing)}>View</Button>
 							) : (<></>)}
 						</div>
-						{(listing.awaiting_moderation) ? (
+
+						{listing.awaiting_moderation && (
 							<>
 							<div className="absolute top-0 left-0 w-full h-full dark:bg-black/80 bg-black/20 overflow-hidden">
 								<div className="absolute top-1/2 left-[-30%] w-[160%] -rotate-40 bg-red-800 py-2 text-center tracking-widest">
@@ -161,11 +162,11 @@ export default function DisplayListings({ onListingClick }) {
 								</div>
 							)}
 							</>
-						) : (<div className="text-4xl text-red-600">stupid thing fails</div>)}
+						)}
 					</div>
 				))
 			) : (
-				<p className="text-gray-500 text-center">No listings found.</p>
+				<p className="text-gray-500 text-center">No products found</p>
 			)}
 		</div>
 	)
