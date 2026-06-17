@@ -144,7 +144,7 @@ export default function DisplayListings({ onListingClick }) {
 								<Button color="bgless" onClick={() => onListingClick?.(listing)}>View</Button>
 							) : (<></>)}
 						</div>
-						{(listing.awaiting_moderation === true) && (
+						{(listing.awaiting_moderation) ? (
 							<>
 							<div className="absolute top-0 left-0 w-full h-full dark:bg-black/80 bg-black/20 overflow-hidden">
 								<div className="absolute top-1/2 left-[-30%] w-[160%] -rotate-40 bg-red-800 py-2 text-center tracking-widest">
@@ -161,7 +161,7 @@ export default function DisplayListings({ onListingClick }) {
 								</div>
 							)}
 							</>
-						)}
+						) : (<div className="text-4xl text-red-600">stupid thing fails</div>)}
 					</div>
 				))
 			) : (
