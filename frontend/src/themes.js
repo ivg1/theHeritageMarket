@@ -4,7 +4,7 @@ import { createTheme } from "flowbite-react";
 export const lightTheme = createTheme({
     navbar: {
         root: {
-            base: "border-b border-slate-200 bg-white px-2 py-2 shadow-sm backdrop-blur-sm",
+            base: "border-b border-slate-200 bg-white/50 px-2 py-2 shadow-sm backdrop-blur-md z-4000",
         },
         link: {
             base: "block py-2 pl-3 pr-4 md:p-0",
@@ -114,12 +114,17 @@ export const lightTheme = createTheme({
         }
     }
     */
+    drawer: {
+        root: {
+            base: "z-5000",
+        }
+    },
 });
 
 export const darkTheme = createTheme({
     navbar: {
         root: {
-            base: "border-b dark:border-(--darkborder) dark:bg-(--darkbg) dark:backdrop-blur-sm px-2 py-2.5 dark:shadow-sm sm:px-4",
+            base: "border-b dark:border-(--darkborder) dark:bg-(--darkbg)/50 dark:backdrop-blur-md px-2 py-2.5 dark:shadow-sm sm:px-4 dark:z-4000",
         },
         link: {
             base: "block py-2 pl-3 pr-4 md:p-0",
@@ -237,7 +242,7 @@ export const darkTheme = createTheme({
     },
     drawer: {
         root: {
-            base: "dark:bg-(--darksurface)",
+            base: "dark:bg-(--darksurface) dark:z-5000",
             backdrop: "dark:bg-(--darkbg)/80"
         }
     },

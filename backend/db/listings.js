@@ -46,7 +46,9 @@ const Listings = {
                     WHERE 
                         visibility = true AND
                         seller_id = $1
-                    ORDER BY created_at DESC
+                    ORDER BY 
+                        awaiting_moderation ASC,
+                        created_at DESC
                 `, [id]);
 
                 return result.rows;
