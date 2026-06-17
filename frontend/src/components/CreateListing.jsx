@@ -164,7 +164,7 @@ export default function CreateListing({ open, onClose }) {
     };
 
     return (
-        <div className="create-listing-overlay fixed inset-0 flex items-start justify-center overflow-hidden sm:items-center z-900">
+        <div className="create-listing-overlay fixed inset-0 flex items-start justify-center overflow-hidden sm:items-center z-6000">
             <div className="create-listing-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" />
             <div className="create-listing-panel relative z-1000 w-full max-w-200 max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain sm:rounded-2xl bg-white p-6 shadow-2xl dark:bg-(--darkbg)">
                 <Button
