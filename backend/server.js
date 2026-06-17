@@ -24,15 +24,18 @@ if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ 
+    storage: multer.memoryStorage() ,
+    limits: {
+        fileSize: 10*1024*1024
+    }
+});
 
 app.use("/uploads", express.static("uploads"));
 
 app.post("/upload", upload.single("file"), async (req, res) => {
     try {
-        console.log("content-type:", req.headers["content-type"]);
-        console.log("files:", req.files);
-        console.log("body:", req.body);
+        console.log("file:", req.file);
 
         const outputFile = Date.now() + "_" + (Math.floor(Math.random() * 10000)) + ".webp";
         const outputPath = "uploads/" + outputFile;

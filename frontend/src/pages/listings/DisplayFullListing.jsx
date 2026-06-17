@@ -351,7 +351,7 @@ export default function DisplayFullListing() {
 														});
 													}}
 												/>
-												<Label htmlFor="showEmail"><span className="text-sm">Show email</span></Label>
+												<Label htmlFor="showEmail"><span className="text-sm text-white">Show email</span></Label>
 											</div>
 										</div>
 										<div className="contact-card bg-green-700 dark:bg-green-900 text-white xl:w-1/2 w-full min-h-fit rounded-2xl overflow-x-hidden">
@@ -376,7 +376,7 @@ export default function DisplayFullListing() {
 														});
 													}}
 												/>
-												<Label htmlFor="showPhone"><span className="text-sm">Show phone</span></Label>
+												<Label htmlFor="showPhone"><span className="text-sm text-white">Show phone</span></Label>
 											</div>
 										</div>
 										</>

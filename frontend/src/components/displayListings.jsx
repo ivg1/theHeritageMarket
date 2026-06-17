@@ -109,7 +109,7 @@ export default function DisplayListings({ onListingClick }) {
     
 	//dark:hover:bg-[#320505]
     return (
-        <div className="listing-list min-w-full">
+		<div className="listing-list min-w-full">
 			{listings.length > 0 ? (
 				listings.map((listing) => (
 					<div className="listing-card relative min-h-fit  hover:bg-white hover:cursor-pointer dark:hover:bg-[#151515] overflow-hidden" key={listing.id} listingid={listing.id}>
@@ -169,5 +169,5 @@ export default function DisplayListings({ onListingClick }) {
 				<p className="text-gray-500 text-center">No products found</p>
 			)}
 		</div>
-    )
+	)
 }
