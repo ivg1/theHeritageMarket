@@ -18,7 +18,7 @@ export default function CreateListing({ open, onClose }) {
         price: "",
         negotiable: false,
         description: "",
-        tags: [],
+        tags: "",
         includeEmail: true,
         includePhone: true,
         images: []
@@ -69,7 +69,18 @@ export default function CreateListing({ open, onClose }) {
 
     const handleClose = () => {
         if (hasInfo && !window.confirm("Discard listing?")) return;
-
+        localStorage.removeItem("listingSave");
+        setNewListing({
+            type: "physical",
+            title: "",
+            price: "",
+            negotiable: false,
+            description: "",
+            tags: "",
+            includeEmail: true,
+            includePhone: true,
+            images: []
+        });
         setIsSubmitted(false);
         setError("");
         onClose();
@@ -191,16 +202,22 @@ export default function CreateListing({ open, onClose }) {
                 setIsSubmitted(false);
                 return;
             }
+            if (newListing.tags.trim() === "") {
+                setError("Tags are missing.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
 
-
+            const goodTags = [...new Set(
+                newListing.tags
+                    .split(",")
+                    .map(tag => tag.trim().toLowerCase())
+                    .filter(tag => tag.length > 0)
+                    .map(tag => tag.charAt(0).toUpperCase() + tag.slice(1))
+            )];
+            
             try {
-                const goodTags = [...new Set(
-                    newListing.tags
-                        .split(",")
-                        .map(tag => tag.trim().toLowerCase())
-                        .filter(tag => tag.length > 0)
-                        .map(tag => tag.charAt(0).toUpperCase() + tag.slice(1))
-                )];
 
                 const me = await Server.me();
                 const username = me.username;
@@ -237,7 +254,7 @@ export default function CreateListing({ open, onClose }) {
                     price: "",
                     negotiable: false,
                     description: "",
-                    tags: [],
+                    tags: "",
                     includeEmail: true,
                     includePhone: true,
                     images: []
@@ -360,7 +377,7 @@ export default function CreateListing({ open, onClose }) {
                                 <div className="mb block">
                                     <Label htmlFor="tags">Tags:</Label>
                                 </div>
-                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." shadow 
+                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." shadow required
                                     value={newListing.tags}
                                     onChange={(e) => {
                                         setNewListing({
