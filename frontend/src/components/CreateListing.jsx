@@ -54,6 +54,7 @@ export default function CreateListing({ open, onClose }) {
 
     //since this thing sometimes disappears (the creating thing), make sure to save it just in case
     useEffect(() => {
+        if (newListing.title === "") return;
         localStorage.setItem("listingSave", JSON.stringify(newListing));
     }, [newListing]);
     
