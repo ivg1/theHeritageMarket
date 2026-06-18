@@ -440,7 +440,7 @@ export default function CreateListing({ open, onClose }) {
                                 </div>
                             )}
                             <div className="flex justify-end mt-10 mr-2 mb-2">
-                                <Button type="submit" color="red" disabled={isSubmitted}>{isSubmitted ? (<><Spinner size="sm" className="me-3" light /> Uploading...</>) : "Create listing"}</Button>
+                                <Button type="submit" color="red" disabled={isSubmitted}>{isSubmitted ? (<><Spinner color="failure" size="sm" className="me-3" light /> Uploading...</>) : "Create listing"}</Button>
                             </div>
                         </form>
                     </div>
