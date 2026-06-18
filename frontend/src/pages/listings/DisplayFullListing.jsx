@@ -19,6 +19,7 @@ export default function DisplayFullListing() {
 	const [editing, setEditing] = useState(false);
 	const [formValues, setFormValues] = useState(null);
 	const [mod, setMod] = useState(false);
+	const [admin, setAdmin] = useState(false);
 	const [specialMessage, setSpecialMessage] = useState("");
 
 	const { listingId } = useParams();
@@ -64,6 +65,7 @@ export default function DisplayFullListing() {
                     console.log("cannot edit");
                 }
 				if (me && me.is_mod) setMod(true);
+				if (me && me.is_admin) setAdmin(true);
 
 				if (listing.awaiting_moderation && !editAccess) {
 					console.error("not permitted to view at the moment");
@@ -493,7 +495,7 @@ export default function DisplayFullListing() {
 									<HR className="my-2" />
 									<div className="flex gap-2 justify-end z-10">
 										<div className="flex gap-2">
-											{mod && (
+											{(mod || admin) && (
 												<div className="flex gap-2">
 													{listing.awaiting_moderation && (
 														<Button color="red" className="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
