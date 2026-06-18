@@ -114,7 +114,7 @@ export default function SignupPage() {
     return (
         <>
             <div className="auth-container min-w-screen min-h-screen flex items-center justify-center sm:py-10">
-                <div className="auth-holder w-screen h-screen sm:w-100 sm:h-fit bg-white dark:bg-black sm:rounded-2xl px-4 pt-8 sm:border-solid sm:border-2 dark:border-(--darkborder) border-gray-200">
+                <div className="auth-holder w-screen h-fit sm:w-100 sm:h-fit bg-white dark:bg-black sm:rounded-2xl px-4 pt-8 sm:border-solid sm:border-2 dark:border-(--darkborder) border-gray-200">
                     <div className="flex flex-col justify-center mb-6">
                         <h1 className="text-4xl font-bold text-center mb-2">Sign Up</h1>
                     </div>
@@ -167,7 +167,7 @@ export default function SignupPage() {
                         </div>
                         <div className="flex items-center gap-2">
                             <Checkbox id="agree" name="agree" color="red" />
-                            <Label htmlFor="agree" className="flex">
+                            <Label htmlFor="agree" className="flex items-center">
                                 I agree with the&nbsp;
                                 <Link to="/legal/terms-of-service" target="_blank" className="text-red-600 hover:underline">
                                     terms of service
