@@ -60,25 +60,48 @@ export default function AccountDetails({ details, loading, loadingError }) {
         }
 
         //phone validation
-        const phone = values.phone?.trim();
-        if (phone.length === 0) {
-            console.error("Cannot submit empty lines");
-            setError("Cannot submit empty lines.");
-            setShowError(true);
-            setSubmitting(false);
-            return;
-        } 
-        const phoneRegex = /^\+?[1-9]\d{7,14}$/;
+            const phone = values.phone?.trim();
+            if (phone.length === 0) {
+                console.error("Cannot submit empty lines");
+                setError("Cannot submit empty lines.");
+                setShowError(true);
+                setSubmitting(false);
+                return;
+            } 
+            const phoneRegex = /^\+?[1-9]\d{7,14}$/;
+    
+            const normalized = phone.replace(/[\s()-]/g, "");
+    
+            if (!phoneRegex.test(normalized)) {
+                console.error("Phone number is invalid");
+                setError("Phone number is invalid.");
+                setShowError(true);
+                setSubmitting(false);
+                return;
+            }
 
-        const normalized = phone.replace(/[\s()-]/g, "");
-
-        if (!phoneRegex.test(normalized)) {
-            console.error("Phone number is invalid");
-            setError("Phone number is invalid.");
+        if (formValues.fname.length > 20) {
+            console.error("First name too long.");
+            setError("First name too long.");
             setShowError(true);
             setSubmitting(false);
             return;
         }
+        if (formValues.lname.length > 20) {
+            console.error("Last name too long.");
+            setError("Last name too long.");
+            setShowError(true);
+            setSubmitting(false);
+            return;
+        }
+        if (formValues.about.length > 600) {
+            console.error("About too long.");
+            setError("About too long.");
+            setShowError(true);
+            setSubmitting(false);
+            return;
+        }
+        
 
         let profileImageUrl = details.profile_image;
         try {
@@ -131,6 +154,10 @@ export default function AccountDetails({ details, loading, loadingError }) {
             file,
             preview: URL.createObjectURL(file)
         });
+        setFormValues({
+            ...formValues,
+            profile_image: file
+        })
     };
 
 
@@ -181,7 +208,11 @@ export default function AccountDetails({ details, loading, loadingError }) {
                                                 fname: e.target.value
                                             });
                                         }}
+                                        className={formValues?.fname.length > 20 ? "border-red-600 border-2 rounded-lg" : ""}
                                     />
+                                    <div className="flex justify-end">
+                                        <p className={formValues?.fname.length > 20 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{formValues?.fname.length}/20</p>
+                                    </div>
                                 </div>
                                 <div className="form-item mb-2 sm:mb-6">
                                     <div className="block">
@@ -194,7 +225,11 @@ export default function AccountDetails({ details, loading, loadingError }) {
                                                 lname: e.target.value
                                             });
                                         }}
+                                        className={formValues?.lname.length > 20 ? "border-red-600 border-2 rounded-lg" : ""}
                                     />
+                                    <div className="flex justify-end">
+                                        <p className={formValues?.lname.length > 20 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{formValues?.lname.length}/20</p>
+                                    </div>
                                 </div>
                             </div>
                             <HR className="m-0" />
@@ -239,7 +274,11 @@ export default function AccountDetails({ details, loading, loadingError }) {
 													about: e.target.value
 												});
 											}}
+                                            className={formValues?.about.length > 600 ? "border-red-600 border-2 rounded-lg" : ""}
                                         />
+                                        <div className="flex justify-end">
+                                            <p className={formValues?.about.length > 600 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{formValues?.about.length}/600</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

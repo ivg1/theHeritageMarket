@@ -44,7 +44,7 @@ export default function SignupPage() {
         let characters = /[!@#$%^&*/+-_]/;
         if (!characters.test(values.password)) {
             console.error("password must include at least 1 symbol");
-            setError("Password must include at least 1 symbol (!,@,#,$,%,^,&,*,/,+,-,_).");
+            setError("Password must include at least 1 symbol (!,@,#,$,%,^,&,*,/,+,-).");
             setShowError(true);
             return;
         }
@@ -63,6 +63,32 @@ export default function SignupPage() {
                 return;
             }
         }
+
+        if (values.fname.length > 20) {
+            console.error("First name too long.");
+            setError("First name too long (max. 20char).");
+            setShowError(true);
+            return;
+        }
+        if (values.lname.length > 20) {
+            console.error("Last name too long.");
+            setError("Last name too long (max. 20char).");
+            setShowError(true);
+            return;
+        }
+        if (values.username.length > 20) {
+            console.error("Username too long.");
+            setError("Username too long (max. 20char).");
+            setShowError(true);
+            return;
+        }
+        if (values.email.length > 40) {
+            console.error("Email too long.");
+            setError("Email too long (max. 40char).");
+            setShowError(true);
+            return;
+        }
+
         
 
         const toSend = {
@@ -130,7 +156,7 @@ export default function SignupPage() {
                             <TextInput id="password" name="password" type="password" placeholder="••••••••" required shadow />
                             <ul className="list-disc px-4 mt-2 text-gray-400 text-sm">
                                 <li>Must be 8 or more characters</li>
-                                <li>Must include a symbol (!,@,#,$,%,^,&,*,/,+,-,_)</li>
+                                <li>Must include a symbol (!,@,#,$,%,^,&,*,/,+,-)</li>
                             </ul>
                         </div>
                         <div className="form-item">

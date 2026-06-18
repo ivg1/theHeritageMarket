@@ -12,7 +12,17 @@ export default function CreateListing({ open, onClose }) {
     const [showError, setShowError] = useState(true);
 
     //todo: later make the form update through this, with onChange events
-    const [newListing, setNewListing] = useState([]);
+    const [newListing, setNewListing] = useState({
+        type: "physical",
+        title: "",
+        price: "",
+        negotiable: false,
+        description: "",
+        tags: [],
+        includeEmail: true,
+        includePhone: true,
+        images: []
+    });
 
     const [imageUploadingAllowed, setImageUploadingAllowed] = useState(true);
 
@@ -42,6 +52,18 @@ export default function CreateListing({ open, onClose }) {
         return () => window.removeEventListener("beforeunload", handleBeforeUnload);
     }, [open, hasInfo]);
 
+    //since this thing sometimes disappears (the creating thing), make sure to save it just in case
+    useEffect(() => {
+        localStorage.setItem("listingSave", JSON.stringify(newListing));
+    }, [newListing]);
+    
+    //and also restore it
+    useEffect(() => {
+        const save = localStorage.getItem("listingSave");
+        if (save) setNewListing(JSON.parse(save));
+
+    }, [])
+
     if (!open) return null;
 
     const handleClose = () => {
@@ -51,151 +73,190 @@ export default function CreateListing({ open, onClose }) {
         setError("");
         onClose();
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (isSubmitted) return;
-        setIsSubmitted(true);
-        setError("");
-
-        const formData = new FormData(e.target);
-        const values = Object.fromEntries(formData.entries());
-
-        console.log(values);
-        const images = formData.getAll("images").filter(
-            image => image instanceof File && image.size > 0
-        );
-        console.log(images);
-
-        
-
-        //validate images
-        const allowedTypes = [
-            "image/jpeg",
-            "image/jpg",
-            "image/png",
-            "image/webp",
-            "image/heic",
-            "image/heif"
-        ];
-
-        if (images.length > 6) {
-            setError("Select less images. (Limit 6)");
-            setShowError(true);
-            setIsSubmitted(false);
-            return;
-        }
-        
-        for (const image of images) {
-            console.log(image.type);
-            if (!allowedTypes.includes(image.type)) {
-                setError(`${image.name} is not a supported image type.`);
-                setShowError(true);
-                setIsSubmitted(false);
-                return;
-            }
-            if (image.size > 10 * 1024 * 1024) {
-                setError(`${image.name} exceeds 10MB.`);
-                setShowError(true);
-                setIsSubmitted(false);
-                return;
-            }
-        }
-
-        //here i could just go through each image in a for loop and upload them one by one
-        //but why not have parallel uploads so its faster. speeeeed
-        let imageUrls = [];
-        if (values.type === "physical") {
-            try {
-                const uploadPromises = images.map(image =>
-                    Server.uploadImage(image)
-                );
-    
-                const results = await Promise.all(uploadPromises);
-                imageUrls = results.map(result => result.image_url);
-    
-                console.log(imageUrls);
-            } catch (err) {
-                console.error(err);
-                setError(`Failed to upload one or more images: ${err}`);
-                setShowError(true);
-                setIsSubmitted(false);
-                return;
-            }
-        }
-
-        //general validation
-        if (values.title === "") {
-            setError("Title cannot be empty.");
-            setShowError(true);
-            setIsSubmitted(false);
-            return;
-        }
-        if (values.price < 0) {
-            setError("Price cannot be negative.");
-            setShowError(true);
-            setIsSubmitted(false);
-            return;
-        }
-        if (Math.round(values.price) !== Number(values.price)) {
-            setError("Price has to be integer.");
-            setShowError(true);
-            setIsSubmitted(false);
-            return;
-        }
-        if (values.desc === "") {
-            setError("Cannot have an empty description.");
-            setShowError(true);
-            setIsSubmitted(false);
-            return;
-        }
-
-
         try {
-            const goodTags = [...new Set(
-                values.tags
-                    .split(",")
-                    .map(tag => tag.trim().toLowerCase())
-                    .filter(tag => tag.length > 0)
-                    .map(tag => tag.charAt(0).toUpperCase() + tag.slice(1))
-            )];
+            if (isSubmitted) return;
+            setIsSubmitted(true);
+            setError("");
 
-            const me = await Server.me();
-            const username = me.username;
-            const userData = await Server.users.getDataByUsername(username); //yes i dont leak anything other than email, phone and id here
-            const sellerId = userData.id;
-            const sellerEmail = (values.includeEmail === "on") ? userData.email : null; //honestly idk how this might happen to set null but ok
-            const sellerPhone = (values.includePhone === "on") ? userData.phone : null;
+            //const formData = new FormData(e.target);
+            //const values = Object.fromEntries(formData.entries());
+            //console.log(values);
+            console.log(newListing);
+            
+            //here i could just go through each image in a for loop and upload them one by one
+            //but why not have parallel uploads so its faster. speeeeed
+            let imageUrls = [];
+            if (newListing.type === "physical") {
+                //const images = formData.getAll("images").filter(
+                //    image => image instanceof File && image.size > 0
+                //);
+                const images = newListing.images.filter(
+                    image => image instanceof File && image.size > 0
+                );
+                console.log(images);
 
-            const toSend = {
-                title: values.title,
-                description: values.desc,
-                price: Number(values.price),
-                tags: goodTags,
-                images: imageUrls,
-                seller_id: sellerId,
-                seller_email: sellerEmail,
-                seller_phone: sellerPhone,
-                email_show: (values.includeEmail === "on"),
-                phone_show: (values.includePhone === "on" && sellerPhone !== null), //for now this will work, but later to add a feedback saying user doesnt have phone added
-                is_physical: (values.type === "physical"),
-                negotiable: (values.negotiable === "on")
-            };
-            console.log(toSend);
+                //validate images
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/jpg",
+                    "image/png",
+                    "image/webp",
+                    "image/heic",
+                    "image/heif"
+                ];
 
-			const response = await Server.listings.create(toSend);
-			console.log("listing create response", response);
+                if (images.length > 6) {
+                    setError("Select less images. (Limit 6)");
+                    setShowError(true);
+                    setIsSubmitted(false);
+                    return;
+                }
+                
+                for (const image of images) {
+                    console.log(image.type);
+                    if (!allowedTypes.includes(image.type)) {
+                        setError(`${image.name} is not a supported image type.`);
+                        setShowError(true);
+                        setIsSubmitted(false);
+                        return;
+                    }
+                    if (image.size > 10 * 1024 * 1024) {
+                        setError(`${image.name} exceeds 10MB.`);
+                        setShowError(true);
+                        setIsSubmitted(false);
+                        return;
+                    }
+                }
+                
+                try {
+                    const uploadPromises = images.map(image =>
+                        Server.uploadImage(image)
+                    );
+        
+                    const results = await Promise.all(uploadPromises);
+                    imageUrls = results.map(result => result.image_url);
+        
+                    console.log(imageUrls);
+                } catch (err) {
+                    console.error(err);
+                    setError(`Failed to upload one or more images: ${err}`);
+                    setShowError(true);
+                    setIsSubmitted(false);
+                    return;
+                }
+            }
 
-            setHasInfo(false);
-            onClose();
-            window.location.reload();
-		} catch (err) {
-			console.error("listing creation failed", err);
-            setError(`Failed to create listing. ${err}`);
+            //general validation
+            if (newListing.title === "") {
+                setError("Title cannot be empty.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+            if (newListing.title.length > 60) {
+                setError("Title too long.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+
+            if (newListing.price < 0) {
+                setError("Price cannot be negative.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+            if (Math.round(newListing.price) !== Number(newListing.price)) {
+                setError("Price has to be integer.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+
+            if (newListing.description === "") {
+                setError("Cannot have an empty description.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+            if (newListing.description.length > 2000) {
+                setError("Description too long.");
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+
+
+            try {
+                const goodTags = [...new Set(
+                    newListing.tags
+                        .split(",")
+                        .map(tag => tag.trim().toLowerCase())
+                        .filter(tag => tag.length > 0)
+                        .map(tag => tag.charAt(0).toUpperCase() + tag.slice(1))
+                )];
+
+                const me = await Server.me();
+                const username = me.username;
+                const userData = await Server.users.getDataByUsername(username); //yes i dont leak anything other than email, phone and id here
+                const sellerId = userData.id;
+                const sellerEmail = (newListing.includeEmail === "on") ? userData.email : null; //honestly idk how this might happen to set null but ok
+                const sellerPhone = (newListing.includePhone === "on") ? userData.phone : null;
+
+                const toSend = {
+                    title: newListing.title,
+                    description: newListing.description,
+                    price: Number(newListing.price),
+                    tags: goodTags,
+                    images: imageUrls,
+                    seller_id: sellerId,
+                    seller_email: sellerEmail,
+                    seller_phone: sellerPhone,
+                    email_show: (newListing.includeEmail === "on"),
+                    phone_show: (newListing.includePhone === "on" && sellerPhone !== null), //for now this will work, but later to add a feedback saying user doesnt have phone added
+                    is_physical: (newListing.type === "physical"),
+                    negotiable: (newListing.negotiable === "on")
+                };
+                console.log(toSend);
+
+                const response = await Server.listings.create(toSend);
+                console.log("listing create response", response);
+
+                setHasInfo(false);
+
+                localStorage.removeItem("listingSave");
+                setNewListing({
+                    type: "physical",
+                    title: "",
+                    price: "",
+                    negotiable: false,
+                    description: "",
+                    tags: [],
+                    includeEmail: true,
+                    includePhone: true,
+                    images: []
+                });
+
+                onClose();
+                setIsSubmitted(false);
+                window.location.reload();
+            } catch (err) {
+                console.error("listing creation failed", err);
+                setError(`Failed to create listing. ${err}`);
+                setShowError(true);
+                setIsSubmitted(false);
+            }
+        } catch (err) {
+            console.error("Some error occured.", err);
+            setError(`Some error occured. ${err}`);
             setShowError(true);
             setIsSubmitted(false);
-		}
+        }
     };
 
     return (
@@ -231,31 +292,86 @@ export default function CreateListing({ open, onClose }) {
                                 <div className="mb block">
 								    <Label htmlFor="username">Title:&nbsp;<span className="text-red-600">*</span></Label>
 							    </div>
-							    <TextInput id="title" name="title" type="text" placeholder="Maths IGCSE Extended book" required shadow />
+							    <TextInput id="title" name="title" type="text" placeholder="Maths IGCSE Extended book" required shadow 
+                                    value={newListing.title}
+                                    onChange={(e) => {
+                                        setNewListing({
+                                            ...newListing,
+                                            title: e.target.value
+                                        })
+                                    }}
+                                    className={newListing.title.length > 60 ? "border-red-600 border-2 rounded-lg" : ""}
+                                />
+                                <div className="flex justify-end">
+                                    <p className={newListing.title.length > 60 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{newListing.title.length}/60</p>
+                                </div>
                             </div>
                             <div className="form-item">
                                 <div className="mb block">
 								    <Label htmlFor="username">Price:&nbsp;<span className="text-red-600">*</span></Label>
 							    </div>
-							    <TextInput id="price" name="price" type="number" placeholder="10..?" min="0" step="1" required shadow />
-
-                                <div className="flex items-center gap-1 my-2">
-                                    <Checkbox color="red" id="negotiable" name="negotiable" />
-                                    <Label htmlFor="negotiable">Price negotiable</Label>
+							    <TextInput id="price" name="price" type="number" placeholder="10..?" min="0" step="1" required shadow 
+                                    value={newListing.price}
+                                    onChange={(e) => {
+                                        setNewListing({
+                                            ...newListing,
+                                            price: Number(e.target.value)
+                                        })
+                                    }}
+                                    className={newListing.price > 1000 ? "border-red-600 border-2 rounded-lg" : ""}
+                                />
+                                <div className="flex justify-between">
+                                    <div className="flex items-center gap-1 my-2">
+                                        <Checkbox color="red" id="negotiable" name="negotiable" 
+                                            checked={newListing.negotiable}
+                                            onChange={(e) => {
+                                                setNewListing({
+                                                    ...newListing,
+                                                    negotiable: e.target.checked
+                                                });
+                                            }}
+                                        />
+                                        <Label htmlFor="negotiable">Price negotiable</Label>
+                                    </div>
+                                    <p className={newListing.price > 1000 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>max. €1000</p>
                                 </div>
                             </div>
                             <div className="form-item">
                                 <div className="mb block">
 								    <Label htmlFor="username">Description:&nbsp;<span className="text-red-600">*</span></Label>
 							    </div>
-							    <Textarea id="desc" name="desc" type="text" rows={4} placeholder="Used, in good condition..." required shadow />
+							    <Textarea id="desc" name="desc" type="text" rows={4} placeholder="Used, in good condition..." required shadow 
+                                    value={newListing.description}
+                                    onChange={(e) => {
+                                        setNewListing({
+                                            ...newListing,
+                                            description: e.target.value
+                                        })
+                                    }}
+                                    className={newListing.description.length > 2000 ? "border-red-600 border-2 rounded-lg" : ""}
+                                />
+                                <div className="flex justify-end">
+                                    <p className={newListing.description.length > 2000 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{newListing.description.length}/2000</p>
+                                </div>
                                 <HelperText>Try to include things like, in case of a book, how used it is. Aim to write multiple lines.</HelperText>
                             </div>
                             <div className="form-item">
                                 <div className="mb block">
                                     <Label htmlFor="tags">Tags:</Label>
                                 </div>
-                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." shadow />
+                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." shadow 
+                                    value={newListing.tags}
+                                    onChange={(e) => {
+                                        setNewListing({
+                                            ...newListing,
+                                            tags: e.target.value
+                                        })
+                                    }}
+                                    className={newListing.tags.length > 60 ? "border-red-600 border-2 rounded-lg" : ""}
+                                />
+                                <div className="flex justify-end">
+                                    <p className={newListing.tags.length > 60 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{newListing.tags.length}/60</p>
+                                </div>
                                 <HelperText>Adding tags makes it easier to find your listing. Separate them by commas.</HelperText>
                             </div>
                             <div className="form-item flex flex-col gap-1">
@@ -263,11 +379,27 @@ export default function CreateListing({ open, onClose }) {
                                     <Label>Contact:</Label>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Checkbox color="red" id="includePhone" name="includePhone" defaultChecked />
+                                    <Checkbox color="red" id="includePhone" name="includePhone"
+                                        checked={newListing.includePhone}
+                                        onChange={(e) => {
+                                            setNewListing({
+                                                ...newListing,
+                                                includePhone: e.target.checked
+                                            })
+                                        }}
+                                    />
                                     <Label htmlFor="include-phone">Display phone for contact</Label>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Checkbox color="red" id="includeEmail" name="includeEmail" defaultChecked />
+                                    <Checkbox color="red" id="includeEmail" name="includeEmail" 
+                                        checked={newListing.includeEmail}
+                                        onChange={(e) => {
+                                            setNewListing({
+                                                ...newListing,
+                                                includeEmail: e.target.checked
+                                            })
+                                        }}
+                                    />
                                     <Label htmlFor="include-email">Display email for contact</Label>
                                 </div>
                             </div>
@@ -276,7 +408,15 @@ export default function CreateListing({ open, onClose }) {
                                     {/* rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server */}
                                     <div id="images-upload">
                                         <Label htmlFor="images" className="mb block">Upload images</Label>
-                                        <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp, image/heic, image/heif" multiple />
+                                        <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp, image/heic, image/heif" multiple 
+                                            onChange={(e) => {
+                                                const images = Array.from(e.target.files || []);
+                                                setNewListing({
+                                                    ...newListing,
+                                                    images: images
+                                                })
+                                            }}
+                                        />
                                         <HelperText>Up to 6 images (max. 10MB each). Only images (incl. PNG, JPG, HEIC).</HelperText>
                                     </div>
                                 </div>

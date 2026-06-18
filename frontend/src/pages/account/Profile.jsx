@@ -22,6 +22,7 @@ export default function Profile() {
     const [editAccess, setEditAccess] = useState(false);
     const [editingAbout, setEditingAbout] = useState(false);
     const [newAbout, setNewAbout] = useState("");
+    const [aboutError, setAboutError] = useState(null);
 
     const [mod, setMod] = useState(false);
     const [admin, setAdmin] = useState(false);
@@ -114,11 +115,18 @@ export default function Profile() {
             return;
         }
 
-        setError("");
+        setAboutError("");
 
-        const formData = new FormData(e.target);
-        const values = Object.fromEntries(formData.entries());
-        console.log(values);
+        //const formData = new FormData(e.target);
+        //const values = Object.fromEntries(formData.entries());
+        //console.log(values);
+
+        if (newAbout.length > 600) {
+            console.error("About too long.");
+            setAboutError("About too long.");
+            setSubmitted(false);
+            return;
+        }
 
         try {
             let about = newAbout;
@@ -140,7 +148,7 @@ export default function Profile() {
             setSubmitted(false);
         } catch (err) {
             console.error("updating about failed", err);
-            setError("Failed to update about.");
+            setAboutError("Failed to update about.");
             setShowError(true);
             setSubmitted(false);
             //setEditingAbout(false);
@@ -218,10 +226,16 @@ export default function Profile() {
                                 </h1>
                                 {editingAbout ? (
                                     <form onSubmit={handleAboutEdit}>
-                                        <Textarea id="about" name="about" value={newAbout} className="my-2" rows={4} onChange={(e) => {
+                                        {aboutError !== "" && (
+                                            <p className="text-red-600 text-xl">{aboutError}</p>
+                                        )}
+                                        <Textarea id="about" name="about" value={newAbout} className={newAbout.length > 600 ? "my-2 border-red-600 border-2 rounded-lg" : "my-2"} rows={4} onChange={(e) => {
                                             setNewAbout(e.target.value);
                                         }} />
-                                        <Button color="red" type="submit" disabled={isSubmitted}>{isSubmitted ? "Saving..." : "Save"}</Button>
+                                        <div className="flex justify-between">
+                                            <Button color="red" type="submit" disabled={isSubmitted}>{isSubmitted ? "Saving..." : "Save"}</Button>
+                                            <p className={newAbout.length > 600 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{newAbout.length}/600</p>
+                                        </div>
                                     </form>
                                 ) : (
                                     <p className="whitespace-pre-wrap">{user.about}</p>

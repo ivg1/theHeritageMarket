@@ -97,7 +97,7 @@ export default function DisplayFullListing() {
 		if (!changes) {
 			console.log("no changes made");
 			setEditing(false);
-			return;			
+			return;
 		}
 
 		//phone validation
@@ -128,14 +128,26 @@ export default function DisplayFullListing() {
             setIsSubmitted(false);
             return;
         }
+		if (formValues.price > 1000) {
+            setError("Price is way too high.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
         if (Math.round(formValues.price) !== Number(formValues.price)) {
             setError("Price has to be integer.");
             setShowError(true);
             setIsSubmitted(false);
             return;
         }
-        if (formValues.desc === "") {
+        if (formValues.description === "") {
             setError("Cannot have an empty description.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+		if (formValues.description.length > 2000) {
+            setError("Description is way too long.");
             setShowError(true);
             setIsSubmitted(false);
             return;
@@ -284,7 +296,7 @@ export default function DisplayFullListing() {
 							</div>
 						</div>
 					)}
-					<div className=" min-w-full">
+					<div className="max-w-full min-w-full wrap-break-word">
 						<div className="flex flex-col p-4">
 							<div>
 								{editAccess && specialMessage !== "" && (
@@ -302,7 +314,11 @@ export default function DisplayFullListing() {
 														title: e.target.value
 													});
 												}}
+												className={formValues.title.length > 60 ? "border-red-600 border-2 rounded-lg" : ""}
 											/>
+											<div className="flex justify-end">
+												<p className={formValues.title.length > 60 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{formValues.title.length}/60</p>
+											</div>
 										</>
 									) : (
 										<h1 className="text-4xl font-bold">{formValues.title}</h1>
@@ -322,7 +338,11 @@ export default function DisplayFullListing() {
 																price: Number(e.target.value)
 															});
 														}}
+														className={formValues.price > 1000 ? "border-red-600 border-2 rounded-lg" : ""}
 													/>
+													<div className="flex justify-end">
+														<p className={formValues.price > 1000 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>max. €1000</p>
+													</div>
 												</span>
 												<div className="flex items-center gap-1 text-xl">
 													<Checkbox color="red" id="negotiable" name="negotiable" checked={formValues.negotiable} 
@@ -356,15 +376,20 @@ export default function DisplayFullListing() {
 								<div className="mb-6">
 									<h2 className="text-2xl font-semibold">Description:</h2>
 									{editing ? (
-										<Textarea id="description" name="description" value={formValues.description} rows={4} required
-											onChange={(e) => {
-												setFormValues({
-													...formValues,
-													description: e.target.value
-												});
-											}}
-										/>
-
+										<>
+											<Textarea id="description" name="description" value={formValues.description} rows={4} required
+												onChange={(e) => {
+													setFormValues({
+														...formValues,
+														description: e.target.value
+													});
+												}}
+												className={formValues.description.length > 2000 ? "border-red-600 border-2 rounded-lg" : ""}
+											/>
+											<div className="flex justify-end">
+												<p className={formValues.price > 1000 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{formValues.description.length}/2000</p>
+											</div>
+										</>
 									) : (
 										<p className="whitespace-pre-wrap">{formValues.description}</p>
 									)}
@@ -387,7 +412,7 @@ export default function DisplayFullListing() {
 											<div className="min-w-full min-h-full rounded-2xl p-3">
 												<h1 className="text-xl font-bold">Email:</h1>
 												{mod && (
-													<TextInput id="email" name="email" value={formValues.seller_email} 
+													<TextInput id="email" name="email" value={formValues.seller_email || "{not given}"} 
 														onChange={(e) => {
 															setFormValues({
 																...formValues,
@@ -414,7 +439,7 @@ export default function DisplayFullListing() {
 												<h1 className="text-xl font-bold">Phone number:</h1>
 												{/* later make only mods allowed to change email and phone here ... oh and i need to fix bug where if user changes their email (for now its blocked), the listing email is still the same */}
 												{mod && (
-													<TextInput id="phone" name="phone" value={formValues.seller_phone} 
+													<TextInput id="phone" name="phone" value={formValues.seller_phone || "{not given}"} 
 														onChange={(e) => {
 															setFormValues({
 																...formValues,

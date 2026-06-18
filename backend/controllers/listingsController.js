@@ -20,7 +20,7 @@ const createListing_post = async (req, res) => {
 
         if (seller_id !== req.userId) return res.status(400).json({ error: "you are not showing yourself for who you are" });
 
-        if (!title || !price || !seller_id || !description || (is_physical === undefined)) return res.status(400).json({ message: "missing must have fields"});
+        if ((title === undefined) || (price === undefined) || (seller_id === undefined) || (description === undefined) || (is_physical === undefined)) return res.status(400).json({ message: "missing must have fields"});
         
         const result = await Listings.create(
             title, 
