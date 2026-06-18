@@ -237,7 +237,7 @@ export default function CreateListing({ open, onClose }) {
                     seller_phone: sellerPhone,
                     email_show: (newListing.includeEmail === "on"),
                     phone_show: (newListing.includePhone === "on" && sellerPhone !== null), //for now this will work, but later to add a feedback saying user doesnt have phone added
-                    is_physical: (newListing.type === "physical"),
+                    is_physical: (imageUploadingAllowed),
                     negotiable: (newListing.negotiable === "on")
                 };
                 console.log(toSend);
@@ -298,11 +298,19 @@ export default function CreateListing({ open, onClose }) {
                             <div className="form-item flex flex-col">
                                 <h1 className="text-l mb-1">What type of listing is it?&nbsp;<span className="text-red-600">*</span></h1>
                                 <div className="flex gap-2 m-1 justify-start items-center">
-                                    <Radio color="red" id="physical" name="type" value="physical" defaultChecked onChange={(e) => {setImageUploadingAllowed(e.target.value === "physical")}}/>
+                                    <Radio color="red" id="physical" name="type" value="physical" defaultChecked 
+                                        onChange={(e) => {
+                                            setImageUploadingAllowed(e.target.value === "physical");
+                                        }}
+                                    />
                                     <Label htmlFor="physical">Physical item</Label>
                                 </div>
                                 <div className="flex gap-2 mx-1 justify-start items-center">
-                                    <Radio color="red" id="service" name="type" value="service" onChange={(e) => {setImageUploadingAllowed(e.target.value === "physical")}} />
+                                    <Radio color="red" id="service" name="type" value="service" 
+                                        onChange={(e) => {
+                                            setImageUploadingAllowed(e.target.value === "physical");
+                                        }} 
+                                    />
                                     <Label htmlFor="service">Service</Label>
                                 </div>
                             </div>
