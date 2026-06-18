@@ -19,9 +19,9 @@ This project has multiple features:
 
 ## Installing
 ### Required:
-- PostgreSQL 18
-- Node.js (v22.17.0 or later)
-- npm (v10.9.2 or later)
+- Download [PostgreSQL 18(.4)](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
+- [Node.js](https://nodejs.org/en/download) (v22.17.0 or later)
+- npm (v10.9.2 or later) (```curl -qL https://www.npmjs.com/install.sh | sh```)
 
 ### To host the files on your device:
 ```bash
@@ -32,12 +32,15 @@ cd theHeritageMarket
 #Install dependencies and start dev servers
 cd frontend
 npm install
-npm run dev
-
-#(In a separate terminal)
 cd ../backend
 npm install
+
+#Run servers in separate terminals
+#(terminal 1) /backend
 node server
+#(terminal 2) /frontend
+npm run dev
+
 ```
 Have the PgSQL server on port 5432 (if you want another port, make sure to change the ```PORT``` value in ```backend/.env```).
 
