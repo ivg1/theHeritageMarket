@@ -108,11 +108,11 @@ export default function DisplayListings({ onListingClick, profileId }) {
     }
     
     if (loading) return <p className="text-gray-500 text-center">Loading...</p>;
-	if (error) return <p className="text-red-500 text-center">Error loading products</p>;
+	if (error) return <p className="text-red-500 text-center">Error loading listings</p>;
     
 	//dark:hover:bg-[#320505]
     return (
-			<div className="listing-list min-w-full max-w-full p-2 justify-items-center">
+			<div className="listing-list min-w-full max-w-full sm:p-2 justify-items-center">
 				{listings.length > 0 ? (
 					listings.map((listing) => (
 						<div key={listing.id}>

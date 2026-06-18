@@ -45,6 +45,12 @@ export default function DisplayListingsForMods({ onListingClick }) {
         Server.listings.mods.getAll()
             .then((data) => {
                 if (!mounted) return;
+                if (data.message === "unauthorised") {
+                    setError("You are not authorised mate");
+                    setLoading(false);
+                    mounted = false;
+                    return;
+                }
                 setListings(Array.isArray(data) ? data : []);
                 setLoading(false);
             })
@@ -95,11 +101,11 @@ export default function DisplayListingsForMods({ onListingClick }) {
 
     
     if (loading) return <p className="text-gray-500 text-center">Loading...</p>;
-    if (error) return <p className="text-red-500 text-center">Error loading products</p>;
+    if (error) return <p className="text-red-500 text-center">{error}</p>;
     
     //dark:hover:bg-[#320505]
     return (
-        <div className="listing-list min-w-full">
+        <div className="listing-list min-w-full max-w-full p-2 justify-items-center">
             {listings.length > 0 ? (
                 listings.map((listing) => (
                     <div key={listing.id}>

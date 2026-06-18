@@ -18,20 +18,6 @@ export default function Moderation() {
     const [createListingOpen, setCreateListingOpen] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    useEffect(() => {
-        let isMounted = true;
-
-        Auth.loginState().then((status) => {
-            if (isMounted) {
-                setIsLoggedIn(status);
-            }
-        });
-
-        return () => {
-            isMounted = false;
-        };
-    }, [location.pathname]);
-
     return (
         <div className="listings-page px-10 min-h-screen">
             <div className="listings-content flex items-center justify-center p-4">

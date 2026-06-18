@@ -244,11 +244,12 @@ export default function Profile() {
                         </div>
                     </div>
                     <div className="py-4 px-6">
-                        <div className="bg-gray min-w-full min-h-40 grid grid-cols-1 sm:grid-cols-3 gap-4 divide-x dark:divide-(--darkborder) divide-gray-300 border dark:border-(--darkborder) border-gray-300 rounded-2xl py-4">
+                        <div className="bg-gray min-w-full min-h-40 grid grid-cols-1 sm:grid-cols-1 gap-4 divide-x dark:divide-(--darkborder) divide-gray-300 border dark:border-(--darkborder) border-gray-300 rounded-2xl py-4">
                             <div className="flex flex-col items-center py-4">
                                 <h1 className="text-3xl font-bold ">Listings posted</h1>
                                 <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
                             </div>
+                            {/*
                             <div className="flex flex-col items-center py-4">
                                 <h1 className="text-3xl font-bold ">Listings Posted</h1>
                                 <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
@@ -257,11 +258,12 @@ export default function Profile() {
                                 <h1 className="text-3xl font-bold ">Listings Posted</h1>
                                 <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
                             </div>
+                            */}
                         </div>
                     </div>
-                    <div className="py-4 px-6">
-                        <div className="border dark:border-(--darkborder) border-gray-300 rounded-2xl p-4">
-                            <h1 className="text-3xl font-bold mb-2">{user.fname} {user.lname}'s current listings</h1>
+                    <div className="py-4 sm:px-6">
+                        <div className="sm:border dark:border-(--darkborder) border-gray-300 rounded-2xl sm:p-4">
+                            <h1 className="text-3xl font-bold mb-2 p-4 sm:p-0">{user.fname} {user.lname}'s current listings</h1>
                             <div className="flex">
                                 <div className="w-full flex justify-center">
                                     <DisplayListingsByUser 
