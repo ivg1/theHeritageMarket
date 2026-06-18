@@ -107,7 +107,7 @@ export default function DisplayListings({ onListingClick, category }) {
 
     
     if (loading) return <p className="text-gray-500 text-center">Loading...</p>;
-	if (error) return <p className="text-red-500 text-center">Error loading products</p>;
+	if (error) return <p className="text-red-500 text-center">Error loading listings</p>;
     
 	//dark:hover:bg-[#320505]
     return (
@@ -241,7 +241,7 @@ export default function DisplayListings({ onListingClick, category }) {
 					</div>
 				))
 			) : (
-				<p className="text-gray-500 text-center">No products found</p>
+				<p className="text-gray-500 text-center">No listings found</p>
 			)}
 		</div>
 	)
