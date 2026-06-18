@@ -40,6 +40,11 @@ export const Server = {
                 },
                 body: JSON.stringify(body ?? {})
             });
+            //should put this everywhere else too.
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
             return await response.json();
         },
         async update(body) {
@@ -189,7 +194,7 @@ export const Server = {
 
         async setMod(body) {
             const token = await Auth.getToken();
-            const response = await fetch(`${this.modUrl}/mods/setMod`, {
+            const response = await fetch(`${this.modUrl}/admins/setMod`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -197,8 +202,26 @@ export const Server = {
                 },
                 body: JSON.stringify(body ?? {})
             });
-            if (response.status === 401) throw new Error("Wrong current password")
-            if (!response.ok) throw new Error("failed resetting password");
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
+            return await response.json();
+        },
+        async removeMod(body) {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/admins/removeMod`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify(body ?? {})
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
             return await response.json();
         }
     },

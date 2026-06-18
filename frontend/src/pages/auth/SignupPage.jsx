@@ -1,4 +1,4 @@
-import { Button, Checkbox, Label, TextInput, useThemeMode, Toast, ToastToggle } from "flowbite-react";
+import { Button, Checkbox, Label, TextInput, useThemeMode, Toast, ToastToggle, HelperText } from "flowbite-react";
 import "./SignupPage.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react"
@@ -33,6 +33,37 @@ export default function SignupPage() {
             setShowError(true);
             return;
         }
+
+        //password validation
+        if (values.password.length < 8) {
+            console.error("password must be 8 or more characters");
+            setError("Password must be 8 or more characters.");
+            setShowError(true);
+            return;
+        }
+        let characters = /[!@#$%^&*/+-_]/;
+        if (!characters.test(values.password)) {
+            console.error("password must include at least 1 symbol");
+            setError("Password must include at least 1 symbol (!,@,#,$,%,^,&,*,/,+,-,_).");
+            setShowError(true);
+            return;
+        }
+
+        //phone validation
+        const phone = values.phone?.trim();
+        if (phone) {
+            const phoneRegex = /^\+?[1-9]\d{7,14}$/;
+
+            const normalized = phone.replace(/[\s()-]/g, "");
+
+            if (!phoneRegex.test(normalized)) {
+                console.error("Phone number is invalid");
+                setError("Phone number is invalid.");
+                setShowError(true);
+                return;
+            }
+        }
+        
 
         const toSend = {
             username: values.username,
@@ -97,6 +128,10 @@ export default function SignupPage() {
                                 <Label htmlFor="password">Password:&nbsp;<span className="text-red-600">*</span></Label>
                             </div>
                             <TextInput id="password" name="password" type="password" placeholder="••••••••" required shadow />
+                            <ul className="list-disc px-4 mt-2 text-gray-400 text-sm">
+                                <li>Must be 8 or more characters</li>
+                                <li>Must include a symbol (!,@,#,$,%,^,&,*,/,+,-,_)</li>
+                            </ul>
                         </div>
                         <div className="form-item">
                             <div className="mb-2 block">

@@ -18,12 +18,20 @@ import { useState, useEffect, useRef } from "react";
 
 export default function AccountDetails({ details, loading, loadingError }) {
     const [error, setError] = useState("");
+
     const [showError, setShowError] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
 
     const [profileImage, setProfileImage] = useState(null);
     const profileInputRef = useRef(null);
+
+    const [formValues, setFormValues] = useState(details);
+    const [newDetails, setNewDetails] = useState(details);
+
+    useEffect(() => {
+        if (details) setFormValues(details);
+    }, [details]);
 
     const handleProfilePickerClose = () => {
         setProfilePickerShow(false);
@@ -34,11 +42,43 @@ export default function AccountDetails({ details, loading, loadingError }) {
 
         setSubmitting(true);
         setSuccess(false);
+        setError("");
+        setShowError(false);
+
         console.log("submitted profile data");
 
         const formData = new FormData(e.target);
         const values = Object.fromEntries(formData);
         console.log(values);
+
+        const changes = await JSON.stringify(newDetails) !== JSON.stringify(formValues);
+        if (!changes) {
+            console.log("no changes made");
+            setSuccess("User didnt make any changes.");
+            setSubmitting(false);
+			return;	
+        }
+
+        //phone validation
+        const phone = values.phone?.trim();
+        if (phone.length === 0) {
+            console.error("Cannot submit empty lines");
+            setError("Cannot submit empty lines.");
+            setShowError(true);
+            setSubmitting(false);
+            return;
+        } 
+        const phoneRegex = /^\+?[1-9]\d{7,14}$/;
+
+        const normalized = phone.replace(/[\s()-]/g, "");
+
+        if (!phoneRegex.test(normalized)) {
+            console.error("Phone number is invalid");
+            setError("Phone number is invalid.");
+            setShowError(true);
+            setSubmitting(false);
+            return;
+        }
 
         let profileImageUrl = details.profile_image;
         try {
@@ -49,28 +89,36 @@ export default function AccountDetails({ details, loading, loadingError }) {
             }
         } catch (err) {
             console.error(err);
+            setError(err);
+            setShowError(true);
+            setSubmitting(false);
+            return;
         }
 
         const toSend = {
             profile_image: profileImageUrl,
-            fname: values.fname,
-            lname: values.lname,
-            phone: values.phone,
-            //email: values.email,
-            about: values.about
+            fname: formValues.fname,
+            lname: formValues.lname,
+            phone: formValues.phone,
+            //email: formValues.email,
+            about: formValues.about
         };
 
         try {
             const response = await Server.users.update(toSend);
             console.log("user updated");
+            setNewDetails(formValues);
         } catch (err) {
             console.error(err);
+            setError(err);
+            setShowError(true);
+            setSubmitting(false);
+            return;
         }
 
 
-
         Data.me(true);
-        setSuccess(true);
+        setSuccess("User details updated");
         setSubmitting(false);
 
     };
@@ -88,7 +136,7 @@ export default function AccountDetails({ details, loading, loadingError }) {
 
     if (loading) return <div className="min-w-full min-h-full flex justify-center items-center text-gray-500">Loading...</div>
 	if (loadingError) return <div className="min-w-full min-h-full flex justify-center items-center text-red-500">{loadingError}</div>
-    if (!details) return <div className="min-w-full min-h-full flex justify-center items-center text-red-500">You seem to not exist mate.</div>
+    if (!details) return <div className="min-w-full min-h-full flex justify-center items-center text-gray-500">Trying to fetch details.</div>
 
     return (
         <div className="account-details-container">
@@ -98,13 +146,8 @@ export default function AccountDetails({ details, loading, loadingError }) {
                     {/* <h1 className="text-2xl font-bold mb-2">Personal</h1> */}
                     <form onSubmit={handleProfileDetailsSubmit}>
                         <div className="flex gap-4 mb-4 flex-col dark:border-(--darkborder) border border-gray-200 p-4 rounded-2xl ">
-                            {success ? (
-                                <div>
-                                    <p className="text-green-400">User details updated.</p>
-                                </div>
-                            ) : (<></>)}
                             <div className="flex gap-4 items-center flex-col sm:flex-row">
-                                <div className="relative group">
+                                <Label className="relative group">
                                     <div className="w-36 h-36 rounded-full overflow-hidden dark:border-(--darkborder) border border-gray-200">
                                         <img
                                             src={profileImage?.preview || details.profile_image || "/placeholderProfile.png" }
@@ -112,7 +155,7 @@ export default function AccountDetails({ details, loading, loadingError }) {
                                             className="w-full h-full object-cover"
                                         />
                                     </div>
-                                    <div className="w-full h-full absolute top-0 left-0 hidden group-hover:flex justify-center items-center bg-black/40 text-white dark:bg-black/50 rounded-[50%] hover:cursor-pointer overflow-hidden" onClick={() => {
+                                    <div className="w-full h-full absolute top-0 left-0 flex md:hidden group-hover:flex justify-center items-center bg-black/40 text-white dark:bg-black/50 rounded-[50%] hover:cursor-pointer overflow-hidden" onClick={() => {
                                         profileInputRef.current?.click()
                                     }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
@@ -128,18 +171,32 @@ export default function AccountDetails({ details, loading, loadingError }) {
                                         onChange={handleProfileImageChange}
                                     />
                                     
-                                </div>
+                                </Label>
                                 <div className="form-item sm:mb-6">
                                     <div className="block">
                                         <Label htmlFor="fname" className="ml-1">First Name:</Label>
                                     </div>
-                                    <TextInput id="fname" name="fname" defaultValue={details.fname} placeHolder={details.fname} />
+                                    <TextInput id="fname" name="fname" value={formValues?.fname || ""} placeHolder={formValues?.fname || ""} required 
+                                        onChange={(e) => {
+                                            setFormValues({
+                                                ...formValues,
+                                                fname: e.target.value
+                                            });
+                                        }}
+                                    />
                                 </div>
                                 <div className="form-item mb-2 sm:mb-6">
                                     <div className="block">
                                         <Label htmlFor="lname" className="ml-1">Last Name:</Label>
                                     </div>
-                                    <TextInput id="lname" name="lname" defaultValue={details.lname} placeHolder={details.lname} />
+                                    <TextInput id="lname" name="lname" value={formValues?.lname || ""} placeHolder={formValues?.lname || ""} required 
+                                        onChange={(e) => {
+                                            setFormValues({
+                                                ...formValues,
+                                                lname: e.target.value
+                                            });
+                                        }}
+                                    />
                                 </div>
                             </div>
                             <HR className="m-0" />
@@ -149,13 +206,27 @@ export default function AccountDetails({ details, loading, loadingError }) {
                                         <div className="block">
                                             <Label htmlFor="phone" className="ml-1">Phone number:</Label>
                                         </div>
-                                        <TextInput id="phone" name="phone" type="tel" defaultValue={details.phone} placeHolder={details.phone} className="max-w-200" rows={4} />
+                                        <TextInput id="phone" name="phone" type="tel" value={formValues?.phone || ""} placeHolder={formValues?.phone || ""} className="max-w-200" rows={4} required 
+                                            onChange={(e) => {
+												setFormValues({
+													...formValues,
+													phone: e.target.value
+												});
+											}}
+                                        />
                                     </div>
                                     <div className="form-item">
                                         <div className="block">
                                             <Label htmlFor="email" className="ml-1">Email:</Label>
                                         </div>
-                                        <TextInput id="email" name="email" type="email" defaultValue={details.email} placeHolder={details.email} className="max-w-200" rows={4} disabled />
+                                        <TextInput id="email" name="email" type="email" value={formValues?.email || ""} placeHolder={formValues?.email || ""} className="max-w-200" rows={4} disabled 
+                                            onChange={(e) => {
+												setFormValues({
+													...formValues,
+													email: e.target.value
+												});
+											}}
+                                        />
                                     </div>
                                 </div>
                                 <div className="flex flex-col">
@@ -163,23 +234,32 @@ export default function AccountDetails({ details, loading, loadingError }) {
                                         <div className="block">
                                             <Label htmlFor="about" className="ml-1">About:</Label>
                                         </div>
-                                        <Textarea id="about" name="about" defaultValue={details.about} placeHolder={details.about} className="max-w-200" rows={4} />
+                                        <Textarea id="about" name="about" value={formValues?.about || ""} placeHolder={formValues?.about || ""} className="max-w-200" rows={4} required 
+                                            onChange={(e) => {
+												setFormValues({
+													...formValues,
+													about: e.target.value
+												});
+											}}
+                                        />
                                     </div>
                                 </div>
                             </div>
+                            {success && (
+                                <div>
+                                    <p className="text-green-400">{success}</p>
+                                </div>
+                            )}
+                            {error && showError && (
+                                <div>
+                                    <p className="text-red-600">{error}</p>
+                                </div>
+                            )}
                         </div>
                         <Button type="submit" color="red" disabled={submitting}>{submitting ? "Saving..." : "Save"}</Button>
                     </form>
                 </div>
             </div>
-            {error && showError && (
-                <div className="min-w-screen fixed flex top-0 left-0 p-4">
-                    <Toast>
-                        {error}
-                        <ToastToggle onDismiss={() => setShowError(false)} />
-                    </Toast>
-                </div>
-			)}
         </div>
     )
 }

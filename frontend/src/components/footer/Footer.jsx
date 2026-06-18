@@ -3,12 +3,19 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 import Data from "../../auth/data";
+import Auth from "../../auth/auth";
 
 export default function Footer() {
 
     const [me, setMe] = useState(null);
     useEffect(() => {
 		const getMe = async () => {
+            const loginState = await Auth.loginState();
+            if (!loginState) {
+                console.log("user not logged in");
+                return;
+            }
+            
 			try {
 				const me = await Data.me();
 				//console.log(me);

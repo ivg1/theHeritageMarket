@@ -50,6 +50,21 @@ export default function Security({ details, loading, loadingError}) {
             setSubmitting(false);
             return;
         }
+        if (values.newPassword.length < 8) {
+            console.error("password must be 8 or more characters");
+            setError("Password must be 8 or more characters.");
+            setShowError(true);
+            setSubmitting(false);
+            return;
+        }
+        let characters = /[!@#$%^&*/+-_]/;
+        if (!characters.test(values.newPassword)) {
+            console.error("password must include at least 1 symbol");
+            setError("Password must include at least 1 symbol (!,@,#,$,%,^,&,*,/,+,-,_).");
+            setShowError(true);
+            setSubmitting(false);
+            return;
+        }
 
         try {
             const toSend = {
@@ -80,14 +95,13 @@ export default function Security({ details, loading, loadingError}) {
 
         //
 
-        Data.me(true);
         setSubmittingDelete(false);
     }
     
 
     if (loading) return <div className="min-w-full min-h-full flex justify-center items-center text-gray-500">Loading...</div>
 	if (loadingError) return <div className="min-w-full min-h-full flex justify-center items-center text-red-500">{loadingError}</div>
-    if (!details) return <div className="min-w-full min-h-full flex justify-center items-center text-red-500">You seem to not exist mate.</div>
+    if (!details) return <div className="min-w-full min-h-full flex justify-center items-center text-gray-500">Trying to fetch details.</div>
 
     return (
         <div className="security-container">
@@ -129,6 +143,10 @@ export default function Security({ details, loading, loadingError}) {
                                         <TextInput id="repeatNewPassword" name="repeatNewPassword" type="password" />
                                     </div>
                                 </div>
+                                <ul className="list-disc px-4 mt-2 text-gray-400 text-sm">
+                                    <li>New password must be 8 or more characters</li>
+                                    <li>New password must include a symbol (!,@,#,$,%,^,&,*,/,+,-,_)</li>
+                                </ul>
                             </div>
                         </div>
                         <Button type="submit" color="red" disabled={submitting}>{submitting ? "Resetting..." : "Reset password"}</Button>
@@ -138,12 +156,13 @@ export default function Security({ details, loading, loadingError}) {
                         <div className="">
                             <h1 className="text-2xl font-bold ml-2 mb-2 text-red-600">Delete account</h1>
                             <div className="flex gap-4 mb-4 flex-col border border-red-600 p-4 rounded-2xl ">
+                                <h1 className="text-lg font-bold text-red-600">(Currently disabled)</h1>
                                 <div className="flex gap-4 items-center flex-col sm:flex-row max-w-fit">
                                     <div className="form-item">
                                         <div className="block mb-2">
                                             <Label htmlFor="username">Username:</Label>
                                         </div>
-                                        <TextInput id="username" name="username" />
+                                        <TextInput id="username" name="username" disabled />
                                         <HelperText className="text-red-600">Enter your username to confirm.</HelperText>
                                     </div>
                                 </div>

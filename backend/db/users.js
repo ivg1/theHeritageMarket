@@ -3,7 +3,7 @@ const { pool } = require("./db.js");
 const Users = {
     async me(id) {
         try {
-            const result = await pool.query("SELECT id, username, profile_image, role, is_mod FROM users WHERE id = $1", [id]);
+            const result = await pool.query("SELECT id, username, profile_image, role, is_mod, is_admin FROM users WHERE id = $1", [id]);
             return result.rows[0];
         } catch (err) {
             console.error("error in users db me()", err);
@@ -283,10 +283,23 @@ const Users = {
 
             try {
                 const result = await pool.query(query, values);
-                console.log(`db set admin true for user id ${id}`);
+                console.log(`db set mod true for user id ${id}`);
                 return result.rows[0] || null;
             } catch (err) {
-                console.error("error in users db update.setAdmin()", err);
+                console.error("error in users db update.setMod()", err);
+                throw err;
+            }
+        },
+        async removeMod(id) {
+            const query = "UPDATE users SET is_mod = false, role = 'normal' WHERE id = $1 RETURNING *";
+            const values = [id];
+
+            try {
+                const result = await pool.query(query, values);
+                console.log(`db set mod false for user id ${id}`);
+                return result.rows[0] || null;
+            } catch (err) {
+                console.error("error in users db update.removeMod()", err);
                 throw err;
             }
         }

@@ -30,7 +30,8 @@ router.get("/private/getDataById", authJwt.verifyToken, usersController.privateG
 router.post("/update", authJwt.verifyToken, usersController.updateUser_post);
 router.post("/private/resetPass", authJwt.verifyToken, usersController.privateResetPass_post);
 
-router.post("/mods/setMod", authJwt.verifyToken, roleCheck.needPrivilege, usersController.setUserMod_post);
+router.post("/admins/setMod", authJwt.verifyToken, roleCheck.needAdmin, usersController.setUserMod_post);
+router.post("/admins/removeMod", authJwt.verifyToken, roleCheck.needAdmin, usersController.removeUserMod_post)
 
 //router.post("/delete", authJwt.verifyToken, roleCheck.requirePrivilege,  usersController.deleteUser_post);
 

@@ -13,7 +13,8 @@ export default function CreateListing({ open, onClose }) {
 
     //todo: later make the form update through this, with onChange events
     const [newListing, setNewListing] = useState([]);
-    // ^ sir yes sir, doing now (17/6/26)
+
+    const [imageUploadingAllowed, setImageUploadingAllowed] = useState(true);
 
     //prevent background scrolling
     useEffect(() => {
@@ -61,12 +62,13 @@ export default function CreateListing({ open, onClose }) {
         const formData = new FormData(e.target);
         const values = Object.fromEntries(formData.entries());
 
-
-
         console.log(values);
-
-        const images = formData.getAll("images");
+        const images = formData.getAll("images").filter(
+            image => image instanceof File && image.size > 0
+        );
         console.log(images);
+
+        
 
         //validate images
         const allowedTypes = [
@@ -104,22 +106,51 @@ export default function CreateListing({ open, onClose }) {
         //here i could just go through each image in a for loop and upload them one by one
         //but why not have parallel uploads so its faster. speeeeed
         let imageUrls = [];
-        try {
-            const uploadPromises = images.map(image =>
-                Server.uploadImage(image)
-            );
+        if (values.type === "physical") {
+            try {
+                const uploadPromises = images.map(image =>
+                    Server.uploadImage(image)
+                );
+    
+                const results = await Promise.all(uploadPromises);
+                imageUrls = results.map(result => result.image_url);
+    
+                console.log(imageUrls);
+            } catch (err) {
+                console.error(err);
+                setError(`Failed to upload one or more images: ${err}`);
+                setShowError(true);
+                setIsSubmitted(false);
+                return;
+            }
+        }
 
-            const results = await Promise.all(uploadPromises);
-            imageUrls = results.map(result => result.image_url);
-
-            console.log(imageUrls);
-        } catch (err) {
-            console.error(err);
-            setError(`Failed to upload one or more images: ${err}`);
+        //general validation
+        if (values.title === "") {
+            setError("Title cannot be empty.");
             setShowError(true);
             setIsSubmitted(false);
             return;
         }
+        if (values.price < 0) {
+            setError("Price cannot be negative.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+        if (Math.round(values.price) !== Number(values.price)) {
+            setError("Price has to be integer.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+        if (values.desc === "") {
+            setError("Cannot have an empty description.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+
 
         try {
             const goodTags = [...new Set(
@@ -161,7 +192,7 @@ export default function CreateListing({ open, onClose }) {
             window.location.reload();
 		} catch (err) {
 			console.error("listing creation failed", err);
-            setError("Failed to create listing. (server might be down or double check everything)", err);
+            setError(`Failed to create listing. ${err}`);
             setShowError(true);
             setIsSubmitted(false);
 		}
@@ -186,25 +217,25 @@ export default function CreateListing({ open, onClose }) {
                     <div className="flex flex-col">
                         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                             <div className="form-item flex flex-col">
-                                <h1 className="text-l mb-1">What type of listing is it?</h1>
+                                <h1 className="text-l mb-1">What type of listing is it?&nbsp;<span className="text-red-600">*</span></h1>
                                 <div className="flex gap-2 m-1 justify-start items-center">
-                                    <Radio color="red" id="physical" name="type" value="physical" defaultChecked />
+                                    <Radio color="red" id="physical" name="type" value="physical" defaultChecked onChange={(e) => {setImageUploadingAllowed(e.target.value === "physical")}}/>
                                     <Label htmlFor="physical">Physical item</Label>
                                 </div>
                                 <div className="flex gap-2 mx-1 justify-start items-center">
-                                    <Radio color="red" id="service" name="type" value="service" />
+                                    <Radio color="red" id="service" name="type" value="service" onChange={(e) => {setImageUploadingAllowed(e.target.value === "physical")}} />
                                     <Label htmlFor="service">Service</Label>
                                 </div>
                             </div>
                             <div className="form-item">
                                 <div className="mb block">
-								    <Label htmlFor="username">Title:</Label>
+								    <Label htmlFor="username">Title:&nbsp;<span className="text-red-600">*</span></Label>
 							    </div>
 							    <TextInput id="title" name="title" type="text" placeholder="Maths IGCSE Extended book" required shadow />
                             </div>
                             <div className="form-item">
                                 <div className="mb block">
-								    <Label htmlFor="username">Price:</Label>
+								    <Label htmlFor="username">Price:&nbsp;<span className="text-red-600">*</span></Label>
 							    </div>
 							    <TextInput id="price" name="price" type="number" placeholder="10..?" min="0" step="1" required shadow />
 
@@ -215,7 +246,7 @@ export default function CreateListing({ open, onClose }) {
                             </div>
                             <div className="form-item">
                                 <div className="mb block">
-								    <Label htmlFor="username">Description:</Label>
+								    <Label htmlFor="username">Description:&nbsp;<span className="text-red-600">*</span></Label>
 							    </div>
 							    <Textarea id="desc" name="desc" type="text" rows={4} placeholder="Used, in good condition..." required shadow />
                                 <HelperText>Try to include things like, in case of a book, how used it is. Aim to write multiple lines.</HelperText>
@@ -224,7 +255,7 @@ export default function CreateListing({ open, onClose }) {
                                 <div className="mb block">
                                     <Label htmlFor="tags">Tags:</Label>
                                 </div>
-                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." required shadow />
+                                <TextInput id="tags" name="tags" placeholder="Book, Used, Maths, IGCSE, ..." shadow />
                                 <HelperText>Adding tags makes it easier to find your listing. Separate them by commas.</HelperText>
                             </div>
                             <div className="form-item flex flex-col gap-1">
@@ -240,14 +271,16 @@ export default function CreateListing({ open, onClose }) {
                                     <Label htmlFor="include-email">Display email for contact</Label>
                                 </div>
                             </div>
-                            <div className="form-item">
-                                {/* todo: rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server */}
-                                <div id="images-upload">
-                                    <Label htmlFor="images" className="mb block">Upload images</Label>
-                                    <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp, image/heic, image/heif" multiple required />
-                                    <HelperText>Upload up to 6 images for your listing (max. 10MB each). Only images (incl. PNG, JPG, HEIC).</HelperText>
+                            {imageUploadingAllowed && (
+                                <div className="form-item">
+                                    {/* rlly got to change this up later to use https://picrd.com/docs ... nvm i set up hosting on my server */}
+                                    <div id="images-upload">
+                                        <Label htmlFor="images" className="mb block">Upload images</Label>
+                                        <FileInput id="images" name="images" accept="image/png, image/jpg, image/jpeg, image/webp, image/heic, image/heif" multiple />
+                                        <HelperText>Up to 6 images (max. 10MB each). Only images (incl. PNG, JPG, HEIC).</HelperText>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                             <div className="flex justify-end mt-10 mr-2 mb-2">
                                 <Button type="submit" color="red" disabled={isSubmitted}>{isSubmitted ? (<><Spinner size="sm" className="me-3" light /> Uploading...</>) : "Create listing"}</Button>
                             </div>

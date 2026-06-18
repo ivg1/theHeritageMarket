@@ -21,6 +21,8 @@ export default function Listings() {
     const [createListingOpen, setCreateListingOpen] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+	const [category, setCategory] = useState("all");
+
     useEffect(() => {
         let isMounted = true;
 
@@ -46,7 +48,7 @@ export default function Listings() {
 						</svg>
 					</Button>
 				</div>
-                <Filter />
+                <Filter category={category} setCategory={setCategory} />
             </div>
             <div className="listings-content flex items-center justify-center md:p-4">
                 <div className="container">
@@ -54,6 +56,7 @@ export default function Listings() {
                         onListingClick={(listing) => {
                             navigate(`${listing.id}`);
                         }}
+						category={category}
 						className="z-30"
                     />
                 </div>

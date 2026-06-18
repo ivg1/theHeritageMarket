@@ -76,7 +76,7 @@ export default function Landing() {
                 <div className="step2 md:grid md:grid-cols-2 gap-4 min-h-fit flex flex-col">
                     <div className="steps-text-holder p-10 md:order-first order-first">
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white p-2">2. Explore/Create listings.</h2>
-                        <p className="font-normal text-gray-700 dark:text-gray-400">Browse through existing listings or create your own to showcase your goods or services. Each listing includes detailed information about the item and the seller such as the seller's target price.</p>
+                        <p className="font-normal text-gray-700 dark:text-gray-400">Browse through existing listings or create your own to showcase your goods or services.</p>
                     </div>
                     <div className="flex justify-center items-center w-full">
                         <img src="/steps/step2.png" className="steps-image-holder flex rounded-lg border border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 flex-col text-left text-ellipsis max-h-100 max-w-full"></img>
@@ -110,7 +110,7 @@ export default function Landing() {
                             <AccordionTitle>Is this service free?</AccordionTitle>
                             <AccordionContent>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                    Yes. It is completely free to use. We would greatly appreciate it if you spread the word to your friends!
+                                    Yes. It is completely free to use. It would be great if you spread the word to your friends!
                                 </p>
                             </AccordionContent>
                         </AccordionPanel>
@@ -134,7 +134,7 @@ export default function Landing() {
                             <AccordionTitle>How do I message the seller?</AccordionTitle>
                             <AccordionContent>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                    You can communicate with the seller through our built-in messenger by clicking on the message button on their listing, or if the seller provided an email/phone number you can contact them through those channels.
+                                    You can communicate with the seller through our built-in messenger by clicking on the message button on their listing, or if the seller provided an email or phone number you can contact them through those channels.
                                 </p>
                             </AccordionContent>
                         </AccordionPanel>
@@ -142,7 +142,7 @@ export default function Landing() {
                             <AccordionTitle>Is it safe to buy/sell on this platform?</AccordionTitle>
                             <AccordionContent>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                    Look, this platform connects students, and the only way for a transaction to occur is physically meeting up and at the end of the day, it's on your side to make sure you get what you pay for.
+                                    Yes, it is safe to buy/sell on this platform. We dont sell data, we dont do any of that bad stuff.
                                 </p>
                             </AccordionContent>
                         </AccordionPanel>

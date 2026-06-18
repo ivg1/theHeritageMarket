@@ -4,7 +4,7 @@ import { createTheme } from "flowbite-react";
 export const lightTheme = createTheme({
     navbar: {
         root: {
-            base: "border-b border-slate-200 bg-white/50 px-2 py-2 shadow-sm backdrop-blur-md",
+            base: "bg-white/50 px-2 py-2 shadow-sm backdrop-blur-md",
         },
         link: {
             base: "block py-2 pl-3 pr-4 md:p-0",
@@ -13,6 +13,12 @@ export const lightTheme = createTheme({
                 off: "border-b border-transparent text-slate-600 hover:text-slate-900 md:border-0 md:hover:bg-transparent md:hover:text-red-600",
             },
         },
+        toggle: {
+            base: "focus:outline-none focus:ring-1 focus:ring-red-200 text-red-600"
+        },
+        collapse: {
+            base: "text-black"
+        }
 
     },
 
@@ -91,7 +97,7 @@ export const lightTheme = createTheme({
     },
     toast: {
         root: {
-            base: "rounded-xl bg-red-100 text-red-800 p-4 fixed top-0 left-0 m-4 z-3000 min-w-[98vw] max-w-[98vw] "
+            base: "rounded-xl bg-red-100 text-red-800 p-4 fixed top-0 left-0 m-4 z-9999 min-w-[98vw] max-w-[98vw] "
         },
         toggle: {
             base: "bg-red-100 hover:bg-red-200 text-red-800 hover:text-red-800"
@@ -119,12 +125,15 @@ export const lightTheme = createTheme({
             base: "",
         }
     },
+    checkbox: {
+        base: "rounded-sm"
+    },
 });
 
 export const darkTheme = createTheme({
     navbar: {
         root: {
-            base: "border-b dark:border-(--darkborder) dark:bg-(--darkbg)/50 dark:backdrop-blur-md px-2 py-2.5 dark:shadow-sm sm:px-4 dark:z-4000",
+            base: "dark:bg-(--darkbg)/50 dark:backdrop-blur-md px-2 py-2.5 dark:shadow-sm sm:px-4 dark:z-4000",
         },
         link: {
             base: "block py-2 pl-3 pr-4 md:p-0",
@@ -133,9 +142,6 @@ export const darkTheme = createTheme({
                 off: "dark:border-b dark:border-transparent dark:md:border-0 dark:md:hover:bg-transparent dark:md:hover:text-red-600 dark:hover:bg-(--darkbutton-1)",
             },
         },
-        toggle: {
-            base: "dark:hover:bg-(--darkbutton-1)"
-        },
         collapse: {
             base: "w-full md:block md:w-auto",
             list: "mt-4 flex flex-col md:mt-0 md:flex-row md:space-x-8 md:text-sm md:font-medium",
@@ -143,6 +149,9 @@ export const darkTheme = createTheme({
                 on: "hidden",
                 off: ""
             }
+        },
+        toggle: {
+            base: "dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-red-700 dark:text-red-700"
         },
     },
     button: {
@@ -213,7 +222,7 @@ export const darkTheme = createTheme({
         }
     },
     checkbox: {
-        base: "dark:bg-(--darkbutton-1)"
+        base: "dark:bg-(--darkbutton-1) rounded-sm"
     },
     radio: {
         base: "dark:bg-(--darkbutoton)"
@@ -248,7 +257,7 @@ export const darkTheme = createTheme({
     },
     toast: {
         root: {
-            base: "dark:rounded-xl dark:bg-red-800 dark:text-red-200 dark:m-4 dark:p-4 dark:min-w-[98vw] dark:max-w-[98vw] dark:z-3000 dark:fixed dark:top-0 dark:left-0"
+            base: "dark:rounded-xl dark:bg-red-800 dark:text-red-200 dark:m-4 dark:p-4 dark:min-w-[98vw] dark:max-w-[98vw] dark:z-9999 dark:fixed dark:top-0 dark:left-0"
         },
         toggle: {
             base: "dark:bg-red-800 dark:text-red-400 dark:hover:bg-red-700 dark:hover:text-red-200"

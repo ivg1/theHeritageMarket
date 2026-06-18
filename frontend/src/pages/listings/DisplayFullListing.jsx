@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Button, Checkbox, Label, Radio, Textarea, TextInput, HR } from "flowbite-react";
+import { Button, Checkbox, Label, Radio, Textarea, TextInput, HR, Toast, ToastToggle } from "flowbite-react";
 
 import Server from "../../serverComms/server";
 import Auth from "../../auth/auth";
@@ -11,7 +11,9 @@ export default function DisplayFullListing() {
 	const [listing, setListing] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [found, setFound] = useState(false);
+	const [loadingError, setLoadingError] = useState(null);
 	const [error, setError] = useState(null);
+	const [showError, setShowError] = useState(false);
 
 	const [editAccess, setEditAccess] = useState(false);
 	const [editing, setEditing] = useState(false);
@@ -33,7 +35,7 @@ export default function DisplayFullListing() {
 				if (!mounted) return;
 				if (!data.id) {
 					console.error("no such listing");
-					setError("There is no such listing.");
+					setLoadingError("There is no such listing.");
 					setLoading(false);
 					mounted = false;
 					return;
@@ -65,7 +67,7 @@ export default function DisplayFullListing() {
 
 				if (listing.awaiting_moderation && !editAccess) {
 					console.error("not permitted to view at the moment");
-					setError("You are not permitted to view this listing at the moment.");
+					setLoadingError("You are not permitted to view this listing at the moment.");
 					setLoading(false);
 					mounted = false;
 					return;
@@ -79,7 +81,7 @@ export default function DisplayFullListing() {
 			})
 			.catch((err) => {
 				if (!mounted) return;
-				setError(err);
+				setLoadingError(err);
 				setLoading(false);
 			});
 		return () => { 
@@ -97,6 +99,47 @@ export default function DisplayFullListing() {
 			setEditing(false);
 			return;			
 		}
+
+		//phone validation
+        const phone = formValues.seller_phone?.trim();
+        if (phone) {
+            const phoneRegex = /^\+?[1-9]\d{7,14}$/;
+
+            const normalized = phone.replace(/[\s()-]/g, "");
+
+            if (!phoneRegex.test(normalized)) {
+                console.error("Phone number is invalid");
+                setError("Phone number is invalid.");
+                setShowError(true);
+                return;
+            }
+        }
+
+		//general validation
+        if (formValues.title === "") {
+            setError("Title cannot be empty.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+        if (formValues.price < 0) {
+            setError("Price cannot be negative.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+        if (Math.round(formValues.price) !== Number(formValues.price)) {
+            setError("Price has to be integer.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
+        if (formValues.desc === "") {
+            setError("Cannot have an empty description.");
+            setShowError(true);
+            setIsSubmitted(false);
+            return;
+        }
 
 		setListing(formValues);
 
@@ -181,7 +224,7 @@ export default function DisplayFullListing() {
     }
 
 	if (loading) return <div className="min-w-screen min-h-screen flex justify-center items-center text-gray-500">Loading...</div>
-	if (error) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">{error}</div>
+	if (loadingError) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">{loadingError}</div>
 	if (!found) return <div className="min-w-screen min-h-screen flex justify-center items-center text-red-500">Listing not found.</div>
 
 	const tags = listing.tags;
@@ -193,6 +236,7 @@ export default function DisplayFullListing() {
 	}
 
 	return (
+		<>
 		<div>
 			<form onSubmit={handleSaveChanges}>
 				<div className="flex justify-between">
@@ -203,7 +247,7 @@ export default function DisplayFullListing() {
 						Back
 					</Button>
 					{editAccess ? (
-						<Button color={editing ? "red" : "bgless"} className="mx-6 mt-4" onClick={(e) => { 
+						<Button color={editing ? "red" : "bgless"} className={editing ? "mx-6 mt-4 fixed right-0 z-100 border-2 border-white dark:border-(--darkborder)" : "mx-6 mt-4"} onClick={(e) => { 
 							if (!editing) {
 								setEditing(true);
 							} else {
@@ -218,37 +262,40 @@ export default function DisplayFullListing() {
 						</Button>
 					) : (<></>)}
 				</div>
-				<div className="min-w-screen min-h-screen p-6 flex flex-col lg:grid lg:grid-cols-2 gap-2">
-					<div className="min-w-full">
-						<div className="p-2 flex flex-col md:flex-row justify-start">
-							<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden max-h-screen scrollbar-thumb-black md:[direction:rtl] scrollbar-thin pl-1">
+				<div className={formValues.is_physical ? "min-w-screen min-h-screen p-6 flex flex-col lg:grid lg:grid-cols-2 gap-2" : "min-w-screen min-h-screen p-6 flex flex-col gap-2"}>
+					{formValues.is_physical && (
+						<div className="min-w-full">
+							<div className="p-2 flex flex-col md:flex-row justify-start">
+								<div className="flex md:flex-col flex-row gap-2 md:mr-2 mt-2 md:mt-0 order-last md:order-first max-w-full overflow-x-scroll md:overflow-x-hidden max-h-screen scrollbar-thumb-black md:[direction:rtl] scrollbar-thin pl-1">
+									{images.length > 0 ? (
+										images.map((image) => (
+											<img className="w-15 h-15 aspect-square bg-gray-200 dark:bg-(--darksurface) rounded-lg hover:cursor-pointer opacity-80 hover:opacity-100" key={image} src={image} onClick={() => { setMainImage(image, this) }}/>
+										))
+									) : (
+										<div className="w-15 h-15 bg-gray-200 rounded-lg flex justify-center items-center dark:bg-(--darksurface)">kein<br/>images</div>
+									)}
+								</div>
 								{images.length > 0 ? (
-									images.map((image) => (
-										<img className="w-15 h-15 aspect-square bg-gray-200 rounded-lg hover:cursor-pointer opacity-80 hover:opacity-100" key={image} src={image} onClick={() => { setMainImage(image, this) }}/>
-									))
+									<img src={images[0]} className="main-image min-w-0 flex-1 aspect-square object-contain bg-white dark:bg-(--darksurface) rounded-lg" />
 								) : (
-									<div className="w-15 h-15 bg-gray-200 rounded-lg flex justify-center items-center">kein<br/>images</div>
+									<div className="main-image min-w-0 flex-1 flex justify-center items-center aspect-square bg-white dark:bg-(--darksurface) rounded-lg">NO IMAGE</div>
 								)}
+								
 							</div>
-							{images.length > 0 ? (
-								<img src={images[0]} className="main-image min-w-0 flex-1 aspect-square object-contain bg-white dark:bg-black rounded-lg" />
-							) : (
-								<div className="main-image min-w-0 flex-1 flex justify-center items-center aspect-square bg-white dark:bg-black rounded-lg">NO IMAGE</div>
-							)}
-							
 						</div>
-					</div>
+					)}
 					<div className=" min-w-full">
-						<div className="flex flex-col  p-4">
+						<div className="flex flex-col p-4">
 							<div>
 								{editAccess && specialMessage !== "" && (
 									<p className="whitespace-pre-wrap text-red-600 mb-2">{specialMessage}</p>
 								)}
 								<div className="flex flex-col mb-6">
+									{!formValues.is_physical && (<h1 className="text-md font-bold mb-0">Service</h1>)}
 									{editing ? (
 										<>
 											<Label htmlFor="title">Title:</Label>
-											<TextInput id="title" name="title" value={formValues.title} 
+											<TextInput id="title" name="title" value={formValues.title} required 
 												onChange={(e) => {
 													setFormValues({
 														...formValues,
@@ -268,7 +315,7 @@ export default function DisplayFullListing() {
 												<span className="text-3xl flex items-center gap-2">
 													<span className="text-2xl">Price:</span>
 													€
-													<TextInput id="price" name="price" value={formValues.price} type="number" 
+													<TextInput id="price" name="price" value={formValues.price} min="0" step="1" type="number" required 
 														onChange={(e) => {
 															setFormValues({
 																...formValues,
@@ -292,9 +339,15 @@ export default function DisplayFullListing() {
 										) : (
 											<>
 												Price:&nbsp;
-												<span className="text-3xl">
-													€{formValues.price}
-												</span>&nbsp;
+												{listing.price === 0 ? (
+													<span className="text-3xl">
+														Free&nbsp;
+													</span>
+												) : (
+													<span className="text-3xl">
+														€{formValues.price}&nbsp;
+													</span>
+												)}
 												{formValues.negotiable ? <span className="text-sm text-red-700 flex items-center">(negotiable)</span> : <></>}
 											</>
 										)}
@@ -303,7 +356,7 @@ export default function DisplayFullListing() {
 								<div className="mb-6">
 									<h2 className="text-2xl font-semibold">Description:</h2>
 									{editing ? (
-										<Textarea id="description" name="description" value={formValues.description} rows={4} 
+										<Textarea id="description" name="description" value={formValues.description} rows={4} required
 											onChange={(e) => {
 												setFormValues({
 													...formValues,
@@ -324,7 +377,7 @@ export default function DisplayFullListing() {
 											</div>
 										))
 									) : (
-										<div className="">(no tags given)</div>
+										<div className=""></div>
 									)}
 								</div>
 								<div className="flex flex-col min-w-full gap-4 my-4">
@@ -333,14 +386,16 @@ export default function DisplayFullListing() {
 										<div className="contact-card bg-red-700 dark:bg-red-900 text-white xl:w-1/2 w-full min-h-fit rounded-2xl overflow-x-hidden">
 											<div className="min-w-full min-h-full rounded-2xl p-3">
 												<h1 className="text-xl font-bold">Email:</h1>
-												<TextInput id="email" name="email" value={formValues.seller_email} 
-													onChange={(e) => {
-														setFormValues({
-															...formValues,
-															seller_email: e.target.value
-														});
-													}}
-												/>
+												{mod && (
+													<TextInput id="email" name="email" value={formValues.seller_email} 
+														onChange={(e) => {
+															setFormValues({
+																...formValues,
+																seller_email: e.target.value
+															});
+														}}
+													/>
+												)}
 											</div>
 											<div className="flex items-center gap-1 text-xl pl-4 mb-4">
 												<Checkbox color="red" id="showEmail" name="showEmail" checked={formValues.email_show} 
@@ -358,14 +413,16 @@ export default function DisplayFullListing() {
 											<div className="min-w-full min-h-full rounded-2xl p-3">
 												<h1 className="text-xl font-bold">Phone number:</h1>
 												{/* later make only mods allowed to change email and phone here ... oh and i need to fix bug where if user changes their email (for now its blocked), the listing email is still the same */}
-												<TextInput id="phone" name="phone" value={formValues.seller_phone} 
-													onChange={(e) => {
-														setFormValues({
-															...formValues,
-															seller_phone: e.target.value
-														});
-													}}
-												/>
+												{mod && (
+													<TextInput id="phone" name="phone" value={formValues.seller_phone} 
+														onChange={(e) => {
+															setFormValues({
+																...formValues,
+																seller_phone: e.target.value
+															});
+														}}
+													/>
+												)}
 											</div>
 											<div className="flex items-center gap-1 text-xl pl-4 mb-4">
 												<Checkbox color="red" id="showPhone" name="showPhone" checked={formValues.phone_show} 
@@ -444,5 +501,16 @@ export default function DisplayFullListing() {
 				</div>
 			</form>
 		</div>
+		<div className="absolute z-9999">
+			{error && showError && (
+				<div className="min-w-screen fixed flex top-0 left-0 p-4">
+					<Toast>
+						{error}
+						<ToastToggle onDismiss={() => setShowError(false)} />
+					</Toast>
+				</div>
+			)}
+		</div>
+		</>
 	);
 }

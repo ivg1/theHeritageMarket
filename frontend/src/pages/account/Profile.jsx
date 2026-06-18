@@ -24,6 +24,7 @@ export default function Profile() {
     const [newAbout, setNewAbout] = useState("");
 
     const [mod, setMod] = useState(false);
+    const [admin, setAdmin] = useState(false);
 
     const [isSubmitted, setSubmitted] = useState(false);
 
@@ -66,6 +67,9 @@ export default function Profile() {
 
                 if (me && me.is_mod) {
                     setMod(true);
+                }
+                if (me && me.is_admin) {
+                    setAdmin(true);
                 }
 
                 setLoading(false);
@@ -154,7 +158,23 @@ export default function Profile() {
             setGood("Set user as mod");
             setShowGood(true);
         } catch (err) {
-            setError("Failed setting user as mod");
+            setError(err.message);
+            setShowError(true);
+        }
+    }
+
+    const handleRemoveUserMod = async () => {
+        try {
+            const toSend = {
+                id: id
+            };
+
+            const response = await Server.users.removeMod(toSend);
+            console.log("removed mod");
+            setGood("Removed mod");
+            setShowGood(true);
+        } catch (err) {
+            setError(err.message);
             setShowError(true);
         }
     }
@@ -241,7 +261,7 @@ export default function Profile() {
                         </div>
                     </div>
                 </div>
-                {mod && (
+                {admin && (
                     <>
                     <HR className="m-0" />
                     <div className="mod-stuff p-4 flex justify-between items-center pr-8">
@@ -253,7 +273,10 @@ export default function Profile() {
                                 <p className="text-green-600 text-xl">{good}</p>
                             )}
                         </div>
-                        <Button color="red" onClick={handleSetUserMod}>Set as Mod</Button>
+                        <div className="flex gap-2">
+                            <Button color="red" onClick={handleSetUserMod}>Set as Mod</Button>
+                            <Button className="bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700" onClick={handleRemoveUserMod}>Remove Mod</Button>
+                        </div>
                     </div>
                     </>
                 )}

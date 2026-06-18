@@ -91,9 +91,9 @@ const updateUser_post = async (req, res) => {
         if (username) {
             userChanges.push(await Users.update.username(username, id));
         }
-        if (email) {
-            userChanges.push(await Users.update.email(email, id));
-        }
+        //if (email) {
+        //    userChanges.push(await Users.update.email(email, id));
+        //}
         if (phone) {
             userChanges.push(await Users.update.phone(phone, id));
         }
@@ -164,9 +164,9 @@ const setUserMod_post = async (req, res) => {
     try {
         const { id } = req.body;
         //idk how to name this guy
-        const userRequester = await Users.auth.private.getDataById(req.userId);
-        //i hope this will not fail me...
-        if (!userRequester.is_mod) return res.status(400).json({ error: "mate, you arent privileged to be allowed to do that lol"});
+        //const userRequester = await Users.auth.private.getDataById(req.userId);
+        //hold up, this is useless cus i already checked in middleware
+        //if (!userRequester.is_mod) return res.status(400).json({ error: "mate, you arent privileged to be allowed to do that lol"});
 
         const result = await Users.update.setMod(id);
         console.log(`set user of id ${id} as mod`);
@@ -175,6 +175,24 @@ const setUserMod_post = async (req, res) => {
         console.error(err);
         console.log(`failed setting user of id ${id} as mod in controller`);
         return res.status(400).json({ error: `failed setting user of id ${id} as mod in controller`});
+    }
+}
+
+const removeUserMod_post = async (req, res) => {
+    try {
+        const { id } = req.body;
+        //idk how to name this guy
+        //const userRequester = await Users.auth.private.getDataById(req.userId);
+        //hold up, this is useless cus i already checked in middleware
+        //if (!userRequester.is_admin) return res.status(400).json({ error: "mate, you arent privileged to be allowed to do that lol"});
+
+        const result = await Users.update.removeMod(id);
+        console.log(`removed mod from user of id ${id}`);
+        return res.status(200).json({ message: `removed mod from user of id ${id}` });
+    } catch (err) {
+        console.error(err);
+        console.log(`failed removing mod from user in controller`);
+        return res.status(400).json({ error: `failed removing mod from user in controller`});
     }
 }
 
@@ -189,5 +207,6 @@ module.exports = {
     privateGetDataById_get,
     privateResetPass_post,
 
-    setUserMod_post
+    setUserMod_post,
+    removeUserMod_post
 }

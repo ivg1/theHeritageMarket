@@ -10,10 +10,11 @@ const Listings = {
                         seller_id,
                         CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE title END AS title,
                         CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE description END AS description,
-                        CASE WHEN awaiting_moderation THEN 0 ELSE price END AS price,
+                        CASE WHEN awaiting_moderation THEN 1 ELSE price END AS price,
                         CASE WHEN awaiting_moderation THEN NULL ELSE tags END AS tags,
                         CASE WHEN awaiting_moderation THEN NULL ELSE images END AS images,
                         CASE WHEN awaiting_moderation THEN CURRENT_TIMESTAMP ELSE created_at END AS created_at,
+                        is_physical,
                         awaiting_moderation
                     FROM listings
                     WHERE visibility = true
@@ -37,10 +38,11 @@ const Listings = {
                         seller_id,
                         CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE title END AS title,
                         CASE WHEN awaiting_moderation THEN 'awaiting moderation' ELSE description END AS description,
-                        CASE WHEN awaiting_moderation THEN 0 ELSE price END AS price,
+                        CASE WHEN awaiting_moderation THEN 1 ELSE price END AS price,
                         CASE WHEN awaiting_moderation THEN NULL ELSE tags END AS tags,
                         CASE WHEN awaiting_moderation THEN NULL ELSE images END AS images,
                         CASE WHEN awaiting_moderation THEN CURRENT_TIMESTAMP ELSE created_at END AS created_at,
+                        is_physical,
                         awaiting_moderation
                     FROM listings
                     WHERE 
@@ -69,7 +71,7 @@ const Listings = {
         mods: {
             async getHeroAll() {
                 try {
-                    const result = await pool.query("SELECT id, title, description, price, tags, images, created_at FROM listings ORDER BY created_at DESC");
+                    const result = await pool.query("SELECT id, title, description, price, tags, images, created_at, awaiting_moderation, is_physical FROM listings ORDER BY created_at DESC");
                     return result.rows;
                 } catch (err) {
                     console.error("error in listings db data.getHeroAll()", err);

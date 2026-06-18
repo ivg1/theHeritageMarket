@@ -2,22 +2,25 @@
 import { FloatingLabel, Dropdown, DropdownItem, Button } from "flowbite-react";
 import ListingsDrawer from "../components/ListingsDrawer.jsx";
 
+import { useState } from "react";
+
 //onChange={(e) => setFilters({ ...filters, search: e.target.value })} (in FloatingLabel)
-const Filter = () => {
+const Filter = ({ setCategory, category }) => {
 	return (
 			<div className="flex flex-col items-center gap-2 sm:flex-row">
 				<div className="flex sm:order-first gap-2">
 					<ListingsDrawer />
 					<Dropdown label="Categories" color="red">
-						<DropdownItem>
+						<DropdownItem onClick={() => setCategory("all")}>
 							All Categories
 						</DropdownItem>
-						<DropdownItem>
+						<DropdownItem onClick={() => setCategory("physicals")}>
 							All physical goods
 						</DropdownItem>
-						<DropdownItem>
+						<DropdownItem onClick={() => setCategory("services")}>
 							All services
 						</DropdownItem>
+						{/*
 						<DropdownItem>
 							Books (incl. textbooks)
 						</DropdownItem>
@@ -36,6 +39,7 @@ const Filter = () => {
 						<DropdownItem>
 							Leaked tests/exams??
 						</DropdownItem>
+						*/}
 					</Dropdown>
 				</div>
 				<FloatingLabel
