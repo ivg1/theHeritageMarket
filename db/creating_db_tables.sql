@@ -1,5 +1,5 @@
 create table users (
-	id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	id integer generated always as identity primary key,
 	username text not null,
 	email text not null,
 	password_hash text not null,
@@ -8,7 +8,7 @@ create table users (
 );
 
 create table listings (
-	id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	id integer generated always as identity primary key,
 	title text not null,
 	description text,
 	price integer,
@@ -24,7 +24,7 @@ create table listings (
 );
 
 create table stats (
-    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    total_listings_created BIGINT DEFAULT 0
+    id integer generated always as identity primary key,
+    total_listings_created bigint default 0
 );
 insert into stats (total_listings_created) values (0);
