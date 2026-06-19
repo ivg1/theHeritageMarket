@@ -23,6 +23,7 @@ import PrivacyPolicy from "./pages/legal/Privacy.jsx";
 import RelationToSchool from "./pages/legal/RelationToSchool.jsx";
 
 import Profile from "./pages/account/Profile.jsx";
+import Profiles from "./pages/account/Profiles.jsx";
 import Settings from "./pages/account/Settings.jsx";
 
 import { darkTheme, lightTheme } from "./themes.js";
@@ -74,6 +75,7 @@ function AppShell() {
                         <Route path="/about" element={<About />} />
 
                         <Route path="/profile/:userId" element={<Profile />} />
+                        <Route path="/profile" element={<Profiles />} />
                         <Route path="/dashboard" element={<ComingSoon />} />
                         <Route path="/settings" element={<Settings />} />
 

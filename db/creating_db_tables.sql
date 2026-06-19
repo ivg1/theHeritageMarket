@@ -22,3 +22,9 @@ create table listings (
 	created_at timestamp default current_timestamp,
 	visibility bool default true
 );
+
+create table stats (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    total_listings_created BIGINT DEFAULT 0
+);
+insert into stats (total_listings_created) values (0);

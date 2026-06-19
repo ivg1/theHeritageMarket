@@ -68,6 +68,16 @@ const Listings = {
                 throw err;
             }
         },
+        async getNum() {
+            try {
+                const result = await pool.query("SELECT COUNT(*) FROM listings");
+                console.log("db fetched number of rows in listings");
+                return result.rows[0];
+            } catch (err) {
+                console.error("error in listings db data.getNum()", err);
+                throw err;
+            }
+        },
         mods: {
             async getHeroAll() {
                 try {

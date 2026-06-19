@@ -17,6 +17,7 @@ module.exports = {
 
 router.get("/getAll", listingsController.getListingsHeroData_get);
 router.get("/read", listingsController.dataOfListing_get);
+router.get("/getNum", listingsController.getNum_get);
 
 router.post("/create", [authJwt.verifyToken], listingsController.createListing_post);
 router.post("/update", [authJwt.verifyToken], listingsController.updateListing_post);

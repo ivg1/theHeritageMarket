@@ -80,8 +80,8 @@ const Users = {
             }
         },
         async getUserById(id) {
-            //i didnt put phone here cus idk if this might get leaked in the profile page (cus the entire response is in the network tab)
-            const query = "SELECT id, username, email, profile_image, fname, lname, created_at, listings_posted, about FROM users WHERE id = $1";
+            //i didnt put phone here cus idk 
+            const query = "SELECT id, username, email, profile_image, fname, lname, created_at, listings_posted, about, is_mod, is_admin FROM users WHERE id = $1";
 
             try {
                 const result = await pool.query(query, [id]);
@@ -116,7 +116,7 @@ const Users = {
         },
         private: {
             async getDataById(id) {
-                const query = "SELECT id, username, email, phone, profile_image, fname, lname, created_at, listings_posted, about, role, is_mod FROM users WHERE id = $1";
+                const query = "SELECT id, username, email, phone, profile_image, fname, lname, created_at, listings_posted, about, role, is_mod, is_admin FROM users WHERE id = $1";
 
                 try {
                     const result = await pool.query(query, [id]);
@@ -152,6 +152,16 @@ const Users = {
                 return result.rows[0];
             } catch (err) {
                 console.error("error in users db data.getNum()", err);
+                throw err;
+            }
+        },
+        async getAll() {
+            try {
+                const result = await pool.query("SELECT id, username, fname, lname, about, is_mod, is_admin, profile_image FROM users");
+                console.log("db fetched all users profile data in users");
+                return result.rows;
+            } catch (err) {
+                console.error("error in users db data.getAll()", err);
                 throw err;
             }
         }

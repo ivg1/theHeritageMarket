@@ -19,8 +19,8 @@ export default function Moderation() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     return (
-        <div className="listings-page px-10 min-h-screen">
-            <div className="listings-content flex items-center justify-center p-4">
+        <div className="listings-page p-0 min-h-screen">
+            <div className="listings-content flex items-center justify-center sm:p-4">
                 <div className="container">
                     <DisplayListingsForMods
                         onListingClick={(listing) => {

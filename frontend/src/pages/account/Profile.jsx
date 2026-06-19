@@ -199,9 +199,20 @@ export default function Profile() {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <div className="flex md:flex-row flex-col items-center">
-                            <h1 className="text-4xl font-bold ml-6">{user.username}</h1>
-                            <p className="text-gray-500 ml-4">({user.fname} {user.lname})</p>
+                        <div className="flex md:flex-row flex-col items-center ml-4 md:ml-0">
+                            <h1 className="text-4xl font-bold md:ml-4">{user.username}</h1>
+                            <p className="text-gray-500 md:ml-4">({user.fname} {user.lname})</p>
+                            <div className="md:ml-2">
+                                {user.is_admin ? (
+                                    <p className="text-gray-500 text-center"><i>Administrator</i></p>
+                                ) : (
+                                    <>
+                                        {user.is_mod && (
+                                            <p className="text-gray-500 text-center"><i>Moderator</i></p>
+                                        )}
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <p className="text-gray-500 m-4">

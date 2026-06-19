@@ -15,6 +15,11 @@ export const Server = {
             console.log(result);
             return result;
         },
+        async getNum() {
+            const response = await fetch(`${this.modUrl}/getNum`);
+            const result = await response.json();
+            return result;
+        },
         async getAllByUser(body) {
             const token = await Auth.getToken();
             const response = await fetch(`${this.modUrl}/getAllByUser`, {
@@ -136,8 +141,8 @@ export const Server = {
                     "x-access-token": token
                 }
             });
-            console.log(response);
-            return await response.text();
+            //console.log(response);
+            return await response.json();
         },
         async getDataByUsername(username) {
             const token = await Auth.getToken();
@@ -222,6 +227,18 @@ export const Server = {
                 const error = await response.json();
                 throw new Error(error.message);
             }
+            return await response.json();
+        },
+
+        async getAll() {
+            const token = await Auth.getToken();
+            const response = await fetch(`${this.modUrl}/getAll`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                }
+            });
+            //console.log(await response.json());
             return await response.json();
         }
     },

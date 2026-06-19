@@ -27,6 +27,16 @@ const getUserById_get = async (req, res) => {
     }
 }
 
+const getAll_get = async (req, res) => {
+    try {
+        const usersList = await Users.data.getAll();
+        return res.status(200).json(usersList);
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed getting all users profiles" });
+    }
+}
+
 const getUserDataByUsername_get = async (req, res) => {
     try {
         const { username } = req.query;
@@ -208,5 +218,7 @@ module.exports = {
     privateResetPass_post,
 
     setUserMod_post,
-    removeUserMod_post
+    removeUserMod_post,
+
+    getAll_get
 }

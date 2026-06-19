@@ -1,5 +1,6 @@
 const Listings = require("../db/listings");
 const Users = require("../db/users");
+const Stats = require("../db/stats");
 
 const createListing_post = async (req, res) => {
     try {
@@ -40,6 +41,8 @@ const createListing_post = async (req, res) => {
 
         const increaseStatCreated = await Users.update.incrementCreatedStat(req.userId);
         if (!increaseStatCreated) return res.status(400).json({ error: "could not increment listings_posted stat" });
+
+        const increaseTotalStat = await Stats.listings.increment();
 
         return res.status(201).json({ message: "listing created", listing: result });
     } catch (err) {
@@ -162,6 +165,16 @@ const dataOfListing_get = async (req, res) => {
     } 
 }
 
+const getNum_get = async (req, res) => {
+    try {
+        const listingsNum = await Stats.listings.totalCreated();
+        return res.status(200).json(listingsNum);
+    } catch (err) {
+        console.error(err);
+        return res.status(400).json({ error: "failed getting all users" });
+    }
+}
+
 //todo: when i make auth, make this secure ASAP... i think i did now
 const deleteListing_post = async (req, res) => {
     try {
@@ -239,5 +252,7 @@ module.exports = {
     modsRejectListing_post,
     modsAcceptListing_post,
 
-    getListingsHeroDataByUser_post
+    getListingsHeroDataByUser_post,
+
+    getNum_get
 };
