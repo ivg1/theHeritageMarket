@@ -1,14 +1,14 @@
 # The Heritage Market
 A platform for students to buy/sell goods and services in your school's community.
 
-## Features
 *Project is still in development.*
 
+## Features
 This project has multiple features:
 - Listings displays
 - User accounts system
 - User account roles (normal user, moderator, and admin)
-- Statistics - usage, etc. (planned)
+- Statistics - usage, etc. (planned) (some already implemented)
 - Messenger (planned)
 
 ## Tech stack
@@ -17,7 +17,7 @@ This project has multiple features:
 - **Database**: PostgreSQL 18
 - **Build & Dev**: Vite, npm
 
-## Installing
+## Setting up on your device
 ### Required:
 - Download [PostgreSQL 18(.4)](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 - [Node.js](https://nodejs.org/en/download) (v22.17.0 or later)
@@ -84,22 +84,43 @@ insert into stats (total_listings_created) values (0);
 
 
 ### Setting up the backend server
-The backend server uses variables from the ```.env``` file. There is a template for the variables in the ```.env.example``` file, which you should use.
+The backend server uses variables from the ```.env``` file. 
+
+There is a template for the variables in the ```.env.example``` file, which you should use.
 
 Steps:
-- Create the .env file in the backend folder.
-```bash
+1. Create the .env file in the backend folder: ```nano .env```
+2. Copy the template code from ```.env.example``` into the new ```.env``` file.
+3. Replace the placeholders with your values.
 
+
+### Setting up the frontend
+In case you want another port for the backend server, or you run it on something other than localhost, dont forget to change the url in 
+```
+frontend/src/serverComms/server.jsx
+```
+at where ```url``` is declared.
+
+## Development
+For development, or testing, you need to start both the frontend development server, and run the backend server:
+```bash
+#In the frontend folder
+npm run dev
+#Then use the URL Vite outputs
+```
+And in a separate terminal:
+```bash
+#In the backend folder
+node server
 ```
 
-### Setting up the frontend code
-In case you want another port for the backend server, or you run it on something other than localhost, dont forget to change the url in ```frontend/src/serverComms/server.jsx``` at ```const url = "http://localhost:3000";```
-
-### Production
+## Production
 For production, first build the frontend files:
 ```bash
 cd frontend
 npm run build
 ```
 Then copy the contents of the ```dist``` folder to somewhere, or upload them to a hosting platform like vercel.
+
+That's it.
 
