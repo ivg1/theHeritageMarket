@@ -6,6 +6,9 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import DisplayListingsByUser from "../../components/DisplayListingsByUser";
 
+import CountUpModule from "react-countup";
+const CountUp = CountUpModule.default;
+
 export default function Profile() {
     const navigate = useNavigate();
 
@@ -121,7 +124,7 @@ export default function Profile() {
         //const values = Object.fromEntries(formData.entries());
         //console.log(values);
 
-        if (newAbout.length > 600) {
+        if (newAbout.length > 200) {
             console.error("About too long.");
             setAboutError("About too long.");
             setSubmitted(false);
@@ -240,12 +243,12 @@ export default function Profile() {
                                         {aboutError !== "" && (
                                             <p className="text-red-600 text-xl">{aboutError}</p>
                                         )}
-                                        <Textarea id="about" name="about" value={newAbout} className={newAbout.length > 600 ? "my-2 border-red-600 border-2 rounded-lg" : "my-2"} rows={4} onChange={(e) => {
+                                        <Textarea id="about" name="about" value={newAbout} className={newAbout.length > 200 ? "my-2 border-red-600 border-2 rounded-lg" : "my-2"} rows={4} onChange={(e) => {
                                             setNewAbout(e.target.value);
                                         }} />
                                         <div className="flex justify-between">
                                             <Button color="red" type="submit" disabled={isSubmitted}>{isSubmitted ? "Saving..." : "Save"}</Button>
-                                            <p className={newAbout.length > 600 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{newAbout.length}/600</p>
+                                            <p className={newAbout.length > 200 ? "text-red-600 text-sm" : "text-gray-500 text-sm"}>{newAbout.length}/200</p>
                                         </div>
                                     </form>
                                 ) : (
@@ -258,7 +261,7 @@ export default function Profile() {
                         <div className="bg-gray min-w-full min-h-40 grid grid-cols-1 sm:grid-cols-1 gap-4 divide-x dark:divide-(--darkborder) divide-gray-300 border dark:border-(--darkborder) border-gray-300 rounded-2xl py-4">
                             <div className="flex flex-col items-center py-4">
                                 <h1 className="text-3xl font-bold ">Listings posted</h1>
-                                <p className="text-8xl font-bold text-red-600">{user.listings_posted}</p>
+                                <p className="text-8xl font-bold text-red-600"><CountUp end={user.listings_posted} duration={4} /></p>
                             </div>
                             {/*
                             <div className="flex flex-col items-center py-4">
