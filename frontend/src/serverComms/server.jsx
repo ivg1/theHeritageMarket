@@ -238,8 +238,30 @@ export const Server = {
                     "x-access-token": token
                 }
             });
+            if (!response.ok) throw new Error("Fobidden");
             //console.log(await response.json());
             return await response.json();
+        },
+        
+        danger: {
+            modUrl: `${url}/users/danger`,
+            async delete(body) {
+                const token = await Auth.getToken();
+                const response = await fetch(`${this.modUrl}/delete`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                    },
+                    body: JSON.stringify(body ?? {})
+                });
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message);
+                }
+                //console.log(await response.json());
+                return await response.json();
+            }
         }
     },
     auth: {

@@ -159,7 +159,7 @@ const privateResetPass_post = async (req, res) => {
 //same thing here, SECURE ASAP (when done with auth)
 const deleteUser_post = async (req, res) => {
     try {
-        const { id } = req.query;
+        const { id } = req.body;
         const result = await Users.danger.delete(id);
         return res.status(200).json({ deleted: result });
     } catch (err) {

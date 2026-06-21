@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 
 router.get("/getNum", usersController.getNumUsers_get);
 router.get("/getById", usersController.getUserById_get);
-router.get("/getAll", usersController.getAll_get);
+router.get("/getAll", authJwt.verifyToken, roleCheck.needPrivilege, usersController.getAll_get);
 router.get("/getDataByUsername", usersController.getUserDataByUsername_get);
 router.get("/private/getDataById", authJwt.verifyToken, usersController.privateGetDataById_get);
 
@@ -34,6 +34,6 @@ router.post("/private/resetPass", authJwt.verifyToken, usersController.privateRe
 router.post("/admins/setMod", authJwt.verifyToken, roleCheck.needAdmin, usersController.setUserMod_post);
 router.post("/admins/removeMod", authJwt.verifyToken, roleCheck.needAdmin, usersController.removeUserMod_post)
 
-//router.post("/delete", authJwt.verifyToken, roleCheck.requirePrivilege,  usersController.deleteUser_post);
+router.post("/danger/delete", authJwt.verifyToken, roleCheck.needPrivilege, usersController.deleteUser_post);
 
 module.exports = router;

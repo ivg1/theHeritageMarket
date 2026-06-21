@@ -190,6 +190,23 @@ export default function Profile() {
         }
     }
 
+    const handleDeleteUser = async () => {
+        if (!window.confirm("Confirm delete user?")) return;
+        try {
+            const toSend = {
+                id: id
+            };
+
+            const response = await Server.users.danger.delete(toSend);
+            console.log("deleted user");
+            setGood("User deleted");
+            setShowGood(true);
+        } catch (err) {
+            setError(err.message);
+            setShowError(true);
+        }
+    }
+
     return (
         <div className="profile-page min-w-screen min-h-screen flex justify-center">
             <div className="w-full max-w-screen min-h-200 rounded-2xl dark:border-(--darkbg)">
@@ -306,6 +323,7 @@ export default function Profile() {
                         <div className="flex gap-2">
                             <Button color="red" onClick={handleSetUserMod}>Set as Mod</Button>
                             <Button className="bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700" onClick={handleRemoveUserMod}>Remove Mod</Button>
+                            <Button color="red" onClick={handleDeleteUser}>Delete user</Button>
                         </div>
                     </div>
                     </>

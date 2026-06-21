@@ -38,10 +38,13 @@ export default function Profiles() {
 			})
 			.catch((err) => {
 				if (!mounted) return;
-				setError(err);
+				setError("Forbidden");
 				setLoading(false);
 			});
-		return () => { mounted = false };
+
+		return () => { 
+			mounted = false
+		};
 	}, []);
 
     if (loading) return <div className="min-w-screen min-h-screen flex justify-center items-center text-gray-500">Loading...</div>

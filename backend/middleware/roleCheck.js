@@ -20,10 +20,10 @@ const needAdmin = async (req, res, next) => {
 }
 
 const isSameId = async (req, res, next) => {
-    const targetId = Number(req.body.id);
-    const requestId = Number(req.userId);
-
-    if (targetId !== requestId) return res.status(403).json({ message: "get out" });
+    const { id } = req.body
+    const requestId = req.userId;
+    console.log(id !== requestId);
+    if (id !== requestId) return res.status(403).json({ message: "get out" });
 
     next();
 }
