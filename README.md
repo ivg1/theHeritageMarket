@@ -13,7 +13,7 @@ This project has multiple features:
 - Statistics - usage, etc. (planned) (some already implemented)
 - Messenger (planned)
 
-## Tech stack
+## What I used
 - **Frontend**: Javascript, React, Tailwind CSS, Flowbite
 - **Backend**: Node.js
 - **Database**: PostgreSQL 18
