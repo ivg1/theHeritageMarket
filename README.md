@@ -3,7 +3,7 @@ A platform for students to buy/sell goods and services in your school's communit
 
 *Project is still in development.*
 
-(i wrote this entire readme MYSELF, i used the readme from https://github.com/hackclub/hackatime-desktop as inspiration!) I SWEAR i didnt use ai here, it doesnt even know what i wrote.
+(i wrote this entire readme MYSELF, i used the readme from https://github.com/hackclub/hackatime-desktop as inspiration!) I SWEAR i didnt use ai here, it doesnt even know what i wrote. i spent an entire car ride perfecting this and you believe its ai :(
 
 ## Features
 This project has multiple features:
