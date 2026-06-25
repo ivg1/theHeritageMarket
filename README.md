@@ -15,7 +15,7 @@ This project has multiple features:
 - Statistics - usage, etc. (planned) (some already implemented)
 - Messenger (planned)
 
-## What I used
+## What I used for stack
 - **Frontend**: Javascript, React, Tailwind CSS, Flowbite
 - **Backend**: Node.js
 - **Database**: PostgreSQL 18
@@ -36,13 +36,14 @@ cd theHeritageMarket
 #Install dependencies and start dev servers
 cd frontend
 npm install
-#if you get npm warn and error, run: rm package-lock.json
+#If you get npm warn and error, run: rm package-lock.json (cus I have to on my server)
 cd ../backend
 npm install
 ```
 
 ### Setting up the PostgreSQL database
-#### 1. Create the database for this project (make sure to write the account credentials and db name in the .env file).
+#### 1. Create the database for this project 
+(make sure to write the account credentials and db name in the ```.env``` file).
 
 For example:
 ```sql
@@ -51,7 +52,7 @@ create database theheritagedb;
 
 #### 2. Run the query below.
 There is a folder called ```db``` in which you will find 2 files.
-The one we want is creating_db_tables.sql:
+The one we want is ```creating_db_tables.sql```:
 
 ```sql
 create table users (
