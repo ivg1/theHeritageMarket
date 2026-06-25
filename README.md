@@ -1,6 +1,8 @@
 # The Heritage Market
 A platform for students to buy/sell goods and services in your school's community.
 
+I made this platform to make it easier for students to trade things in their school, such as textbooks. Reselling used books after a school year is sometimes difficult, so why not have a platform for your school, where these books are used, and have students who will need them next year find them? (I also added possibility for services)
+
 *Project is still in development.*
 
 (i wrote this entire readme MYSELF, i used the readme from https://github.com/hackclub/hackatime-desktop as inspiration!) I SWEAR i didnt use ai here, it doesnt even know what i wrote. i spent an entire car ride perfecting this and you believe its ai :(
